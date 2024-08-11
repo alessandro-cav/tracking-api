@@ -5,7 +5,6 @@ import com.ms.tracking_api.configs.validations.Validator;
 import com.ms.tracking_api.dtos.requests.FuncionarioRequest;
 import com.ms.tracking_api.dtos.responses.FuncionarioResponse;
 import com.ms.tracking_api.entities.Funcionario;
-import com.ms.tracking_api.entities.UploadArquivo;
 import com.ms.tracking_api.handlers.BadRequestException;
 import com.ms.tracking_api.handlers.ObjetoNotFoundException;
 import com.ms.tracking_api.repositories.FuncionarioRepository;
@@ -15,9 +14,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -35,25 +32,14 @@ public class FuncionarioService {
 
     private final Validator validator;
 
-    public FuncionarioResponse salvar(FuncionarioRequest funcionarioRequest/*, List<MultipartFile> documentos*/) {
-        this.validator.validacaoDoCpfECnpjEEmail(funcionarioRequest.getCpf(), null, null);
+    public FuncionarioResponse salvar(FuncionarioRequest funcionarioRequest) {
+        this.validator.validaCPF(funcionarioRequest.getCpf());
+        this.validator.validaEmail(funcionarioRequest.getEmail());
         this.repository.findByCpf(funcionarioRequest.getCpf()).ifPresent(funcionario -> {
             throw new BadRequestException(  funcionarioRequest.getCpf() + " já cadastrado no sistema!" );
         });
         Funcionario funcionario = this.modelMapper.map(funcionarioRequest, Funcionario.class);
         funcionario = this.repository.save(funcionario);
-       /* if(!(documentos.isEmpty())){
-        for (MultipartFile documento : documentos) {
-            UploadArquivo uploadArquivo = new UploadArquivo();
-            uploadArquivo.setFuncionario(funcionario);
-            try {
-                uploadArquivo.setDocumento(documento.getBytes());
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-            uploadArquivoRepository.save(uploadArquivo);
-        }}*/
-
         return this.modelMapper.map(funcionario, FuncionarioResponse.class);
     }
 
@@ -78,7 +64,8 @@ public class FuncionarioService {
     }
 
    public FuncionarioResponse atualizar(Long id, FuncionarioRequest funcionarioRequest) {
-        this.validator.validacaoDoCpfECnpjEEmail(funcionarioRequest.getCpf(), null, null);
+        this.validator.validaCPF(funcionarioRequest.getCpf());
+       this.validator.validaEmail(funcionarioRequest.getEmail());
         return this.repository.findById(id).map(funcionario -> {
             if (!(funcionario.getCpf().equals(funcionarioRequest.getCpf()))) {
                 this.repository.findByCpf(funcionarioRequest.getCpf()).ifPresent(funcionario1 -> {

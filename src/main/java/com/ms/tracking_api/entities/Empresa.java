@@ -32,6 +32,8 @@ public class Empresa implements Serializable {
 
     private String telefone;
 
+    private String email;
+
     @OneToMany(mappedBy = "empresa")
     private List<Evento> eventos;
 

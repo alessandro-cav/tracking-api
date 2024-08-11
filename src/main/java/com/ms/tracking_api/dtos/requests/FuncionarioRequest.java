@@ -2,6 +2,7 @@ package com.ms.tracking_api.dtos.requests;
 
 import jakarta.persistence.Column;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -9,6 +10,7 @@ import lombok.NoArgsConstructor;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.Serializable;
+import java.util.List;
 
 @Data
 @NoArgsConstructor
@@ -35,4 +37,12 @@ public class FuncionarioRequest implements Serializable {
         @NotBlank(message = "O campo chave pix não pode ser vazio.")
         private String chavePix;
 
+        @NotNull(message = "O campo email é obrigatório.")
+        @NotBlank(message = "O campo email não pode ser vazio.")
+        private String email;
+
+        @NotNull(message = "A lista de documentos é obrigatória.")
+        @NotBlank(message = "lista não pode ser vazia.")
+        @NotEmpty(message = "A lista de documentos não pode estar vazia.")
+        private List<String> documentos;
 }

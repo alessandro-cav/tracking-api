@@ -33,7 +33,8 @@ public class EmpresaService {
     private final Validator validator;
 
     public EmpresaResponse salvar(EmpresaRequest empresaRequest) {
-        this.validator.validacaoDoCpfECnpjEEmail(null, empresaRequest.getCnpj(), null);
+        this.validator.validaCNPJ(empresaRequest.getCnpj());
+        this.validator.validaEmail(empresaRequest.getEmail());
         this.repository.findByCnpj(empresaRequest.getCnpj()).ifPresent(empresa -> {
             throw new BadRequestException(empresa.getCnpj() + " já cadastrado no sistema!" );
         });
@@ -67,7 +68,8 @@ public class EmpresaService {
     }
 
    public EmpresaResponse atualizar(Long id, EmpresaRequest empresaRequest) {
-        this.validator.validacaoDoCpfECnpjEEmail(null, empresaRequest.getCnpj(), null);
+       this.validator.validaCNPJ(empresaRequest.getCnpj());
+       this.validator.validaEmail(empresaRequest.getEmail());
         return this.repository.findById(id).map(empresa -> {
             if (!(empresa.getCnpj().equals(empresaRequest.getCnpj()))) {
                 this.repository.findByCnpj(empresaRequest.getCnpj()).ifPresent(empresa1 -> {

@@ -33,12 +33,13 @@ public class Funcionario implements Serializable {
 
     private String chavePix;
 
+    private String email;
 
     @OneToMany(mappedBy = "funcionario")
     private List<RegistrarAtividade> registrarAtividades;
 
-    @OneToMany(mappedBy = "funcionario")
-    private List<UploadArquivo> uploadArquivos;
+    @Lob
+    private List<String> documentos;
 
     @CreationTimestamp
     private LocalDate dataCriacao;
