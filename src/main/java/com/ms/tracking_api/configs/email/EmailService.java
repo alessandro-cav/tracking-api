@@ -27,10 +27,10 @@ public class EmailService {
 
     private final PasswordEncoder passwordEncod;
 
-    private final Validator validarCpfECnpjEEmail;
+    private final Validator validar;
 
     public void esqueciMinhaSenha(LoginRequestDTO loginRequestDTO) {
-        this.validarCpfECnpjEEmail.validacaoDoCpfECnpjEEmail(null, null, loginRequestDTO.getEmail());
+        this.validar.validaEmail(loginRequestDTO.getEmail());
         User user = this.repository.findByEmail(loginRequestDTO.getEmail()).get();
         Map<String, Object> extraClaims = new HashMap<>();
         String token = Jwts
@@ -42,7 +42,7 @@ public class EmailService {
                 .signWith(this.jwtService.getSignInKey(), SignatureAlgorithm.HS256)
                 .compact();
 
-        String link = "http://localhost:8080/crm-moremac/users/reset_password?token=" + token;
+        String link = "http://localhost:8080/ms-tracking/users/reset_password?token=" + token;
 
         email.enviarEmail(user.getEmail(), user.getNome(), link);
     }

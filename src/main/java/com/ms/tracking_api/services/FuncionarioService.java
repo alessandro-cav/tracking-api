@@ -8,7 +8,6 @@ import com.ms.tracking_api.entities.Funcionario;
 import com.ms.tracking_api.handlers.BadRequestException;
 import com.ms.tracking_api.handlers.ObjetoNotFoundException;
 import com.ms.tracking_api.repositories.FuncionarioRepository;
-import com.ms.tracking_api.repositories.UploadArquivoRepository;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.PageRequest;
@@ -27,8 +26,6 @@ public class FuncionarioService {
     private final ModelMapper modelMapper;
 
     private final FuncionarioRepository repository;
-
-    private final UploadArquivoRepository uploadArquivoRepository;
 
     private final Validator validator;
 

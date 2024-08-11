@@ -43,17 +43,7 @@ public class CustomizedResponseEntityExceptionHandler {
                 new ExceptionResponse(ex.getMessage(), request.getDescription(false), LocalDateTime.now()),
                 HttpStatus.NOT_FOUND);
     }
-
-    @ExceptionHandler(ValidExceptionResponse.class)
-    public final ResponseEntity<Object> handlerValidacao(ValidExceptionResponse ex) {
-        List<String> mensagens = new ArrayList<String>();
-        ex.getMensagens().forEach(erro -> mensagens.add(erro.getErro()));
-        ExceptionResponseValid exceptionResponse = new ExceptionResponseValid(LocalDateTime.now(), mensagens,
-                HttpStatus.BAD_REQUEST.name(), HttpStatus.BAD_REQUEST.value());
-
-        return new ResponseEntity<Object>(exceptionResponse, HttpStatus.BAD_REQUEST);
-    }
-
+    
     @ExceptionHandler(ErrorGeneratingTokenException.class)
     public ResponseEntity<Object> allHandlerErrorGeneratingTokenException(ErrorGeneratingTokenException ex, WebRequest request) {
         return new ResponseEntity<Object>(
