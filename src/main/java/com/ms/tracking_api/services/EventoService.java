@@ -109,4 +109,10 @@ public class EventoService {
     public Evento buscarEventoPeloId(Long id) {
         return this.repository.findById(id).orElseThrow(() -> new ObjetoNotFoundException("Evento não encontrado!"));
     }
+
+
+    public Evento teste(Long id) {
+        return this.repository.findById(id).orElseThrow(() -> new ObjetoNotFoundException("Evento não encontrado!"));
+    }
 }
+
