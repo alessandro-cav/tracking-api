@@ -24,7 +24,6 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
-@Transactional
 public class EventoService {
 
     private final ModelMapper modelMapper;
@@ -35,24 +34,27 @@ public class EventoService {
 
     private final Validator validator;
 
+    @Transactional
     public EventoResponse salvar(EventoRequest eventoRequest) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
         LocalDate data = LocalDate.parse(eventoRequest.getData(), formatter);
 
-        Empresa empresa =  this.empresaService.buscarEmpresaPeloId(eventoRequest.getIdEmpresa());
-        Evento evento  = this.modelMapper.map(eventoRequest, Evento.class);
+        Empresa empresa = this.empresaService.buscarEmpresaPeloId(eventoRequest.getIdEmpresa());
+        Evento evento = this.modelMapper.map(eventoRequest, Evento.class);
         evento.setEmpresa(empresa);
         evento.setData(data);
         evento = this.repository.save(evento);
         return this.modelMapper.map(evento, EventoResponse.class);
     }
 
+    @Transactional(readOnly = true)
     public List<EventoResponse> buscarTodos(PageRequest pageRequest) {
         return this.repository.findAll(pageRequest).stream()
                 .map(evento -> this.modelMapper.map(evento, EventoResponse.class))
                 .collect(Collectors.toList());
     }
 
+    @Transactional(readOnly = true)
     public List<EventoResponse> buscarNovoEventos(PageRequest pageRequest) {
         List<Evento> eventos = this.repository.findAll();
         LocalDate agora = LocalDate.now();
@@ -64,15 +66,17 @@ public class EventoService {
                 .collect(Collectors.toList());
     }
 
+    @Transactional(readOnly = true)
     public EventoResponse buscarPeloId(Long id) {
         return this.repository.findById(id).map(evento -> {
             return this.modelMapper.map(evento, EventoResponse.class);
         }).orElseThrow(() -> new ObjetoNotFoundException("Evento não encontrado!"));
     }
 
+    @Transactional
     public void delete(Long id) {
         this.repository.findById(id).ifPresentOrElse(evento -> {
-            try{
+            try {
                 this.repository.delete(evento);
             } catch (DataIntegrityViolationException e) {
                 throw new BadRequestException("Evento não pode ser exluido, pois está vinculada em alguma vaga ");
@@ -82,14 +86,15 @@ public class EventoService {
         });
     }
 
+    @Transactional
     public EventoResponse atualizar(Long id, EventoRequest eventoRequest) {
-        Empresa empresa =  this.empresaService.buscarEmpresaPeloId(eventoRequest.getIdEmpresa());
+        Empresa empresa = this.empresaService.buscarEmpresaPeloId(eventoRequest.getIdEmpresa());
         return this.repository.findById(id).map(evento -> {
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
             LocalDate data = LocalDate.parse(eventoRequest.getData(), formatter);
 
             eventoRequest.setIdEvento(evento.getIdEvento());
-            evento  = this.modelMapper.map(eventoRequest, Evento.class);
+            evento = this.modelMapper.map(eventoRequest, Evento.class);
             evento.setEmpresa(empresa);
             evento.setData(data);
             evento = this.repository.save(evento);
@@ -97,11 +102,14 @@ public class EventoService {
         }).orElseThrow(() -> new ObjetoNotFoundException("Evento não encontrado!"));
     }
 
+    @Transactional(readOnly = true)
     public List<EventoResponse> buscarPorNome(String nome, PageRequest pageRequest) {
         return this.repository.findByNomeContainingIgnoreCase(nome, pageRequest).stream()
                 .map(evento -> this.modelMapper.map(evento, EventoResponse.class))
                 .collect(Collectors.toList());
     }
+
+    @Transactional(readOnly = true)
     public Evento buscarEventoPeloId(Long id) {
         return this.repository.findById(id).orElseThrow(() -> new ObjetoNotFoundException("Evento não encontrado!"));
     }

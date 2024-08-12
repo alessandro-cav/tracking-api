@@ -30,7 +30,6 @@ import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
-@Transactional
 public class RegistrarAtividadeService {
 
     private final VagaService vagaService;
@@ -43,6 +42,7 @@ public class RegistrarAtividadeService {
 
     private final TokenConfig tokenConfig;
 
+    @Transactional(readOnly = true)
     public byte[] gerarQrCode(RegistrarAtividadeRequest request) {
         List<FuncionarioVaga> funcionarioVagas = this.funcionarioVagaService.findByFuncionarioIdFuncionario(request.getIdFuncionario());
         boolean vagaEncontrada = funcionarioVagas.stream()
@@ -74,7 +74,7 @@ public class RegistrarAtividadeService {
             HttpHeaders headers = new HttpHeaders();
             headers.set(HttpHeaders.CONTENT_TYPE, "image/png");
         } catch (WriterException | IOException e) {
-           throw  new ErrorGeneratingTokenException("Erro ao gerar o qrcode " + e.getMessage());
+            throw new ErrorGeneratingTokenException("Erro ao gerar o qrcode " + e.getMessage());
         }
         return qrCodeImage;
     }
@@ -100,6 +100,7 @@ public class RegistrarAtividadeService {
         return pngOutputStream.toByteArray();
     }
 
+    @Transactional(readOnly = true)
     public RegistrarAtividaderResponse registrarAtividade(TokenRequest request) {
         TokenInfo tokenInfo = this.tokenConfig.validateToken(request.getToken());
         Vaga vaga = this.vagaService.buscarVagaPeloId(tokenInfo.getIdVaga());
@@ -120,6 +121,7 @@ public class RegistrarAtividadeService {
         return rar;
     }
 
+    @Transactional
     public String gerarComprovante(RegistrarAtividadeRequest request) {
         Vaga vaga = this.vagaService.buscarVagaPeloId(request.getIdVaga());
         Funcionario funcionario = this.funcionarioService.buscarFuncionarioPeloId(request.getIdFuncionario());
@@ -130,7 +132,9 @@ public class RegistrarAtividadeService {
         ra.setVaga(vaga);
         ra.setDataHora(LocalDateTime.now());
 
-         this.repository.save(ra);
+        this.repository.save(ra);
+
+        // FALTA A CONFIGURAÇÃO PARA ENVIO DE COMPROVANTE VIA WHATSAPP
         return "deu certo ";
     }
 

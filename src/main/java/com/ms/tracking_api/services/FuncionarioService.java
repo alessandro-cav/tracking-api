@@ -20,7 +20,6 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
-@Transactional
 public class FuncionarioService {
 
     private final ModelMapper modelMapper;
@@ -29,44 +28,49 @@ public class FuncionarioService {
 
     private final Validator validator;
 
+    @Transactional
     public FuncionarioResponse salvar(FuncionarioRequest funcionarioRequest) {
         this.validator.validaCPF(funcionarioRequest.getCpf());
         this.validator.validaEmail(funcionarioRequest.getEmail());
         this.repository.findByCpf(funcionarioRequest.getCpf()).ifPresent(funcionario -> {
-            throw new BadRequestException(  funcionarioRequest.getCpf() + " já cadastrado no sistema!" );
+            throw new BadRequestException(funcionarioRequest.getCpf() + " já cadastrado no sistema!");
         });
         Funcionario funcionario = this.modelMapper.map(funcionarioRequest, Funcionario.class);
         funcionario = this.repository.save(funcionario);
         return this.modelMapper.map(funcionario, FuncionarioResponse.class);
     }
 
-   public List<FuncionarioResponse> buscarTodos(PageRequest pageRequest) {
+    @Transactional(readOnly = true)
+    public List<FuncionarioResponse> buscarTodos(PageRequest pageRequest) {
         return this.repository.findAll(pageRequest).stream()
                 .map(funcionario -> this.modelMapper.map(funcionario, FuncionarioResponse.class))
                 .collect(Collectors.toList());
     }
 
+    @Transactional(readOnly = true)
     public FuncionarioResponse buscarPeloId(Long id) {
         return this.repository.findById(id).map(funcionario -> {
             return this.modelMapper.map(funcionario, FuncionarioResponse.class);
         }).orElseThrow(() -> new ObjetoNotFoundException("Funcionario não encontrado!"));
     }
 
+    @Transactional
     public void delete(Long id) {
         this.repository.findById(id).ifPresentOrElse(funcionario -> {
-                this.repository.delete(funcionario);
+            this.repository.delete(funcionario);
         }, () -> {
             throw new ObjetoNotFoundException("Funcionario não encontrado!");
         });
     }
 
-   public FuncionarioResponse atualizar(Long id, FuncionarioRequest funcionarioRequest) {
+    @Transactional
+    public FuncionarioResponse atualizar(Long id, FuncionarioRequest funcionarioRequest) {
         this.validator.validaCPF(funcionarioRequest.getCpf());
-       this.validator.validaEmail(funcionarioRequest.getEmail());
+        this.validator.validaEmail(funcionarioRequest.getEmail());
         return this.repository.findById(id).map(funcionario -> {
             if (!(funcionario.getCpf().equals(funcionarioRequest.getCpf()))) {
                 this.repository.findByCpf(funcionarioRequest.getCpf()).ifPresent(funcionario1 -> {
-                    throw new BadRequestException( funcionarioRequest.getCpf() + " já cadastrado no sistema!" );
+                    throw new BadRequestException(funcionarioRequest.getCpf() + " já cadastrado no sistema!");
                 });
             }
             funcionarioRequest.setIdFuncionario(funcionario.getIdFuncionario());
@@ -76,12 +80,14 @@ public class FuncionarioService {
         }).orElseThrow(() -> new ObjetoNotFoundException("Funcionario não encontrado!"));
     }
 
+    @Transactional(readOnly = true)
     public List<FuncionarioResponse> buscarPorNome(String nome, PageRequest pageRequest) {
         return this.repository.findByNomeContainingIgnoreCase(nome, pageRequest).stream()
                 .map(funcionario -> modelMapper.map(funcionario, FuncionarioResponse.class))
                 .collect(Collectors.toList());
     }
 
+    @Transactional(readOnly = true)
     public Funcionario buscarFuncionarioPeloId(Long id) {
         return this.repository.findById(id)
                 .orElseThrow(() -> new ObjetoNotFoundException("Funcionario não encontrado!"));

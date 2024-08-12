@@ -8,12 +8,12 @@ import com.ms.tracking_api.repositories.FuncionarioVagaRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
 import java.util.List;
 
 
 @Service
 @RequiredArgsConstructor
-@Transactional
 public class FuncionarioVagaService {
 
     private final VagaService vagaService;
@@ -22,8 +22,7 @@ public class FuncionarioVagaService {
 
     private final FuncionarioVagaRepository repository;
 
-    private final TokenConfig tokenConfig;
-
+    @Transactional
     public void save(FuncionarioVagaRequest request) {
         Vaga vaga = this.vagaService.buscarVagaPeloId(request.getIdVaga());
         Funcionario funcionario = this.funcionarioService.buscarFuncionarioPeloId(request.getIdFuncionario());
@@ -37,15 +36,17 @@ public class FuncionarioVagaService {
         this.repository.save(funcionarioVaga);
     }
 
+    @Transactional
     public void excluirPeloAlunoMateiraPeloAlunoEMateria(FuncionarioVagaRequest request) {
-        this.repository.findByVagaIdVagaAndFuncionarioIdFuncionario(request.getIdVaga(), request.getIdFuncionario()).ifPresentOrElse(lm -> {
-            this.repository.delete(lm);
+        this.repository.findByVagaIdVagaAndFuncionarioIdFuncionario(request.getIdVaga(), request.getIdFuncionario()).ifPresentOrElse(fv -> {
+            this.repository.delete(fv);
         }, () -> {
             throw new ObjetoNotFoundException("Não encontrado vincular com vaga e funcionario");
         });
     }
 
+    @Transactional(readOnly = true)
     public List<FuncionarioVaga> findByFuncionarioIdFuncionario(Long idFuncionario) {
-      return  this.repository.findByFuncionarioIdFuncionario(idFuncionario);
+        return this.repository.findByFuncionarioIdFuncionario(idFuncionario);
     }
 }
