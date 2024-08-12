@@ -1,19 +1,16 @@
 package com.ms.tracking_api.configs.email;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.mail.MailException;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 
 @Configuration
+@RequiredArgsConstructor
 public class EnviaEmail {
 
     private final JavaMailSender javaMailSender;
-
-    public EnviaEmail(JavaMailSender javaMailSender) {
-        this.javaMailSender = javaMailSender;
-    }
-
 
     public void enviarEmail(String destino, String nome, String link) {
 

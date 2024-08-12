@@ -23,7 +23,7 @@ public class EmailService {
 
     private final EnviaEmail email;
 
-    private JwtService jwtService;
+    private final JwtService jwtService;
 
     private final PasswordEncoder passwordEncod;
 
