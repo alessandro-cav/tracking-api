@@ -25,6 +25,6 @@ public class FuncionarioResponse implements Serializable {
 
     private String chavePix;
 
-    private String documento;
+ /*   private String documento;*/
 
 }

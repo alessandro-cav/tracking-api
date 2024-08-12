@@ -38,8 +38,8 @@ public class Funcionario implements Serializable {
     @OneToMany(mappedBy = "funcionario")
     private List<RegistrarAtividade> registrarAtividades;
 
-    @Lob
-    private List<String> documentos;
+/*    @Lob
+    private List<String> documentos;*/
 
     @CreationTimestamp
     private LocalDate dataCriacao;
