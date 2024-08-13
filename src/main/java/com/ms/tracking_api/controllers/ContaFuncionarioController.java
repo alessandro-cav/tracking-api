@@ -63,8 +63,8 @@ public class ContaFuncionarioController {
         return ResponseEntity.ok(this.service.atualizarContaDoFuncionario(idFuncionarios,idConta, request));
     }
 
-    @GetMapping("/buscarPorNome")
-    @Operation(summary = "Buscar o endereço do funcionario por nome", description = "Endpoint para buscar o endereço do funcionario")
+    @GetMapping("/buscarPorTipoConta")
+    @Operation(summary = "Buscar o conta do funcionario por tipo conta", description = "Endpoint para buscar conta do funcionario")
     public ResponseEntity<List<ContaResponse>> buscarPorNome(@PathVariable(name = "idFuncionarios") Long idFuncionarios,
                                                              @RequestParam Integer pagina,
                                                              @RequestParam Integer quantidade,
@@ -72,7 +72,7 @@ public class ContaFuncionarioController {
                                                              @RequestParam String ordenarPor,
                                                              @RequestParam String tipoConta) {
         return ResponseEntity.ok(this.service
-                .buscarContaDoFuncionarioPorNome(idFuncionarios,tipoConta, PageRequest.of(pagina, quantidade, Sort.by(Sort.Direction.valueOf(ordem), ordenarPor))));
+                .buscarContaDoFuncionarioPorTipoConta(idFuncionarios,tipoConta, PageRequest.of(pagina, quantidade, Sort.by(Sort.Direction.valueOf(ordem), ordenarPor))));
 
     }
 }

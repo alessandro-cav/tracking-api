@@ -17,5 +17,6 @@ public interface ContaRepository extends PagingAndSortingRepository<Conta, Long>
 
     List<Conta> findAllByFuncionarioIdFuncionario(Long idFuncionario, PageRequest pageRequest);
 
-    List<Conta> findByFuncionarioIdFuncionarioAndTipoContaContainingIgnoreCase(Long idFuncionario, TipoConta tipoConta, PageRequest pageRequest);
+    List<Conta> findByFuncionarioIdFuncionarioAndTipoConta(Long idFuncionario, TipoConta tipoConta, PageRequest pageRequest);
+
 }

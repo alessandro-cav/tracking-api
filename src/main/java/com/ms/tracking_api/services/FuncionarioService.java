@@ -5,6 +5,7 @@ import com.ms.tracking_api.configs.validations.Validator;
 import com.ms.tracking_api.dtos.requests.FuncionarioRequest;
 import com.ms.tracking_api.dtos.responses.FuncionarioResponse;
 import com.ms.tracking_api.entities.Funcionario;
+import com.ms.tracking_api.enuns.Genero;
 import com.ms.tracking_api.handlers.BadRequestException;
 import com.ms.tracking_api.handlers.ObjetoNotFoundException;
 import com.ms.tracking_api.repositories.FuncionarioRepository;
@@ -32,10 +33,12 @@ public class FuncionarioService {
     public FuncionarioResponse salvar(FuncionarioRequest funcionarioRequest) {
         this.validator.validaCPF(funcionarioRequest.getCpf());
         this.validator.validaEmail(funcionarioRequest.getEmail());
+        Genero genero =  Genero.buscarGenero(funcionarioRequest.getGenero());
         this.repository.findByCpf(funcionarioRequest.getCpf()).ifPresent(funcionario -> {
             throw new BadRequestException(funcionarioRequest.getCpf() + " já cadastrado no sistema!");
         });
         Funcionario funcionario = this.modelMapper.map(funcionarioRequest, Funcionario.class);
+        funcionario.setGenero(genero);
         funcionario = this.repository.save(funcionario);
         return this.modelMapper.map(funcionario, FuncionarioResponse.class);
     }
@@ -67,6 +70,7 @@ public class FuncionarioService {
     public FuncionarioResponse atualizar(Long id, FuncionarioRequest funcionarioRequest) {
         this.validator.validaCPF(funcionarioRequest.getCpf());
         this.validator.validaEmail(funcionarioRequest.getEmail());
+        Genero genero =  Genero.buscarGenero(funcionarioRequest.getGenero());
         return this.repository.findById(id).map(funcionario -> {
             if (!(funcionario.getCpf().equals(funcionarioRequest.getCpf()))) {
                 this.repository.findByCpf(funcionarioRequest.getCpf()).ifPresent(funcionario1 -> {
@@ -75,6 +79,7 @@ public class FuncionarioService {
             }
             funcionarioRequest.setIdFuncionario(funcionario.getIdFuncionario());
             funcionario = this.modelMapper.map(funcionarioRequest, Funcionario.class);
+            funcionario.setGenero(genero);
             funcionario = this.repository.save(funcionario);
             return this.modelMapper.map(funcionario, FuncionarioResponse.class);
         }).orElseThrow(() -> new ObjetoNotFoundException("Funcionario não encontrado!"));
