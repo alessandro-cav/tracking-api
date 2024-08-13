@@ -1,5 +1,6 @@
 package com.ms.tracking_api.entities;
 
+import com.ms.tracking_api.enuns.Genero;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -35,11 +36,25 @@ public class Funcionario implements Serializable {
 
     private String email;
 
+    @Enumerated(EnumType.STRING)
+    private Genero genero;
+
+    /*    @Lob
+    private List<String> documentos;*/
+
+    @ManyToOne
+    @JoinColumn(name = "endereco")
+    private Endereco endereco;
+
+    @ManyToOne
+    @JoinColumn(name = "conta")
+    private Conta conta;
+
     @OneToMany(mappedBy = "funcionario")
     private List<RegistrarAtividade> registrarAtividades;
 
-/*    @Lob
-    private List<String> documentos;*/
+    @OneToMany(mappedBy = "funcionario")
+    private List<FuncionarioEndereco> funcionarioEnderecos;
 
     @CreationTimestamp
     private LocalDate dataCriacao;
