@@ -11,7 +11,7 @@ import com.ms.tracking_api.dtos.requests.TokenRequest;
 import com.ms.tracking_api.dtos.responses.RegistrarAtividaderResponse;
 import com.ms.tracking_api.dtos.responses.TokenInfo;
 import com.ms.tracking_api.entities.*;
-import com.ms.tracking_api.enuns.TipoAtividade;
+import com.ms.tracking_api.enuns.TipoAcesso;
 import com.ms.tracking_api.handlers.BadRequestException;
 import com.ms.tracking_api.handlers.ErrorGeneratingTokenException;
 import com.ms.tracking_api.handlers.ObjetoNotFoundException;
@@ -52,21 +52,21 @@ public class RegistrarAtividadeService {
             throw new ObjetoNotFoundException("O funcionário não está vinculado a esta vaga");
         }
 
-        TipoAtividade tipoAtividade = TipoAtividade.buscarTipo(request.getTipoAtividade());
+        TipoAcesso tipoAcesso = TipoAcesso.buscarTipo(request.getTipoAcesso());
         RegistrarAtividade existeAtividadeRegistrada = this.buscarUltimaAtividadePorFuncionario(request.getIdFuncionario(),
                 request.getIdVaga());
 
         if (existeAtividadeRegistrada != null) {
-            if (tipoAtividade.equals(TipoAtividade.SAIDA)) {
+            if (tipoAcesso.equals(TipoAcesso.SAIDA)) {
                 validarIntervaloDeTempo(existeAtividadeRegistrada.getDataHora(), LocalDateTime.now());
             }
 
-            if (existeAtividadeRegistrada.getTipoAtividade().equals(tipoAtividade)) {
+            if (existeAtividadeRegistrada.getTipoAcesso().equals(tipoAcesso)) {
                 throw new BadRequestException("Funcionario " + existeAtividadeRegistrada.getFuncionario().getNome() +
-                        " já possui uma " + existeAtividadeRegistrada.getTipoAtividade() + " cadastrada! ");
+                        " já possui uma " + existeAtividadeRegistrada.getTipoAcesso() + " cadastrada! ");
             }
         }
-        String token = tokenConfig.generateToken(request.getIdFuncionario(), tipoAtividade.getDescricao(), request.getIdVaga());
+        String token = tokenConfig.generateToken(request.getIdFuncionario(), tipoAcesso.getDescricao(), request.getIdVaga());
         String link = String.format("http://localhost:8080/registrarAtividades/registrarAtividade?token=%s", token);
         byte[] qrCodeImage = null;
         try {
@@ -107,12 +107,12 @@ public class RegistrarAtividadeService {
         Funcionario funcionario = this.funcionarioService.buscarFuncionarioPeloId(tokenInfo.getIdFuncionario());
 
         RegistrarAtividade ra = new RegistrarAtividade();
-        ra.setTipoAtividade(TipoAtividade.buscarTipo(tokenInfo.getTipoAtividade()));
+        ra.setTipoAcesso(TipoAcesso.buscarTipo(tokenInfo.getTipoAtividade()));
         ra.setFuncionario(funcionario);
         ra.setVaga(vaga);
 
         RegistrarAtividaderResponse rar = new RegistrarAtividaderResponse();
-        rar.setTipoAtividade(ra.getTipoAtividade());
+        rar.setTipoAcesso(ra.getTipoAcesso());
         rar.setVaga(ra.getVaga().getVaga());
         rar.setNomeFuncinario(ra.getFuncionario().getNome());
         rar.setEvento(ra.getVaga().getEvento().getNome());
@@ -127,7 +127,7 @@ public class RegistrarAtividadeService {
         Funcionario funcionario = this.funcionarioService.buscarFuncionarioPeloId(request.getIdFuncionario());
 
         RegistrarAtividade ra = new RegistrarAtividade();
-        ra.setTipoAtividade(TipoAtividade.buscarTipo(request.getTipoAtividade()));
+        ra.setTipoAcesso(TipoAcesso.buscarTipo(request.getTipoAcesso()));
         ra.setFuncionario(funcionario);
         ra.setVaga(vaga);
         ra.setDataHora(LocalDateTime.now());

@@ -1,6 +1,5 @@
 package com.ms.tracking_api.dtos.requests;
 
-import com.ms.tracking_api.enuns.TipoAtividade;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -16,7 +15,7 @@ public class RegistrarAtividadeRequest implements Serializable {
 
     private Long idRegistrarAtividade;
 
-    private String tipoAtividade;
+    private String tipoAcesso;
 
     private Long idFuncionario;
 

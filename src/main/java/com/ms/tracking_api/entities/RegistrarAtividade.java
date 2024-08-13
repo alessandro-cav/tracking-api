@@ -1,6 +1,6 @@
 package com.ms.tracking_api.entities;
 
-import com.ms.tracking_api.enuns.TipoAtividade;
+import com.ms.tracking_api.enuns.TipoAcesso;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -27,7 +27,7 @@ public class RegistrarAtividade implements Serializable {
     private Long idRegistrarAtividade;
 
     @Enumerated(EnumType.STRING)
-    private TipoAtividade tipoAtividade;
+    private TipoAcesso tipoAcesso;
 
     @CreationTimestamp
     private LocalDateTime dataHora;
