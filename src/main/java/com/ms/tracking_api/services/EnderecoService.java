@@ -145,7 +145,7 @@ public class EnderecoService {
     @Transactional(readOnly = true)
     public List<EnderecoResponse> buscarEnderecoDoFuncionarioPorNome(Long idFuncionarios, String logradouro, PageRequest pageRequest) {
         Funcionario funcionario = this.funcionarioService.buscarFuncionarioPeloId(idFuncionarios);
-        return this.enderecoRepository.findByEventoIdEventoAndLogradouroContainingIgnoreCase(funcionario.getIdFuncionario(), logradouro, pageRequest).stream()
+        return this.enderecoRepository.findByFuncionarioIdFuncionarioAndLogradouroContainingIgnoreCase(funcionario.getIdFuncionario(), logradouro, pageRequest).stream()
                 .map(endereco -> this.modelMapper.map(endereco, EnderecoResponse.class))
                 .collect(Collectors.toList());
     }
