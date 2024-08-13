@@ -47,6 +47,9 @@ public class Funcionario implements Serializable {
     @OneToMany(mappedBy = "funcionario")
     private List<Endereco> enderecos;
 
+    @OneToMany(mappedBy = "funcionario")
+    private List<Conta> contas;
+
     @CreationTimestamp
     private LocalDate dataCriacao;
 
