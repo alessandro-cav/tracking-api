@@ -23,7 +23,7 @@ public class Evento implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "SQ_EVENTO")
-    private Long IdEvento;
+    private Long idEvento;
 
     private String nome;
 
