@@ -36,6 +36,8 @@ public class Funcionario implements Serializable {
 
     private String email;
 
+    private LocalDate dataNascimento;
+
     @Enumerated(EnumType.STRING)
     private Genero genero;
 
