@@ -2,7 +2,6 @@ package com.ms.tracking_api.entities;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
@@ -42,5 +41,4 @@ public class Empresa implements Serializable {
 
     @UpdateTimestamp
     private LocalDate dataAtualizacao;
-
 }
