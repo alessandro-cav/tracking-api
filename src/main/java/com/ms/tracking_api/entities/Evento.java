@@ -43,12 +43,15 @@ public class Evento implements Serializable {
 
     private String estado;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "empresa")
     private Empresa empresa;
 
     @OneToMany(mappedBy = "evento")
     private List<Vaga> vagas;
+
+    @OneToMany(mappedBy = "evento")
+    private List<Endereco> enderecos;
 
     @CreationTimestamp
     private LocalDate dataCriacao;
