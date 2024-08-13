@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/{idEventos}/enderecos")
+@RequestMapping("/eventos/{idEventos}/enderecos")
 @RequiredArgsConstructor
 
 @Tag(name = "Endereco do evento Controller", description = "APIs relacionadas o endereco do evento controller")

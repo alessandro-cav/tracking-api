@@ -67,7 +67,7 @@ public class VagaController {
         return ResponseEntity.ok(this.service.atualizar(id, request));
     }
 
-    @GetMapping("/buscarPorNome")
+    @GetMapping("/buscarPorVaga")
     @Operation(summary = "Buscar vaga por vaga", description = "Endpoint para buscar vaga")
     public ResponseEntity<List<VagaResponse>> buscarPorNome (@RequestParam Integer pagina,
                                                            @RequestParam Integer quantidade,

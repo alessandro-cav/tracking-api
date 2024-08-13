@@ -21,4 +21,6 @@ public class EmpresaResponse implements Serializable {
 
     private String telefone;
 
+    private String email;
+
 }

@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/{idFuncionarios}/enderecos")
+@RequestMapping("/funcionarios/{idFuncionarios}/enderecos")
 @RequiredArgsConstructor
 
 @Tag(name = "Endereco do funcionario Controller", description = "APIs relacionadas o endereco do funcionario controller")
