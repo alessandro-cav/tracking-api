@@ -1,6 +1,8 @@
 package com.ms.tracking_api.entities;
 
+import com.ms.tracking_api.enuns.ChavePix;
 import com.ms.tracking_api.enuns.Genero;
+import com.ms.tracking_api.enuns.TipoConta;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -28,11 +30,7 @@ public class Funcionario implements Serializable {
 
     private String nome;
 
-    private String rg;
-
     private String cpf;
-
-    private String chavePix;
 
     private String email;
 
@@ -41,16 +39,31 @@ public class Funcionario implements Serializable {
     @Enumerated(EnumType.STRING)
     private Genero genero;
 
+    private String logradouro;
+
+    private String numero;
+
+    private String bairro;
+
+    private String cep;
+
+    private String cidade;
+
+    private String estado;
+
+    private String banco;
+
+    private String agencia;
+
+    @Enumerated(EnumType.STRING)
+    private TipoConta tipoConta;
+
+    @Enumerated(EnumType.STRING)
+    private ChavePix chavePix;
+
     /*    @Lob
     private List<String> documentos;*/
 
-    @ManyToOne
-    @JoinColumn(name = "endereco")
-    private Endereco endereco;
-
-    @ManyToOne
-    @JoinColumn(name = "conta")
-    private Conta conta;
 
     @OneToMany(mappedBy = "funcionario")
     private List<RegistrarAtividade> registrarAtividades;

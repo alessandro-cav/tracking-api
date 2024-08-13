@@ -18,11 +18,21 @@ public class EventoResponse implements Serializable {
 
     private String nome;
 
-    private String local;
-
     private String horario;
 
     private LocalDate data;
+
+    private String logradouro;
+
+    private String numero;
+
+    private String bairro;
+
+    private String cep;
+
+    private String cidade;
+
+    private String estado;
 
     private EmpresaResponse empresa;
 }

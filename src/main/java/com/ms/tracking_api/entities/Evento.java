@@ -31,14 +31,21 @@ public class Evento implements Serializable {
 
     private LocalDate data;
 
+    private String logradouro;
+
+    private String numero;
+
+    private String bairro;
+
+    private String cep;
+
+    private String cidade;
+
+    private String estado;
+
     @ManyToOne
     @JoinColumn(name = "empresa")
     private Empresa empresa;
-
-    @ManyToOne
-    @JoinColumn(name = "endereco")
-    private Endereco endereco;
-
 
     @OneToMany(mappedBy = "evento")
     private List<Vaga> vagas;
