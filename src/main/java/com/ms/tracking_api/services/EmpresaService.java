@@ -61,7 +61,7 @@ public class EmpresaService {
             try {
                 this.repository.delete(empresa);
             } catch (DataIntegrityViolationException e) {
-                throw new BadRequestException("Empresa não pode ser exluida, pois está vinculada em algum evento");
+                throw new BadRequestException("Empresa não pode ser excluida, pois está vinculada em algum evento");
             }
         }, () -> {
             throw new ObjetoNotFoundException("Empresa não encontrada!");
@@ -88,7 +88,7 @@ public class EmpresaService {
     @Transactional(readOnly = true)
     public List<EmpresaResponse> buscarPorNome(String nome, PageRequest pageRequest) {
         return this.repository.findByNomeContainingIgnoreCase(nome, pageRequest).stream()
-                .map(empresa -> modelMapper.map(empresa, EmpresaResponse.class))
+                .map(empresa -> this.modelMapper.map(empresa, EmpresaResponse.class))
                 .collect(Collectors.toList());
     }
 
