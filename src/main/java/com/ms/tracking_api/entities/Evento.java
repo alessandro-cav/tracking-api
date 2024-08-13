@@ -31,18 +31,6 @@ public class Evento implements Serializable {
 
     private LocalDate data;
 
-    private String logradouro;
-
-    private String numero;
-
-    private String bairro;
-
-    private String cep;
-
-    private String cidade;
-
-    private String estado;
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "empresa")
     private Empresa empresa;
