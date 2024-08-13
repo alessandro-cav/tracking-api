@@ -25,29 +25,12 @@ public class FuncionarioResponse implements Serializable {
 
     private String cpf;
 
+    private String telefone;
+
     private String email;
 
     private LocalDate dataNascimento;
 
     private Genero genero;
 
-    private String logradouro;
-
-    private String numero;
-
-    private String bairro;
-
-    private String cep;
-
-    private String cidade;
-
-    private String estado;
-
-    private String banco;
-
-    private String agencia;
-
-    private TipoConta tipoConta;
-
-    private ChavePix chavePix;
 }
