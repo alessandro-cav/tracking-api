@@ -17,7 +17,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -36,13 +35,9 @@ public class EventoService {
 
     @Transactional
     public EventoResponse salvar(EventoRequest eventoRequest) {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
-        LocalDate data = LocalDate.parse(eventoRequest.getData(), formatter);
-
         Empresa empresa = this.empresaService.buscarEmpresaPeloId(eventoRequest.getIdEmpresa());
         Evento evento = this.modelMapper.map(eventoRequest, Evento.class);
         evento.setEmpresa(empresa);
-        evento.setData(data);
         evento = this.repository.save(evento);
         return this.modelMapper.map(evento, EventoResponse.class);
     }
@@ -90,13 +85,9 @@ public class EventoService {
     public EventoResponse atualizar(Long id, EventoRequest eventoRequest) {
         Empresa empresa = this.empresaService.buscarEmpresaPeloId(eventoRequest.getIdEmpresa());
         return this.repository.findById(id).map(evento -> {
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
-            LocalDate data = LocalDate.parse(eventoRequest.getData(), formatter);
-
             eventoRequest.setIdEvento(evento.getIdEvento());
             evento = this.modelMapper.map(eventoRequest, Evento.class);
             evento.setEmpresa(empresa);
-            evento.setData(data);
             evento = this.repository.save(evento);
             return this.modelMapper.map(evento, EventoResponse.class);
         }).orElseThrow(() -> new ObjetoNotFoundException("Evento não encontrado!"));
