@@ -21,4 +21,6 @@ public interface EnderecoRepository extends PagingAndSortingRepository<Endereco,
     Optional<Endereco> findByFuncionarioIdFuncionarioAndIdEndereco(Long idFuncionario, Long idEndereco);
 
     List<Endereco> findAllByFuncionarioIdFuncionario(Long idFuncionario, PageRequest pageRequest);
+
+    List<Endereco> findByFuncionarioIdFuncionarioAndLogradouroContainingIgnoreCase(Long idFuncionario, String logradouro, PageRequest pageRequest);
 }
