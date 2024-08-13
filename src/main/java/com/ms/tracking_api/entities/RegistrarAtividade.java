@@ -32,11 +32,11 @@ public class RegistrarAtividade implements Serializable {
     @CreationTimestamp
     private LocalDateTime dataHora;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "funcionario")
     private Funcionario funcionario;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "vaga")
     private Vaga vaga;
 

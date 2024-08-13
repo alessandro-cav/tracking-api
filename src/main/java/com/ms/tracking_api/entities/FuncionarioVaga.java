@@ -23,11 +23,11 @@ public class FuncionarioVaga implements Serializable {
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "SQ_FUNCIONARIO_VAGA")
     private Long idFuncionarioVaga;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "vaga")
     private Vaga vaga;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "funcionario")
     private Funcionario funcionario;
 

@@ -34,7 +34,7 @@ public class Vaga  implements Serializable {
 
     private String observacao;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "evento")
     private Evento evento;
 
