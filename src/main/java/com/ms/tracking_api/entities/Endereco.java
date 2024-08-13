@@ -34,10 +34,11 @@ public class Endereco implements Serializable {
 
     private String estado;
 
-    @OneToMany(mappedBy = "endereco")
-    private List<FuncionarioEndereco> funcionarioEnderecos;
+    @OneToMany(mappedBy = "enderco")
+    private List<Evento> eventos;
 
-    @OneToMany(mappedBy = "endereco")
-    private List<EventoEndereco> eventoEnderecos;
+    @OneToMany(mappedBy = "enderco")
+    private List<Funcionario> funcionarios;
+
 
 }

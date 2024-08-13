@@ -55,9 +55,6 @@ public class Funcionario implements Serializable {
     @OneToMany(mappedBy = "funcionario")
     private List<RegistrarAtividade> registrarAtividades;
 
-    @OneToMany(mappedBy = "funcionario")
-    private List<FuncionarioEndereco> funcionarioEnderecos;
-
     @CreationTimestamp
     private LocalDate dataCriacao;
 

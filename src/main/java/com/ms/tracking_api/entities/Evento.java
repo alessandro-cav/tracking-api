@@ -35,6 +35,11 @@ public class Evento implements Serializable {
     @JoinColumn(name = "empresa")
     private Empresa empresa;
 
+    @ManyToOne
+    @JoinColumn(name = "endereco")
+    private Endereco endereco;
+
+
     @OneToMany(mappedBy = "evento")
     private List<Vaga> vagas;
 
