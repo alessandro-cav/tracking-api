@@ -1,6 +1,7 @@
 package com.ms.tracking_api.dtos.responses;
 
 
+import com.ms.tracking_api.enuns.Pix;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -26,5 +27,5 @@ public class ContaResponse implements Serializable {
 
     private String chavePix;
 
-    private String pix;
+    private Pix pix;
 }
