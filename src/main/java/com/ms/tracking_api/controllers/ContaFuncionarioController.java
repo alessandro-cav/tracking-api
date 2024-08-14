@@ -70,9 +70,9 @@ public class ContaFuncionarioController {
                                                              @RequestParam Integer quantidade,
                                                              @RequestParam String ordem,
                                                              @RequestParam String ordenarPor,
-                                                             @RequestParam String tipoConta) {
+                                                             @RequestParam String tipoPix) {
         return ResponseEntity.ok(this.service
-                .buscarContaDoFuncionarioPorTipoConta(idFuncionarios,tipoConta, PageRequest.of(pagina, quantidade, Sort.by(Sort.Direction.valueOf(ordem), ordenarPor))));
+                .buscarContaDoFuncionarioPorTipoConta(idFuncionarios,tipoPix, PageRequest.of(pagina, quantidade, Sort.by(Sort.Direction.valueOf(ordem), ordenarPor))));
 
     }
 }

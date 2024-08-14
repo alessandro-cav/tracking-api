@@ -1,8 +1,6 @@
 package com.ms.tracking_api.entities;
 
-import com.ms.tracking_api.enuns.ChavePix;
 import com.ms.tracking_api.enuns.Genero;
-import com.ms.tracking_api.enuns.TipoConta;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;

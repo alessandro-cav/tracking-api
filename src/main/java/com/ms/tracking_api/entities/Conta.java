@@ -1,6 +1,6 @@
 package com.ms.tracking_api.entities;
 
-import com.ms.tracking_api.enuns.ChavePix;
+import com.ms.tracking_api.enuns.Pix;
 import com.ms.tracking_api.enuns.TipoConta;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -27,11 +27,12 @@ public class Conta implements Serializable {
 
     private String agencia;
 
-    @Enumerated(EnumType.STRING)
-    private TipoConta tipoConta;
+    private String  numero;
 
     @Enumerated(EnumType.STRING)
-    private ChavePix chavePix;
+    private Pix pix;
+
+    private String chavePix;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "funcionario")

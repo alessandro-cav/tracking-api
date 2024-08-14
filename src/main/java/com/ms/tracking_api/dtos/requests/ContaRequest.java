@@ -26,11 +26,15 @@ public class ContaRequest implements Serializable {
     @NotBlank(message = "O campo agencia não pode ser vazio.")
     private String agencia;
 
-    @NotNull(message = "O campo tipoConta é obrigatório.")
-    @NotBlank(message = "O campo tipoConta não pode ser vazio.")
-    private String tipoConta;
+    @NotNull(message = "O campo numero da conta é obrigatório.")
+    @NotBlank(message = "O campo numero da conta não pode ser vazio.")
+    private String numeroConta;
 
     @NotNull(message = "O campo chave pix é obrigatório.")
     @NotBlank(message = "O campo chave pix não pode ser vazio.")
     private String chavePix;
+
+    @NotNull(message = "O campo pix é obrigatório.")
+    @NotBlank(message = "O campo pix não pode ser vazio.")
+    private String pix;
 }

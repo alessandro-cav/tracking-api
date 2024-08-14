@@ -22,7 +22,9 @@ public class ContaResponse implements Serializable {
 
     private String agencia;
 
-    private String tipoConta;
+    private String numeroConta;
 
     private String chavePix;
+
+    private String pix;
 }
