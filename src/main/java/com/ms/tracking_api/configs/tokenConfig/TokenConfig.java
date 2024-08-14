@@ -7,27 +7,16 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import org.springframework.context.annotation.Configuration;
-
 import javax.crypto.spec.SecretKeySpec;
 import java.security.Key;
 import java.util.Base64;
 import java.util.Date;
-
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
-import javax.crypto.spec.SecretKeySpec;
-import java.security.Key;
-import java.util.Base64;
-import java.util.Date;
-import org.springframework.context.annotation.Configuration;
 
 @Configuration
 public class TokenConfig {
 
     private static final String SECRET_KEY = "l5sdxk7WnLZqI3jl4rE9ABK7Wxy4TX7GJuCw1v/RWlM=";
     private static final long EXPIRATION_TIME = 300000; // 5 minutos em milissegundos
-    private static final long CLOCK_SKEW = 30000; // 30 segundos de tolerância
 
     private static Key getSigningKey() {
         byte[] keyBytes = Base64.getDecoder().decode(SECRET_KEY);
@@ -48,7 +37,6 @@ public class TokenConfig {
         try {
             Claims claims = Jwts.parserBuilder()
                     .setSigningKey(getSigningKey())
-                    .setAllowedClockSkewSeconds(CLOCK_SKEW / 1000) // Configurando tolerância
                     .build()
                     .parseClaimsJws(token)
                     .getBody();
