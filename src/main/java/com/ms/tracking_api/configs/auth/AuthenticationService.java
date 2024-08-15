@@ -2,8 +2,10 @@ package com.ms.tracking_api.configs.auth;
 
 
 import com.ms.tracking_api.configs.jwt.JwtService;
+import com.ms.tracking_api.configs.validations.Validator;
 import com.ms.tracking_api.entities.User;
 import com.ms.tracking_api.enuns.Role;
+import com.ms.tracking_api.handlers.BadRequestException;
 import com.ms.tracking_api.repositories.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -24,7 +26,13 @@ public class AuthenticationService {
 
     private final AuthenticationManager authenticationManager;
 
+    private final Validator validator;
+
     public AuthenticationResponseDTO register(RegisterRequestDTO requestDTO) {
+        this.validator.validaEmail(requestDTO.getEmail());
+        this.repository.findByEmail(requestDTO.getEmail()).ifPresent(email -> {
+            throw new BadRequestException(requestDTO.getEmail() + " já cadastrado no sistema!");
+        });
         var user = User.builder()
                 .nome(requestDTO.getNome())
                 .email(requestDTO.getEmail())
@@ -40,19 +48,23 @@ public class AuthenticationService {
     }
 
     public AuthenticationResponseDTO authenticate(AuthenticationRequestDTO requestDTO) {
+        this.validator.validaEmail(requestDTO.getEmail());
 
-        //validação
+        var user = repository.findByEmail(requestDTO.getEmail())
+                .orElseThrow(() -> new UsernameNotFoundException("Usuario não encontrado com esse email: " + requestDTO.getEmail()));
 
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
-                      requestDTO.getEmail(),
+                        requestDTO.getEmail(),
                         requestDTO.getSenha()
                 )
         );
-        var user = repository.findByEmail(requestDTO.getEmail()).orElseThrow(() -> new UsernameNotFoundException("Usuario nao encontrado"));
+
         var jwtToken = jwtService.generateToken(user);
-        return  AuthenticationResponseDTO.builder()
+
+        return AuthenticationResponseDTO.builder()
                 .token(jwtToken)
                 .build();
     }
+
 }
