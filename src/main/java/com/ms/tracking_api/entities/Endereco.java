@@ -12,13 +12,13 @@ import java.io.Serializable;
 @AllArgsConstructor
 @Entity
 @Table(name = "tb_endereco")
-@SequenceGenerator(name = "SQ_ENDERECO", allocationSize = 1, sequenceName = "SQ_ENDERECO")
+@SequenceGenerator(name = "ENDERECO_SQ", allocationSize = 1, sequenceName = "ENDERECO_SQ")
 public class Endereco implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "SQ_ENDERECO")
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "ENDERECO_SQ")
     private Long idEndereco;
 
     private String logradouro;
