@@ -18,6 +18,8 @@ public class VagaResponse implements Serializable {
 
     private String vaga;
 
+    private Integer quantidade;
+
     private String chache;
 
     private String vestimenta;

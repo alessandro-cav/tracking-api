@@ -27,9 +27,12 @@ public class VagaRequest implements Serializable {
     @NotBlank(message = "O campo cachê não pode ser vazio.")
     private String chache;
 
-    @NotNull(message = "O campos vestimenta é obrigatório.")
-    @NotBlank(message = "O campos vestimenta não pode ser vazio.")
+    @NotNull(message = "O campo vestimenta é obrigatório.")
+    @NotBlank(message = "O campo vestimenta não pode ser vazio.")
     private String vestimenta;
+
+    @NotNull(message = "O campo quantidade de vagas disponivel é obrigatório.")
+    private Integer quantidade;
 
     private String observacao;
 }

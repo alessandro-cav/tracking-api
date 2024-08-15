@@ -32,6 +32,8 @@ public class Vaga  implements Serializable {
 
     private String vestimenta;
 
+    private Integer quantidade;
+
     private String observacao;
 
     @ManyToOne(fetch = FetchType.LAZY)
