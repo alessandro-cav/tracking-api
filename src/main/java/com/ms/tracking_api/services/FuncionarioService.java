@@ -33,12 +33,14 @@ public class FuncionarioService {
     public FuncionarioResponse salvar(FuncionarioRequest funcionarioRequest) {
         this.validator.validaCPF(funcionarioRequest.getCpf());
         this.validator.validaEmail(funcionarioRequest.getEmail());
-        Genero genero =  Genero.buscarGenero(funcionarioRequest.getGenero());
         this.repository.findByCpf(funcionarioRequest.getCpf()).ifPresent(funcionario -> {
             throw new BadRequestException(funcionarioRequest.getCpf() + " já cadastrado no sistema!");
         });
+        this.repository.findByEmail(funcionarioRequest.getEmail()).ifPresent(funcionario -> {
+            throw new BadRequestException(funcionarioRequest.getEmail() + " já cadastrado no sistema!");
+        });
         Funcionario funcionario = this.modelMapper.map(funcionarioRequest, Funcionario.class);
-        funcionario.setGenero(genero);
+        funcionario.setGenero(Genero.buscarGenero(funcionarioRequest.getGenero()));
         funcionario = this.repository.save(funcionario);
         return this.modelMapper.map(funcionario, FuncionarioResponse.class);
     }
@@ -75,6 +77,11 @@ public class FuncionarioService {
             if (!(funcionario.getCpf().equals(funcionarioRequest.getCpf()))) {
                 this.repository.findByCpf(funcionarioRequest.getCpf()).ifPresent(funcionario1 -> {
                     throw new BadRequestException(funcionarioRequest.getCpf() + " já cadastrado no sistema!");
+                });
+            }
+            if (!(funcionario.getEmail().equals(funcionarioRequest.getEmail()))) {
+                this.repository.findByEmail(funcionarioRequest.getEmail()).ifPresent(funcionario1 -> {
+                    throw new BadRequestException(funcionarioRequest.getEmail() + " já cadastrado no sistema!");
                 });
             }
             funcionarioRequest.setIdFuncionario(funcionario.getIdFuncionario());

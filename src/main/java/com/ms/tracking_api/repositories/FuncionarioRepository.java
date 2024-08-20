@@ -15,4 +15,6 @@ public interface FuncionarioRepository extends PagingAndSortingRepository<Funcio
     Optional<Funcionario> findByCpf(String cpf);
 
     List<Funcionario> findByNomeContainingIgnoreCase(String nome, PageRequest pageRequest);
+
+    Optional<Funcionario> findByEmail(String email);
 }
