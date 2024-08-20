@@ -18,7 +18,7 @@ public class Validator {
         try {
             cpfValidator.assertValid(cpf);
         } catch (InvalidStateException e) {
-            throw new BadRequestException("CPF inválido: " + e.getMessage());
+            throw new BadRequestException("CPF inválido");
         }
     }
 
@@ -27,7 +27,7 @@ public class Validator {
         try {
             cnpjValidator.assertValid(cnpj);
         } catch (InvalidStateException e) {
-            throw new BadRequestException("CNPJ inválido: " + e.getMessage());
+            throw new BadRequestException("CNPJ inválido");
         }
     }
 
