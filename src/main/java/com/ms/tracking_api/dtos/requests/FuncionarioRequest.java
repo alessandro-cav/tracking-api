@@ -41,8 +41,8 @@ public class FuncionarioRequest implements Serializable {
         @NotBlank(message = "O campo email não pode ser vazio.")
         private String email;
 
-        @NotNull(message = "A lista de documentos é obrigatória.")
-        @NotBlank(message = "lista não pode ser vazia.")
-        @NotEmpty(message = "A lista de documentos não pode estar vazia.")
-        private List<String> documentos;
+//        @NotNull(message = "A lista de documentos é obrigatória.")
+//        @NotBlank(message = "lista não pode ser vazia.")
+//        @NotEmpty(message = "A lista de documentos não pode estar vazia.")
+//        private List<String> documentos;
 }

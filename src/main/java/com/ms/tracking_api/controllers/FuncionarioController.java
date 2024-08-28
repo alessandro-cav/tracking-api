@@ -28,7 +28,7 @@ public class FuncionarioController {
 
     @PostMapping
     @Operation(summary = "Criar funcionario", description = "Endpoint para criar funcionario")
-    public ResponseEntity<FuncionarioResponse> salvar(@Valid @RequestBody FuncionarioRequest request/*, List<MultipartFile> documentos*/) {
+    public ResponseEntity<FuncionarioResponse> salvar(@Valid @RequestBody FuncionarioRequest request, List<MultipartFile> documentos) {
         return ResponseEntity.ok(this.service.salvar(request));
     }
 
