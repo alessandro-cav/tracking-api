@@ -19,14 +19,14 @@ import java.util.List;
 @RequestMapping("/{idFuncionarios}/contas")
 @RequiredArgsConstructor
 
-@Tag(name = "Conta do funcionario Controller", description = "APIs relacionadas o conta do funcionario controller")
+@Tag(name = "Conta do funcionario Controller", description = "APIs relacionadas  conta do funcionario controller")
 @SecurityRequirement(name = "bearerAuth")
 public class ContaFuncionarioController {
 
     private final ContaService service;
 
     @PostMapping
-    @Operation(summary = "Salvar o conta do funcionario", description = "Endpoint para salvar o conta do funcionario")
+    @Operation(summary = "Salvar o conta do funcionario", description = "Endpoint para salvar  conta do funcionario")
     public ResponseEntity<ContaResponse> salvar(@PathVariable(name = "idFuncionarios") Long idFuncionarios, @Valid @RequestBody ContaRequest request) {
         return ResponseEntity.ok(this.service.salvarContaDoFuncionario(idFuncionarios, request));
     }
