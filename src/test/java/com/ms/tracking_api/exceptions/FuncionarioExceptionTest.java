@@ -1,4 +1,4 @@
-package com.ms.tracking_api.exeptions;
+package com.ms.tracking_api.exceptions;
 
 import com.ms.tracking_api.configs.validations.Validator;
 import com.ms.tracking_api.dtos.requests.FuncionarioRequest;
