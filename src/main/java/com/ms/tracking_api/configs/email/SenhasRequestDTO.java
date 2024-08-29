@@ -2,9 +2,15 @@ package com.ms.tracking_api.configs.email;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
 
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class SenhasRequestDTO implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -17,19 +23,4 @@ public class SenhasRequestDTO implements Serializable {
     @NotNull(message = "{senha02.not.null}")
     private String senha02;
 
-    public String getSenha01() {
-        return senha01;
-    }
-
-    public void setSenha01(String senha01) {
-        this.senha01 = senha01;
-    }
-
-    public String getSenha02() {
-        return senha02;
-    }
-
-    public void setSenha02(String senha02) {
-        this.senha02 = senha02;
-    }
 }

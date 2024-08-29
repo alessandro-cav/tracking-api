@@ -13,7 +13,6 @@ public class EnviaEmail {
     private final JavaMailSender javaMailSender;
 
     public void enviarEmail(String destino, String nome, String link) {
-
         try {
             String titulo = "Redefinição de Senha";
 
@@ -30,7 +29,5 @@ public class EnviaEmail {
         } catch (MailException e) {
             throw new RuntimeException(e);
         }
-
     }
-
 }

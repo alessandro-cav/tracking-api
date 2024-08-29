@@ -9,7 +9,6 @@ import io.jsonwebtoken.SignatureAlgorithm;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -33,14 +32,7 @@ public class EmailService {
         this.validar.validaEmail(loginRequestDTO.getEmail());
         User user = this.repository.findByEmail(loginRequestDTO.getEmail()).get();
         Map<String, Object> extraClaims = new HashMap<>();
-        String token = Jwts
-                .builder()
-                .setClaims(extraClaims)
-                .setSubject(user.getEmail())
-                .setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis() + 1800000))
-                .signWith(this.jwtService.getSignInKey(), SignatureAlgorithm.HS256)
-                .compact();
+        String token = Jwts.builder().setClaims(extraClaims).setSubject(user.getEmail()).setIssuedAt(new Date(System.currentTimeMillis())).setExpiration(new Date(System.currentTimeMillis() + 1800000)).signWith(this.jwtService.getSignInKey(), SignatureAlgorithm.HS256).compact();
 
         String link = "http://localhost:8080/ms-tracking/users/reset_password?token=" + token;
 
@@ -69,5 +61,4 @@ public class EmailService {
             throw new RuntimeException("Token expirado: " + e.getMessage());
         }
     }
-
 }
