@@ -7,6 +7,7 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import org.springframework.context.annotation.Configuration;
+
 import javax.crypto.spec.SecretKeySpec;
 import java.security.Key;
 import java.util.Base64;
@@ -27,7 +28,7 @@ public class TokenConfig {
         return Jwts.builder()
                 .claim("idFuncionario", idFuncionario.toString())
                 .claim("tipoAtividade", tipoAtividade)
-               .claim("idVaga", idVaga.toString())
+                .claim("idVaga", idVaga.toString())
                 .setExpiration(new Date(System.currentTimeMillis() + EXPIRATION_TIME))
                 .signWith(getSigningKey(), SignatureAlgorithm.HS256)
                 .compact();
@@ -43,8 +44,8 @@ public class TokenConfig {
 
             String idFuncionario = claims.get("idFuncionario", String.class);
             String tipoAtividade = claims.get("tipoAtividade", String.class);
-           String idVaga = claims.get("idVaga", String.class);
-            return new TokenInfo(Long.parseLong(idFuncionario), tipoAtividade,Long.parseLong(idVaga));
+            String idVaga = claims.get("idVaga", String.class);
+            return new TokenInfo(Long.parseLong(idFuncionario), tipoAtividade, Long.parseLong(idVaga));
         } catch (Exception e) {
             throw new BadRequestException("Token inválido ou expirado");
         }

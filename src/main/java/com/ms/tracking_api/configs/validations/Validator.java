@@ -1,13 +1,11 @@
 package com.ms.tracking_api.configs.validations;
 
-
 import br.com.caelum.stella.validation.CNPJValidator;
 import br.com.caelum.stella.validation.CPFValidator;
 import br.com.caelum.stella.validation.InvalidStateException;
 import com.ms.tracking_api.handlers.BadRequestException;
 import org.apache.commons.validator.routines.EmailValidator;
 import org.springframework.context.annotation.Configuration;
-
 
 
 @Configuration
