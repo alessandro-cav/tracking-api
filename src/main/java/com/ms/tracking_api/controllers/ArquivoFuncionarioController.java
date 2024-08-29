@@ -57,7 +57,7 @@ public class ArquivoFuncionarioController {
         this.service.deletePeloId(idFuncionarios, idArquivo);
         return ResponseEntity.noContent().build();
     }
-    
+
     @GetMapping("/download/{arquivo}")
     @Operation(summary = "Baixar arquivo", description = "Endpoint para baixar um arquivo")
     public ResponseEntity<org.springframework.core.io.Resource> downloadArquivo(
