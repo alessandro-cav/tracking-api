@@ -6,8 +6,11 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import java.io.Serializable;
+import java.time.LocalDate;
 
 @Data
 @NoArgsConstructor
@@ -37,4 +40,10 @@ public class Conta implements Serializable {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "funcionario")
     private Funcionario funcionario;
+
+    @CreationTimestamp
+    private LocalDate dataCriacao;
+
+    @UpdateTimestamp
+    private LocalDate dataAtualizacao;
 }
