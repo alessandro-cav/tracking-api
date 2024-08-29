@@ -1,6 +1,5 @@
 package com.ms.tracking_api.configs.auth;
 
-
 import com.ms.tracking_api.configs.jwt.JwtService;
 import com.ms.tracking_api.configs.validations.Validator;
 import com.ms.tracking_api.entities.User;
@@ -42,9 +41,9 @@ public class AuthenticationService {
         repository.save(user);
 
         var jwtToken = jwtService.generateToken(user);
-    return  AuthenticationResponseDTO.builder()
-            .token(jwtToken)
-            .build();
+        return AuthenticationResponseDTO.builder()
+                .token(jwtToken)
+                .build();
     }
 
     public AuthenticationResponseDTO authenticate(AuthenticationRequestDTO requestDTO) {
@@ -66,5 +65,4 @@ public class AuthenticationService {
                 .token(jwtToken)
                 .build();
     }
-
 }

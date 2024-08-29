@@ -1,7 +1,5 @@
 package com.ms.tracking_api.configs.auth;
 
-
-
 import com.ms.tracking_api.repositories.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -22,7 +20,7 @@ public class ApplicationConfig {
     private final UserRepository repository;
 
     @Bean
-    public UserDetailsService userDetailsService(){
+    public UserDetailsService userDetailsService() {
         return username -> repository.findByEmail(username)
                 .orElseThrow(() -> new UsernameNotFoundException("Usuario não encontrado"));
     }
@@ -42,7 +40,6 @@ public class ApplicationConfig {
 
     @Bean
     public PasswordEncoder passwordEncoder() {
-        return  new BCryptPasswordEncoder();
+        return new BCryptPasswordEncoder();
     }
-
 }

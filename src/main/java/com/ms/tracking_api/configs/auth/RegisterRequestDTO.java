@@ -25,6 +25,5 @@ public class RegisterRequestDTO {
     @NotBlank(message = "O campo senha não pode ser vazia.")
     private String senha;
 
-    private String role; // vai ser passado pelo front
-
+    private String role;
 }
