@@ -27,6 +27,7 @@ public class RecuperarSenhaController {
         this.service.esqueciMinhaSenha(loginRequestDTO);
         return ResponseEntity.ok().build();
     }
+
     @Operation(summary = "Nova senha", description = "Endpoint para inclusão da nova senha")
     @PostMapping("/reset_password")
     public ResponseEntity<MensagemResponseDTO> resetarSenha(@RequestParam String token,

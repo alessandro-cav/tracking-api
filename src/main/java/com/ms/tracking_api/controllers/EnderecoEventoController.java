@@ -51,7 +51,7 @@ public class EnderecoEventoController {
     @DeleteMapping("/{idEndereco}")
     @Operation(summary = "Deletar o endereço do evento", description = "Endpoint para deletar o endereço do evento")
     public ResponseEntity<Void> deletePeloId(@PathVariable(name = "idEventos") Long idEventos, @PathVariable(name = "idEndereco") Long idEndereco) {
-        this.service.deleteEnderecoDoEvento(idEventos,idEndereco);
+        this.service.deleteEnderecoDoEvento(idEventos, idEndereco);
         return ResponseEntity.noContent().build();
     }
 
@@ -60,7 +60,7 @@ public class EnderecoEventoController {
     public ResponseEntity<EnderecoResponse> atualizar(@PathVariable(name = "idEventos") Long idEventos,
                                                       @PathVariable(name = "idEndereco") Long idEndereco,
                                                       @Valid @RequestBody EnderecoRequest request) {
-        return ResponseEntity.ok(this.service.atualizarEnderecoDoEvento(idEventos,idEndereco, request));
+        return ResponseEntity.ok(this.service.atualizarEnderecoDoEvento(idEventos, idEndereco, request));
     }
 
     @GetMapping("/buscarPorNome")
@@ -72,7 +72,7 @@ public class EnderecoEventoController {
                                                                 @RequestParam String ordenarPor,
                                                                 @RequestParam String logradouro) {
         return ResponseEntity.ok(this.service
-                .buscarEnderecoDoEventoPorNome(idEventos,logradouro, PageRequest.of(pagina, quantidade, Sort.by(Sort.Direction.valueOf(ordem), ordenarPor))));
+                .buscarEnderecoDoEventoPorNome(idEventos, logradouro, PageRequest.of(pagina, quantidade, Sort.by(Sort.Direction.valueOf(ordem), ordenarPor))));
 
     }
 

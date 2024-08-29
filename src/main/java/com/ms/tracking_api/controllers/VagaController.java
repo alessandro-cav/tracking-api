@@ -35,12 +35,12 @@ public class VagaController {
     }
 
 
-  @GetMapping
-  @Operation(summary = "Listar vaga", description = "Endpoint para listar vaga")
+    @GetMapping
+    @Operation(summary = "Listar vaga", description = "Endpoint para listar vaga")
     public ResponseEntity<List<VagaResponse>> buscarTodos(@RequestParam Integer pagina,
-                                                                  @RequestParam Integer quantidade,
-                                                                  @RequestParam String ordem,
-                                                                  @RequestParam String ordenarPor) {
+                                                          @RequestParam Integer quantidade,
+                                                          @RequestParam String ordem,
+                                                          @RequestParam String ordenarPor) {
         return ResponseEntity.ok(this.service
                 .buscarTodos(PageRequest.of(pagina, quantidade, Sort.by(Sort.Direction.valueOf(ordem), ordenarPor))));
 
@@ -53,8 +53,8 @@ public class VagaController {
         return ResponseEntity.ok(this.service.buscarPeloId(id));
     }
 
-   @DeleteMapping("/{id}")
-   @Operation(summary = "Deletar vaga", description = "Endpoint para deletar vaga")
+    @DeleteMapping("/{id}")
+    @Operation(summary = "Deletar vaga", description = "Endpoint para deletar vaga")
     public ResponseEntity<Void> deletePeloId(@PathVariable(name = "id") Long id) {
         this.service.delete(id);
         return ResponseEntity.noContent().build();
@@ -63,17 +63,17 @@ public class VagaController {
     @PutMapping("/{id}")
     @Operation(summary = "Atualizar vaga", description = "Endpoint para atualizar vaga")
     public ResponseEntity<VagaResponse> atualizar(@PathVariable(name = "id") Long id,
-                                                          @Valid @RequestBody VagaRequest request) {
+                                                  @Valid @RequestBody VagaRequest request) {
         return ResponseEntity.ok(this.service.atualizar(id, request));
     }
 
     @GetMapping("/buscarPorVaga")
     @Operation(summary = "Buscar vaga por vaga", description = "Endpoint para buscar vaga")
-    public ResponseEntity<List<VagaResponse>> buscarPorNome (@RequestParam Integer pagina,
-                                                           @RequestParam Integer quantidade,
-                                                           @RequestParam String ordem,
-                                                           @RequestParam String ordenarPor,
-                                                              @RequestParam String vaga) {
+    public ResponseEntity<List<VagaResponse>> buscarPorNome(@RequestParam Integer pagina,
+                                                            @RequestParam Integer quantidade,
+                                                            @RequestParam String ordem,
+                                                            @RequestParam String ordenarPor,
+                                                            @RequestParam String vaga) {
         return ResponseEntity.ok(this.service
                 .buscarPorNome(vaga, PageRequest.of(pagina, quantidade, Sort.by(Sort.Direction.valueOf(ordem), ordenarPor))));
 

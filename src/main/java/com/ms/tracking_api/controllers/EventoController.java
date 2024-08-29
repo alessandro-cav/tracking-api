@@ -33,12 +33,12 @@ public class EventoController {
     }
 
 
-  @GetMapping("/ListarTodos")
-  @Operation(summary = "Listar eventos antigos e novos", description = "Endpoint para listar eventos antigos e novos")
+    @GetMapping("/ListarTodos")
+    @Operation(summary = "Listar eventos antigos e novos", description = "Endpoint para listar eventos antigos e novos")
     public ResponseEntity<List<EventoResponse>> buscarTodos(@RequestParam Integer pagina,
-                                                                  @RequestParam Integer quantidade,
-                                                                  @RequestParam String ordem,
-                                                                  @RequestParam String ordenarPor) {
+                                                            @RequestParam Integer quantidade,
+                                                            @RequestParam String ordem,
+                                                            @RequestParam String ordenarPor) {
         return ResponseEntity.ok(this.service
                 .buscarTodos(PageRequest.of(pagina, quantidade, Sort.by(Sort.Direction.valueOf(ordem), ordenarPor))));
 
@@ -47,9 +47,9 @@ public class EventoController {
     @GetMapping("/ListarNovos")
     @Operation(summary = "Listar eventos novos", description = "Endpoint para listar eventos  novos")
     public ResponseEntity<List<EventoResponse>> buscarNovoEventos(@RequestParam Integer pagina,
-                                                            @RequestParam Integer quantidade,
-                                                            @RequestParam String ordem,
-                                                            @RequestParam String ordenarPor) {
+                                                                  @RequestParam Integer quantidade,
+                                                                  @RequestParam String ordem,
+                                                                  @RequestParam String ordenarPor) {
         return ResponseEntity.ok(this.service
                 .buscarNovoEventos(PageRequest.of(pagina, quantidade, Sort.by(Sort.Direction.valueOf(ordem), ordenarPor))));
 
@@ -61,8 +61,8 @@ public class EventoController {
         return ResponseEntity.ok(this.service.buscarPeloId(id));
     }
 
-   @DeleteMapping("/{id}")
-   @Operation(summary = "Deletar evento", description = "Endpoint para deletar evento")
+    @DeleteMapping("/{id}")
+    @Operation(summary = "Deletar evento", description = "Endpoint para deletar evento")
     public ResponseEntity<Void> deletePeloId(@PathVariable(name = "id") Long id) {
         this.service.delete(id);
         return ResponseEntity.noContent().build();
@@ -71,16 +71,16 @@ public class EventoController {
     @PutMapping("/{id}")
     @Operation(summary = "Atualizar evento", description = "Endpoint para atualizar evento")
     public ResponseEntity<EventoResponse> atualizar(@PathVariable(name = "id") Long id,
-                                                          @Valid @RequestBody EventoRequest request) {
+                                                    @Valid @RequestBody EventoRequest request) {
         return ResponseEntity.ok(this.service.atualizar(id, request));
     }
 
     @GetMapping("/buscarPorNome")
     @Operation(summary = "Buscar evento por nome", description = "Endpoint para buscar evento")
-    public ResponseEntity<List<EventoResponse>> buscarPorNome (@RequestParam Integer pagina,
-                                                           @RequestParam Integer quantidade,
-                                                           @RequestParam String ordem,
-                                                           @RequestParam String ordenarPor,
+    public ResponseEntity<List<EventoResponse>> buscarPorNome(@RequestParam Integer pagina,
+                                                              @RequestParam Integer quantidade,
+                                                              @RequestParam String ordem,
+                                                              @RequestParam String ordenarPor,
                                                               @RequestParam String nome) {
         return ResponseEntity.ok(this.service
                 .buscarPorNome(nome, PageRequest.of(pagina, quantidade, Sort.by(Sort.Direction.valueOf(ordem), ordenarPor))));

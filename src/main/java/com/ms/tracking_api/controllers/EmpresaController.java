@@ -32,12 +32,12 @@ public class EmpresaController {
     }
 
 
-  @GetMapping
-  @Operation(summary = "Listar a empresa", description = "Endpoint para listar empresa")
+    @GetMapping
+    @Operation(summary = "Listar a empresa", description = "Endpoint para listar empresa")
     public ResponseEntity<List<EmpresaResponse>> buscarTodos(@RequestParam Integer pagina,
-                                                                  @RequestParam Integer quantidade,
-                                                                  @RequestParam String ordem,
-                                                                  @RequestParam String ordenarPor) {
+                                                             @RequestParam Integer quantidade,
+                                                             @RequestParam String ordem,
+                                                             @RequestParam String ordenarPor) {
         return ResponseEntity.ok(this.service
                 .buscarTodos(PageRequest.of(pagina, quantidade, Sort.by(Sort.Direction.valueOf(ordem), ordenarPor))));
 
@@ -50,8 +50,8 @@ public class EmpresaController {
         return ResponseEntity.ok(this.service.buscarPeloId(id));
     }
 
-   @DeleteMapping("/{id}")
-   @Operation(summary = "Deletar a empresa", description = "Endpoint para deletar empresa")
+    @DeleteMapping("/{id}")
+    @Operation(summary = "Deletar a empresa", description = "Endpoint para deletar empresa")
     public ResponseEntity<Void> deletePeloId(@PathVariable(name = "id") Long id) {
         this.service.delete(id);
         return ResponseEntity.noContent().build();
@@ -60,17 +60,17 @@ public class EmpresaController {
     @PutMapping("/{id}")
     @Operation(summary = "Atualizar a empresa", description = "Endpoint para =atualizar empresa")
     public ResponseEntity<EmpresaResponse> atualizar(@PathVariable(name = "id") Long id,
-                                                          @Valid @RequestBody EmpresaRequest request) {
+                                                     @Valid @RequestBody EmpresaRequest request) {
         return ResponseEntity.ok(this.service.atualizar(id, request));
     }
 
     @GetMapping("/buscarPorNome")
     @Operation(summary = "Buscar a empresa por nome", description = "Endpoint para buscar empresa")
-    public ResponseEntity<List<EmpresaResponse>> buscarPorNome (@RequestParam Integer pagina,
-                                                           @RequestParam Integer quantidade,
-                                                           @RequestParam String ordem,
-                                                           @RequestParam String ordenarPor,
-                                                              @RequestParam String nome) {
+    public ResponseEntity<List<EmpresaResponse>> buscarPorNome(@RequestParam Integer pagina,
+                                                               @RequestParam Integer quantidade,
+                                                               @RequestParam String ordem,
+                                                               @RequestParam String ordenarPor,
+                                                               @RequestParam String nome) {
         return ResponseEntity.ok(this.service
                 .buscarPorNome(nome, PageRequest.of(pagina, quantidade, Sort.by(Sort.Direction.valueOf(ordem), ordenarPor))));
 

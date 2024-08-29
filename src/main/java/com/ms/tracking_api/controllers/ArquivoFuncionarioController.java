@@ -30,7 +30,7 @@ public class ArquivoFuncionarioController {
     @PostMapping(value = "/upload", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @Operation(summary = "Upload de arquivo", description = "Endpoint para upload de um único arquivo")
     public ResponseEntity<Void> salvar(@PathVariable(name = "idFuncionarios") Long idFuncionarios,
-                                              @RequestParam("arquivo") MultipartFile arquivo) {
+                                       @RequestParam("arquivo") MultipartFile arquivo) {
         this.service.salvar(idFuncionarios, arquivo);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
@@ -38,10 +38,10 @@ public class ArquivoFuncionarioController {
     @GetMapping
     @Operation(summary = "Listar arquivos do funcionário", description = "Endpoint para listar as arquivos do funcionário")
     public ResponseEntity<List<String>> buscarTodos(@PathVariable(name = "idFuncionarios") Long idFuncionarios,
-                                                          @RequestParam Integer pagina,
-                                                          @RequestParam Integer quantidade,
-                                                          @RequestParam String ordem,
-                                                          @RequestParam String ordenarPor) {
+                                                    @RequestParam Integer pagina,
+                                                    @RequestParam Integer quantidade,
+                                                    @RequestParam String ordem,
+                                                    @RequestParam String ordenarPor) {
         return ResponseEntity.ok(service.buscarTodos(idFuncionarios, PageRequest.of(pagina, quantidade, Sort.by(Sort.Direction.valueOf(ordem), ordenarPor))));
     }
 
