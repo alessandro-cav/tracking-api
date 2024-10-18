@@ -17,7 +17,7 @@ import java.util.Date;
 public class TokenConfig {
 
     private static final String SECRET_KEY = "l5sdxk7WnLZqI3jl4rE9ABK7Wxy4TX7GJuCw1v/RWlM=";
-    private static final long EXPIRATION_TIME = 300000; // 5 minutos em milissegundos
+    private static final long EXPIRATION_TIME = 300000;
 
     private static Key getSigningKey() {
         byte[] keyBytes = Base64.getDecoder().decode(SECRET_KEY);
