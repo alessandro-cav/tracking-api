@@ -11,7 +11,6 @@ import org.springframework.context.annotation.Configuration;
 
 
 @Configuration
-@OpenAPIDefinition(servers = {@io.swagger.v3.oas.annotations.servers.Server(url = "/", description = "default server" ) })
 public class OpenApiConfig {
     @Bean
     public GroupedOpenApi privateApi() {
