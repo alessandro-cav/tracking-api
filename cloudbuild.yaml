@@ -1,9 +1,5 @@
 steps:
 
-  - name: 'gcr.io/cloud-builders/gcloud'
-    args: ['app', 'create', '--region', 'us-central']
-
-
   - name: 'gcr.io/cloud-builders/mvn'
     args: ['clean', 'package']
 
@@ -13,4 +9,3 @@ steps:
 
 options:
   default_logs_bucket_behavior: REGIONAL_USER_OWNED_BUCKET
-
