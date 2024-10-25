@@ -8,4 +8,4 @@ steps:
     args: ['app', 'deploy']
 
 options:
-  logs_bucket: gs://bucket103
+  default_logs_bucket_behavior: REGIONAL_USER_OWNED_BUCKET
