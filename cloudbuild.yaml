@@ -1,8 +1,13 @@
 steps:
+  # Passo 1: Compilar a aplicação com Maven
   - name: 'gcr.io/cloud-builders/mvn'
     args: ['clean', 'package']
 
+  # Passo 2: Fazer o deploy no App Engine (ou outra plataforma)
   - name: 'gcr.io/cloud-builders/gcloud'
     args: ['app', 'deploy']
 
 options:
+  default_logs_bucket_behavior: REGIONAL_USER_OWNED_BUCKET  # Comportamento padrão
+
+timeout: '1600s'
