@@ -3,9 +3,8 @@ package com.ms.tracking_api.services;
 import com.ms.tracking_api.dtos.requests.ContaRequest;
 import com.ms.tracking_api.dtos.responses.ContaResponse;;
 import com.ms.tracking_api.entities.Conta;
-import com.ms.tracking_api.entities.Funcionario;
+import com.ms.tracking_api.entities.Usuario;
 import com.ms.tracking_api.enuns.Pix;
-import com.ms.tracking_api.enuns.TipoConta;
 import com.ms.tracking_api.handlers.BadRequestException;
 import com.ms.tracking_api.handlers.ObjetoNotFoundException;
 import com.ms.tracking_api.repositories.ContaRepository;
@@ -23,7 +22,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class ContaService {
 
-    private final FuncionarioService funcionarioService;
+    private final UsuarioService usuarioService;
 
     private final ContaRepository contaRepository;
 
@@ -31,37 +30,37 @@ public class ContaService {
 
 
     @Transactional
-    public ContaResponse salvarContaDoFuncionario(Long idFuncionarios, ContaRequest request) {
-        Funcionario funcionario = this.funcionarioService.buscarFuncionarioPeloId(idFuncionarios);
+    public ContaResponse salvarContaDoUsuario(Long idUsuario, ContaRequest request) {
+        Usuario usuario = this.usuarioService.buscarUsuarioPeloId(idUsuario);
         Pix pix = Pix.buscarChavePix(request.getPix());
         Conta conta = this.modelMapper.map(request, Conta.class);
-        conta.setFuncionario(funcionario);
+        conta.setUsuario(usuario);
         conta.setPix(pix);
         conta = this.contaRepository.save(conta);
         return this.modelMapper.map(conta, ContaResponse.class);
     }
 
     @Transactional(readOnly = true)
-    public List<ContaResponse> buscarTodasContaDoFuncionario(Long idFuncionarios, PageRequest pageRequest) {
-        Funcionario funcionario = this.funcionarioService.buscarFuncionarioPeloId(idFuncionarios);
-        List<Conta> contas = this.contaRepository.findAllByFuncionarioIdFuncionario(funcionario.getIdFuncionario(), pageRequest);
+    public List<ContaResponse> buscarTodasContaDoUsuario(Long idUsuario, PageRequest pageRequest) {
+        Usuario usuario = this.usuarioService.buscarUsuarioPeloId(idUsuario);
+        List<Conta> contas = this.contaRepository.findAllByUsuarioIdUsuario(usuario.getIdUsuario(), pageRequest);
         return contas.stream().map(conta -> {
             return this.modelMapper.map(conta, ContaResponse.class);
         }).collect(Collectors.toList());
     }
 
     @Transactional(readOnly = true)
-    public ContaResponse buscarContaDoFuncionarioPeloId(Long idFuncionarios, Long idConta) {
-        Funcionario funcionario = this.funcionarioService.buscarFuncionarioPeloId(idFuncionarios);
-        Conta conta =  this.contaRepository.findByFuncionarioIdFuncionarioAndIdConta(funcionario.getIdFuncionario(), idConta)
+    public ContaResponse buscarContaDoUsuarioPeloId(Long idUsuario, Long idConta) {
+        Usuario usuario = this.usuarioService.buscarUsuarioPeloId(idUsuario);
+        Conta conta =  this.contaRepository.findByUsuarioIdUsuarioAndIdConta(usuario.getIdUsuario(), idConta)
                 .orElseThrow(() -> new ObjetoNotFoundException("Conta não encontrada!"));
         return this.modelMapper.map(conta, ContaResponse.class);
     }
 
     @Transactional
-    public void deleteContaDoFuncionario(Long idFuncionarios, Long idConta) {
-        Funcionario funcionario = this.funcionarioService.buscarFuncionarioPeloId(idFuncionarios);
-        this.contaRepository.findByFuncionarioIdFuncionarioAndIdConta(funcionario.getIdFuncionario(), idConta).ifPresentOrElse(conta -> {
+    public void deleteContaDoUsuario(Long idUsuario, Long idConta) {
+        Usuario usuario = this.usuarioService.buscarUsuarioPeloId(idUsuario);
+        this.contaRepository.findByUsuarioIdUsuarioAndIdConta(usuario.getIdUsuario(), idConta).ifPresentOrElse(conta -> {
             try {
                 this.contaRepository.delete(conta);
             } catch (DataIntegrityViolationException e) {
@@ -73,13 +72,13 @@ public class ContaService {
     }
 
     @Transactional
-    public ContaResponse atualizarContaDoFuncionario(Long idFuncionarios, Long idConta, ContaRequest request) {
-        Funcionario funcionario = this.funcionarioService.buscarFuncionarioPeloId(idFuncionarios);
+    public ContaResponse atualizarContaDoUsuario(Long idFuncionarios, Long idConta, ContaRequest request) {
+        Usuario usuario = this.usuarioService.buscarUsuarioPeloId(idFuncionarios);
         Pix pix = Pix.buscarChavePix(request.getPix());
-        return  this.contaRepository.findByFuncionarioIdFuncionarioAndIdConta(funcionario.getIdFuncionario(), idConta).map(conta -> {
+        return  this.contaRepository.findByUsuarioIdUsuarioAndIdConta(usuario.getIdUsuario(), idConta).map(conta -> {
             request.setIdConta(conta.getIdConta());
             conta = this.modelMapper.map(request, Conta.class);
-            conta.setFuncionario(funcionario);
+            conta.setUsuario(usuario);
             conta.setPix(pix);
             conta = this.contaRepository.save(conta);
             return this.modelMapper.map(conta, ContaResponse.class);
@@ -87,10 +86,10 @@ public class ContaService {
     }
 
     @Transactional(readOnly = true)
-    public List<ContaResponse> buscarContaDoFuncionarioPorTipoConta(Long idFuncionarios, String tipoPix, PageRequest pageRequest) {
-        Funcionario funcionario = this.funcionarioService.buscarFuncionarioPeloId(idFuncionarios);
+    public List<ContaResponse> buscarContaDoUsuarioPorTipoConta(Long idUsuario, String tipoPix, PageRequest pageRequest) {
+        Usuario usuario = this.usuarioService.buscarUsuarioPeloId(idUsuario);
         Pix pix = Pix.buscarChavePix(tipoPix);
-        return this.contaRepository.findByFuncionarioIdFuncionarioAndPix(funcionario.getIdFuncionario(), pix, pageRequest).stream()
+        return this.contaRepository.findByUsuarioIdUsuarioAndPix(usuario.getIdUsuario(), pix, pageRequest).stream()
                 .map(conta -> this.modelMapper.map(conta, ContaResponse.class))
                 .collect(Collectors.toList());
     }

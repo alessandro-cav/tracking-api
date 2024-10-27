@@ -11,11 +11,11 @@ import java.time.LocalDate;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class FuncionarioResponse implements Serializable {
+public class UsuarioResponse implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    private Long idFuncionario;
+    private Long idUsuario;
 
     private String nome;
 

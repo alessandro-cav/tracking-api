@@ -4,7 +4,7 @@ import com.ms.tracking_api.dtos.requests.EnderecoRequest;
 import com.ms.tracking_api.dtos.responses.EnderecoResponse;
 import com.ms.tracking_api.entities.Endereco;
 import com.ms.tracking_api.entities.Evento;
-import com.ms.tracking_api.entities.Funcionario;
+import com.ms.tracking_api.entities.Usuario;
 import com.ms.tracking_api.handlers.BadRequestException;
 import com.ms.tracking_api.handlers.ObjetoNotFoundException;
 import com.ms.tracking_api.repositories.EnderecoRepository;
@@ -24,7 +24,7 @@ public class EnderecoService {
 
     private final EventoService eventoService;
 
-    private final FuncionarioService funcionarioService;
+    private final UsuarioService usuarioService;
 
     private final EnderecoRepository enderecoRepository;
 
@@ -91,35 +91,35 @@ public class EnderecoService {
     }
 
     @Transactional
-    public EnderecoResponse salvarEnderecoDoFuncionario(Long idFuncionarios, EnderecoRequest request) {
-        Funcionario funcionario = this.funcionarioService.buscarFuncionarioPeloId(idFuncionarios);
+    public EnderecoResponse salvarEnderecoDoUsuario(Long idUsuario, EnderecoRequest request) {
+        Usuario usuario = this.usuarioService.buscarUsuarioPeloId(idUsuario);
         Endereco endereco = this.modelMapper.map(request, Endereco.class);
-        endereco.setFuncionario(funcionario);
+        endereco.setUsuario(usuario);
         endereco = this.enderecoRepository.save(endereco);
         return this.modelMapper.map(endereco, EnderecoResponse.class);
     }
 
     @Transactional(readOnly = true)
-    public List<EnderecoResponse> buscarTodosEnderecoDoFuncionario(Long idFuncionarios, PageRequest pageRequest) {
-        Funcionario funcionario = this.funcionarioService.buscarFuncionarioPeloId(idFuncionarios);
-        List<Endereco> enderecos = this.enderecoRepository.findAllByFuncionarioIdFuncionario(funcionario.getIdFuncionario(), pageRequest);
+    public List<EnderecoResponse> buscarTodosEnderecoDoUsuario(Long idUsuario, PageRequest pageRequest) {
+        Usuario usuario = this.usuarioService.buscarUsuarioPeloId(idUsuario);
+        List<Endereco> enderecos = this.enderecoRepository.findAllByUsuarioIdUsuario(usuario.getIdUsuario(), pageRequest);
         return enderecos.stream().map(endereco -> {
             return this.modelMapper.map(endereco, EnderecoResponse.class);
         }).collect(Collectors.toList());
     }
 
     @Transactional(readOnly = true)
-    public EnderecoResponse buscarEnderecoDoFuncionarioPeloId(Long idFuncionarios, Long idEndereco) {
-        Funcionario funcionario = this.funcionarioService.buscarFuncionarioPeloId(idFuncionarios);
-        Endereco endereco =  this.enderecoRepository.findByFuncionarioIdFuncionarioAndIdEndereco(funcionario.getIdFuncionario(), idEndereco)
+    public EnderecoResponse buscarEnderecoDoUsuarioPeloId(Long idUsuario, Long idEndereco) {
+        Usuario usuario = this.usuarioService.buscarUsuarioPeloId(idUsuario);
+        Endereco endereco =  this.enderecoRepository.findByUsuarioIdUsuarioAndIdEndereco(usuario.getIdUsuario(), idEndereco)
                 .orElseThrow(() -> new ObjetoNotFoundException("Endereço não encontrado!"));
         return this.modelMapper.map(endereco, EnderecoResponse.class);
     }
 
     @Transactional
-    public void deleteEnderecoDoFuncionario(Long idFuncionarios, Long idEndereco) {
-        Funcionario funcionario = this.funcionarioService.buscarFuncionarioPeloId(idFuncionarios);
-        this.enderecoRepository.findByFuncionarioIdFuncionarioAndIdEndereco(funcionario.getIdFuncionario(), idEndereco).ifPresentOrElse(endereco -> {
+    public void deleteEnderecoDoUsuario(Long idUsuario, Long idEndereco) {
+        Usuario usuario = this.usuarioService.buscarUsuarioPeloId(idUsuario);
+        this.enderecoRepository.findByUsuarioIdUsuarioAndIdEndereco(usuario.getIdUsuario(), idEndereco).ifPresentOrElse(endereco -> {
             try {
                 this.enderecoRepository.delete(endereco);
             } catch (DataIntegrityViolationException e) {
@@ -131,21 +131,21 @@ public class EnderecoService {
     }
 
     @Transactional
-    public EnderecoResponse atualizarEnderecoDoFuncionario(Long idFuncionarios, Long idEndereco, EnderecoRequest request) {
-        Funcionario funcionario = this.funcionarioService.buscarFuncionarioPeloId(idFuncionarios);
-        return  this.enderecoRepository.findByFuncionarioIdFuncionarioAndIdEndereco(funcionario.getIdFuncionario(), idEndereco).map(endereco -> {
+    public EnderecoResponse atualizarEnderecoDoUsuario(Long idUsuario, Long idEndereco, EnderecoRequest request) {
+        Usuario usuario = this.usuarioService.buscarUsuarioPeloId(idUsuario);
+        return  this.enderecoRepository.findByUsuarioIdUsuarioAndIdEndereco(usuario.getIdUsuario(), idEndereco).map(endereco -> {
             request.setIdEndereco(endereco.getIdEndereco());
             endereco = this.modelMapper.map(request, Endereco.class);
-            endereco.setFuncionario(funcionario);
+            endereco.setUsuario(usuario);
             endereco = this.enderecoRepository.save(endereco);
             return this.modelMapper.map(endereco, EnderecoResponse.class);
         }).orElseThrow(() -> new ObjetoNotFoundException("Endereço não encontrado!"));
     }
 
     @Transactional(readOnly = true)
-    public List<EnderecoResponse> buscarEnderecoDoFuncionarioPorNome(Long idFuncionarios, String logradouro, PageRequest pageRequest) {
-        Funcionario funcionario = this.funcionarioService.buscarFuncionarioPeloId(idFuncionarios);
-        return this.enderecoRepository.findByFuncionarioIdFuncionarioAndLogradouroContainingIgnoreCase(funcionario.getIdFuncionario(), logradouro, pageRequest).stream()
+    public List<EnderecoResponse> buscarEnderecoDoUsuarioPorNome(Long idUsuario, String logradouro, PageRequest pageRequest) {
+        Usuario usuario = this.usuarioService.buscarUsuarioPeloId(idUsuario);
+        return this.enderecoRepository.findByUsuarioIdUsuarioAndLogradouroContainingIgnoreCase(usuario.getIdUsuario(), logradouro, pageRequest).stream()
                 .map(endereco -> this.modelMapper.map(endereco, EnderecoResponse.class))
                 .collect(Collectors.toList());
     }

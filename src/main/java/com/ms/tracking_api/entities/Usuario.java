@@ -16,15 +16,13 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "tb_funcionario")
-@SequenceGenerator(name = "SQ_FUNCIONARIO", allocationSize = 1, sequenceName = "SQ_FUNCIONARIO")
-public class Funcionario implements Serializable {
+@Table(name = "tb_usuario")
+public class Usuario implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "SQ_FUNCIONARIO")
-    private Long idFuncionario;
+    private Long idUsuario;
 
     private String nome;
 
@@ -39,17 +37,23 @@ public class Funcionario implements Serializable {
     @Enumerated(EnumType.STRING)
     private Genero genero;
 
-    @OneToMany(mappedBy = "funcionario")
+    @OneToMany(mappedBy = "usuario")
     private List<RegistrarAtividade> registrarAtividades;
 
-    @OneToMany(mappedBy = "funcionario")
+    @OneToMany(mappedBy = "usuario")
     private List<Endereco> enderecos;
 
-    @OneToMany(mappedBy = "funcionario")
+    @OneToMany(mappedBy = "usuario")
     private List<Conta> contas;
 
-    @OneToMany(mappedBy = "funcionario")
-    private List<Arquivo> arquivos;
+    @OneToMany(mappedBy = "usuario")
+    private List<Curriculo> curriculos;
+
+    @OneToMany(mappedBy = "usuario")
+    private List<Aso> asos;
+
+    @OneToMany(mappedBy = "usuario")
+    private List<Imagem> imagens;
 
     @CreationTimestamp
     private LocalDate dataCriacao;

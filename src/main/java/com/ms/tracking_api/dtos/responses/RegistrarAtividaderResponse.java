@@ -24,7 +24,7 @@ public class RegistrarAtividaderResponse implements Serializable {
 
     private String evento;
 
-    private Long idFuncionario;
+    private Long idUsuario;
 
     private Long idVaga;
 

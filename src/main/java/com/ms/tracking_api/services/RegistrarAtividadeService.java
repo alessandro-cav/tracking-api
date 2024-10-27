@@ -34,18 +34,18 @@ public class RegistrarAtividadeService {
 
     private final VagaService vagaService;
 
-    private final FuncionarioService funcionarioService;
+    private final UsuarioService usuarioService;
 
     private final RegistrarAtividadeRepository repository;
 
-    private final FuncionarioVagaService funcionarioVagaService;
+    private final UsuarioVagaService usuarioVagaService;
 
     private final TokenConfig tokenConfig;
 
     @Transactional(readOnly = true)
     public byte[] gerarQrCode(RegistrarAtividadeRequest request) {
-        List<FuncionarioVaga> funcionarioVagas = this.funcionarioVagaService.findByFuncionarioIdFuncionario(request.getIdFuncionario());
-        boolean vagaEncontrada = funcionarioVagas.stream()
+        List<UsuarioVaga> usuarioVagases = this.usuarioVagaService.findByUsuarioIdUsuario(request.getIdUsuario());
+        boolean vagaEncontrada = usuarioVagases.stream()
                 .anyMatch(fv -> fv.getVaga().getIdVaga().equals(request.getIdVaga()));
 
         if (!vagaEncontrada) {
@@ -53,7 +53,7 @@ public class RegistrarAtividadeService {
         }
 
         TipoAcesso tipoAcesso = TipoAcesso.buscarTipo(request.getTipoAcesso());
-        RegistrarAtividade existeAtividadeRegistrada = this.buscarUltimaAtividadePorFuncionario(request.getIdFuncionario(),
+        RegistrarAtividade existeAtividadeRegistrada = this.buscarUltimaAtividadePorUsuario(request.getIdUsuario(),
                 request.getIdVaga());
 
         if (existeAtividadeRegistrada != null) {
@@ -62,11 +62,11 @@ public class RegistrarAtividadeService {
             }
 
             if (existeAtividadeRegistrada.getTipoAcesso().equals(tipoAcesso)) {
-                throw new BadRequestException("Funcionario " + existeAtividadeRegistrada.getFuncionario().getNome() +
+                throw new BadRequestException("Funcionario " + existeAtividadeRegistrada.getUsuario().getNome() +
                         " já possui uma " + existeAtividadeRegistrada.getTipoAcesso() + " cadastrada! ");
             }
         }
-        String token = tokenConfig.generateToken(request.getIdFuncionario(), tipoAcesso.getDescricao(), request.getIdVaga());
+        String token = tokenConfig.generateToken(request.getIdUsuario(), tipoAcesso.getDescricao(), request.getIdVaga());
         String link = String.format("http://localhost:8080/registrarAtividades/registrarAtividade?token=%s", token);
         byte[] qrCodeImage = null;
         try {
@@ -85,9 +85,9 @@ public class RegistrarAtividadeService {
         }
     }
 
-    private RegistrarAtividade buscarUltimaAtividadePorFuncionario(Long idFuncionario, Long idVaga) {
+    private RegistrarAtividade buscarUltimaAtividadePorUsuario(Long idFuncionario, Long idVaga) {
         Optional<RegistrarAtividade> atividades = this.repository.
-                findTopByFuncionarioIdFuncionarioAndVagaIdVagaOrderByDataHoraDesc(idFuncionario, idVaga);
+                findTopByUsuarioIdUsuarioAndVagaIdVagaOrderByDataHoraDesc(idFuncionario, idVaga);
         return atividades.isEmpty() ? null : atividades.get();
     }
 
@@ -104,31 +104,31 @@ public class RegistrarAtividadeService {
     public RegistrarAtividaderResponse registrarAtividade(TokenRequest request) {
         TokenInfo tokenInfo = this.tokenConfig.validateToken(request.getToken());
         Vaga vaga = this.vagaService.buscarVagaPeloId(tokenInfo.getIdVaga());
-        Funcionario funcionario = this.funcionarioService.buscarFuncionarioPeloId(tokenInfo.getIdFuncionario());
+        Usuario usuario = this.usuarioService.buscarUsuarioPeloId(tokenInfo.getIdFuncionario());
 
         RegistrarAtividade ra = new RegistrarAtividade();
         ra.setTipoAcesso(TipoAcesso.buscarTipo(tokenInfo.getTipoAtividade()));
-        ra.setFuncionario(funcionario);
+        ra.setUsuario(usuario);
         ra.setVaga(vaga);
 
         RegistrarAtividaderResponse rar = new RegistrarAtividaderResponse();
         rar.setTipoAcesso(ra.getTipoAcesso());
         rar.setVaga(ra.getVaga().getVaga());
-        rar.setNomeFuncinario(ra.getFuncionario().getNome());
+        rar.setNomeFuncinario(ra.getUsuario().getNome());
         rar.setEvento(ra.getVaga().getEvento().getNome());
         rar.setIdVaga(ra.getVaga().getIdVaga());
-        rar.setIdFuncionario(ra.getFuncionario().getIdFuncionario());
+        rar.setIdUsuario(ra.getUsuario().getIdUsuario());
         return rar;
     }
 
     @Transactional
     public String gerarComprovante(RegistrarAtividadeRequest request) {
         Vaga vaga = this.vagaService.buscarVagaPeloId(request.getIdVaga());
-        Funcionario funcionario = this.funcionarioService.buscarFuncionarioPeloId(request.getIdFuncionario());
+        Usuario usuario = this.usuarioService.buscarUsuarioPeloId(request.getIdUsuario());
 
         RegistrarAtividade ra = new RegistrarAtividade();
         ra.setTipoAcesso(TipoAcesso.buscarTipo(request.getTipoAcesso()));
-        ra.setFuncionario(funcionario);
+        ra.setUsuario(usuario);
         ra.setVaga(vaga);
         ra.setDataHora(LocalDateTime.now());
 

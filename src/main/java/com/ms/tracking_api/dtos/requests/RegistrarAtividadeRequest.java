@@ -17,7 +17,7 @@ public class RegistrarAtividadeRequest implements Serializable {
 
     private String tipoAcesso;
 
-    private Long idFuncionario;
+    private Long idUsuario;
 
     private Long idVaga;
 }

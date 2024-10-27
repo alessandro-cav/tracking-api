@@ -33,8 +33,8 @@ public class RegistrarAtividade implements Serializable {
     private LocalDateTime dataHora;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "funcionario")
-    private Funcionario funcionario;
+    @JoinColumn(name = "usuario")
+    private Usuario usuario;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "vaga")

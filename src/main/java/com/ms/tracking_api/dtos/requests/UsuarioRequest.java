@@ -12,11 +12,11 @@ import java.time.LocalDate;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class FuncionarioRequest implements Serializable {
+public class UsuarioRequest implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    private Long idFuncionario;
+    private Long idUsuario;
 
     @NotNull(message = "O campo nome é obrigatório.")
     @NotBlank(message = "O campo nome não pode ser vazio.")

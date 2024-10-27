@@ -20,9 +20,9 @@ public interface EnderecoRepository extends PagingAndSortingRepository<Endereco,
 
     List<Endereco> findByEventoIdEventoAndLogradouroContainingIgnoreCase(Long idEventos, String nome, PageRequest pageRequest);
 
-    Optional<Endereco> findByFuncionarioIdFuncionarioAndIdEndereco(Long idFuncionario, Long idEndereco);
+    List<Endereco> findAllByUsuarioIdUsuario(Long idUsuario, PageRequest pageRequest);
 
-    List<Endereco> findAllByFuncionarioIdFuncionario(Long idFuncionario, PageRequest pageRequest);
+    Optional<Endereco> findByUsuarioIdUsuarioAndIdEndereco(Long idUsuario, Long idEndereco);
 
-    List<Endereco> findByFuncionarioIdFuncionarioAndLogradouroContainingIgnoreCase(Long idFuncionario, String logradouro, PageRequest pageRequest);
+    List<Endereco> findByUsuarioIdUsuarioAndLogradouroContainingIgnoreCase(Long idUsuario, String logradouro, PageRequest pageRequest);
 }

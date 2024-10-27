@@ -13,23 +13,23 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "tb_funcionario_vaga")
-@SequenceGenerator(name = "SQ_FUNCIONARIO_VAGA", allocationSize = 1, sequenceName = "SQ_FUNCIONARIO_VAGA")
-public class FuncionarioVaga implements Serializable {
+@Table(name = "tb_usuario_vaga")
+@SequenceGenerator(name = "SQ_USUARIO_VAGA", allocationSize = 1, sequenceName = "SQ_USUARIO_VAGA")
+public class UsuarioVaga implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "SQ_FUNCIONARIO_VAGA")
-    private Long idFuncionarioVaga;
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "SQ_USUARIO_VAGA")
+    private Long idUsuarioVaga;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "vaga")
     private Vaga vaga;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "funcionario")
-    private Funcionario funcionario;
+    @JoinColumn(name = "usuario")
+    private Usuario usuario;
 
     @CreationTimestamp
     private LocalDate dataCriacao;

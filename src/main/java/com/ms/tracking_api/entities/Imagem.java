@@ -1,6 +1,5 @@
 package com.ms.tracking_api.entities;
 
-import com.ms.tracking_api.enuns.Pix;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -15,30 +14,27 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "tb_conta")
-@SequenceGenerator(name = "SQ_CONTA", allocationSize = 1, sequenceName = "SQ_CONTA")
-public class Conta implements Serializable {
+@Table(name = "tb_imagem")
+@SequenceGenerator(name = "SQ_IMAGEM", allocationSize = 1, sequenceName = "SQ_IMAGEM")
+public class Imagem implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "SQ_CONTA")
-    private Long idConta;
-
-    private String banco;
-
-    private String agencia;
-
-    private String  numero;
-
-    @Enumerated(EnumType.STRING)
-    private Pix pix;
-
-    private String chavePix;
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "SQ_IMAGEM")
+    private Long idImagem;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "usuario")
     private Usuario usuario;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "empresa")
+    private Empresa empresa;
+
+    @Lob
+    @Column(columnDefinition = "TEXT") // ou BLOB dependendo do tipo de dado
+    private String imagem;
 
     @CreationTimestamp
     private LocalDate dataCriacao;
