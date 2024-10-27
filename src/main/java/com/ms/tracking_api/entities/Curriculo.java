@@ -9,35 +9,28 @@ import org.hibernate.annotations.UpdateTimestamp;
 
 import java.io.Serializable;
 import java.time.LocalDate;
-import java.util.List;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "tb_empresa")
-@SequenceGenerator(name = "SQ_EMPRESA", allocationSize = 1, sequenceName = "SQ_EMPRESA")
-public class Empresa implements Serializable {
+@Table(name = "tb_curriculo")
+@SequenceGenerator(name = "SQ_CURRICULO", allocationSize = 1, sequenceName = "SQ_CURRICULO")
+public class Curriculo implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "SQ_EMPRESA")
-    private Long idEmpresa;
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "SQ_CURRICULO")
+    private Long idCurriculo;
 
-    private String nome;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "usuario")
+    private Usuario usuario;
 
-    private String cnpj;
-
-    private String telefone;
-
-    private String email;
-
-    @OneToMany(mappedBy = "empresa")
-    private List<Evento> eventos;
-
-    @OneToMany(mappedBy = "empresa")
-    private List<Imagem> imagens;
+    @Lob
+    @Column(columnDefinition = "TEXT") // ou BLOB dependendo do tipo de dado
+    private String curriculo;
 
     @CreationTimestamp
     private LocalDate dataCriacao;

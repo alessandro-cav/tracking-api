@@ -14,29 +14,23 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "tb_arquivo")
-@SequenceGenerator(name = "SQ_ARQUIVO", allocationSize = 1, sequenceName = "SQ_ARQUIVO")
-public class Arquivo implements Serializable {
+@Table(name = "tb_aso")
+@SequenceGenerator(name = "SQ_ASO", allocationSize = 1, sequenceName = "SQ_ASO")
+public class Aso implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "SQ_ARQUIVO")
-    private Long idArquivo;
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "SQ_ASO")
+    private Long idAso;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "funcionario")
-    private Funcionario funcionario;
-
-    private String nome;
-
-    private String tipo;
-
-    private Long tamanho;
+    @JoinColumn(name = "usuario")
+    private Usuario usuario;
 
     @Lob
     @Column(columnDefinition = "TEXT") // ou BLOB dependendo do tipo de dado
-    private String arquivo;
+    private String aso;
 
     @CreationTimestamp
     private LocalDate dataCriacao;

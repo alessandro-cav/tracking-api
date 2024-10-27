@@ -38,7 +38,7 @@ public class Endereco implements Serializable {
     private Evento evento;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "funcionario")
-    private Funcionario funcionario;
+    @JoinColumn(name = "usuario")
+    private Usuario usuario;
 
 }

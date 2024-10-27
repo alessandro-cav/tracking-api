@@ -13,5 +13,5 @@ public interface RegistrarAtividadeRepository extends PagingAndSortingRepository
 
 
 
-        Optional<RegistrarAtividade> findTopByFuncionarioIdFuncionarioAndVagaIdVagaOrderByDataHoraDesc(Long idFuncionario, Long idVaga);
+        Optional<RegistrarAtividade> findTopByUsuarioIdUsuarioAndVagaIdVagaOrderByDataHoraDesc(Long idUsuario, Long idVaga);
 }
