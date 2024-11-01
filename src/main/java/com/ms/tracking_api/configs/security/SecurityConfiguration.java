@@ -13,7 +13,6 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
-import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import java.util.List;
 
@@ -33,6 +32,7 @@ public class SecurityConfiguration {
                             CorsConfiguration config = new CorsConfiguration();
                             config.setAllowedOrigins(List.of("http://localhost:4200"));
                             config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+                            config.setAllowedHeaders(List.of("*"));
                             config.setAllowedHeaders(List.of("Authorization", "Content-Type", "Accept", "X-Requested-With"));
                             config.setAllowCredentials(true);
                             return config;
