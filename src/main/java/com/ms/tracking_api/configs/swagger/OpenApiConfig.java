@@ -14,7 +14,6 @@ public class OpenApiConfig {
     @Bean
     public GroupedOpenApi privateApi() {
         return GroupedOpenApi.builder()
-                .group("public")
                 .packagesToScan("com.ms.tracking_api.controllers")
                 .build();
     }
