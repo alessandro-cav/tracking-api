@@ -48,7 +48,7 @@ public class SecurityConfiguration {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(List.of("*"));
+        configuration.setAllowedOrigins(List.of("*", "https://psychic-era-439704-q4.uc.r.appspot.com"));
        /* configuration.setAllowedOrigins(List.of("http://localhost:8100",  "https://psychic-era-439704-q4.uc.r.appspot.com")); */
         configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         configuration.setAllowedHeaders(List.of("*"));
