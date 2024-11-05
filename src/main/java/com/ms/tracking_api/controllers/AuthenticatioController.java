@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/v1/auth")
 @RequiredArgsConstructor
 @Tag(name = "Authentication Controller", description = "APIs relacionadas à autenticação")
+@CrossOrigin(origins = "http://localhost:4200")
 public class AuthenticatioController {
 
     private final AuthenticationService service;
