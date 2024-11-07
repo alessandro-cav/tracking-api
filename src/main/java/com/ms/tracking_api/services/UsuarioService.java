@@ -53,12 +53,12 @@ public class UsuarioService {
         usuario.setEndereco(endereco);
         usuario = this.repository.save(usuario);
         UsuarioResponse usuarioResponse = this.modelMapper.map(usuario, UsuarioResponse.class);
-        usuarioResponse.setLogradouro(usuarioRequest.getLogradouro());
-        usuarioResponse.setNumero(usuarioRequest.getNumero());
-        usuarioResponse.setEstado(usuarioRequest.getEstado());
-        usuarioResponse.setCidade(usuarioRequest.getCidade());
-        usuarioResponse.setBairro(usuarioRequest.getBairro());
-        usuarioResponse.setCep(usuarioRequest.getCep());
+        usuarioResponse.setLogradouro(usuario.getEndereco().getLogradouro());
+        usuarioResponse.setNumero(usuario.getEndereco().getNumero());
+        usuarioResponse.setEstado(usuario.getEndereco().getEstado());
+        usuarioResponse.setCidade(usuario.getEndereco().getCidade());
+        usuarioResponse.setBairro(usuario.getEndereco().getBairro());
+        usuarioResponse.setCep(usuario.getEndereco().getCep());
         return  usuarioResponse;
     }
 
@@ -114,12 +114,12 @@ public class UsuarioService {
             usuario.setEndereco(endereco);
             usuario = this.repository.save(usuario);
             UsuarioResponse usuarioResponse = this.modelMapper.map(usuario, UsuarioResponse.class);
-            usuarioResponse.setLogradouro(usuarioRequest.getLogradouro());
-            usuarioResponse.setNumero(usuarioRequest.getNumero());
-            usuarioResponse.setEstado(usuarioRequest.getEstado());
-            usuarioResponse.setCidade(usuarioRequest.getCidade());
-            usuarioResponse.setBairro(usuarioRequest.getBairro());
-            usuarioResponse.setCep(usuarioRequest.getCep());
+            usuarioResponse.setLogradouro(usuario.getEndereco().getLogradouro());
+            usuarioResponse.setNumero(usuario.getEndereco().getNumero());
+            usuarioResponse.setEstado(usuario.getEndereco().getEstado());
+            usuarioResponse.setCidade(usuario.getEndereco().getCidade());
+            usuarioResponse.setBairro(usuario.getEndereco().getBairro());
+            usuarioResponse.setCep(usuario.getEndereco().getCep());
             return  usuarioResponse;
         }).orElseThrow(() -> new ObjetoNotFoundException("Usuário não encontrado!"));
     }
