@@ -43,23 +43,10 @@ public class UsuarioService {
         Usuario usuario = this.modelMapper.map(usuarioRequest, Usuario.class);
         usuario.setGenero(Genero.buscarGenero(usuarioRequest.getGenero()));
         usuario.setIdUsuario(usuarioRequest.getIdUsuario());
-        Endereco endereco = new Endereco();
-        endereco.setLogradouro(usuarioRequest.getLogradouro());
-        endereco.setNumero(usuarioRequest.getNumero());
-        endereco.setEstado(usuarioRequest.getEstado());
-        endereco.setCidade(usuarioRequest.getCidade());
-        endereco.setBairro(usuarioRequest.getBairro());
-        endereco.setCep(usuarioRequest.getCep());
+        Endereco endereco = getEndereco(usuarioRequest);
         usuario.setEndereco(endereco);
         usuario = this.repository.save(usuario);
-        UsuarioResponse usuarioResponse = this.modelMapper.map(usuario, UsuarioResponse.class);
-        usuarioResponse.setLogradouro(usuario.getEndereco().getLogradouro());
-        usuarioResponse.setNumero(usuario.getEndereco().getNumero());
-        usuarioResponse.setEstado(usuario.getEndereco().getEstado());
-        usuarioResponse.setCidade(usuario.getEndereco().getCidade());
-        usuarioResponse.setBairro(usuario.getEndereco().getBairro());
-        usuarioResponse.setCep(usuario.getEndereco().getCep());
-        return  usuarioResponse;
+        return  gerarUsuarioResponse(usuario);
     }
 
     @Transactional(readOnly = true)
@@ -104,23 +91,10 @@ public class UsuarioService {
             usuarioRequest.setIdUsuario(usuario.getIdUsuario());
             usuario = this.modelMapper.map(usuarioRequest, Usuario.class);
             usuario.setGenero(genero);
-            Endereco endereco = new Endereco();
-            endereco.setLogradouro(usuarioRequest.getLogradouro());
-            endereco.setNumero(usuarioRequest.getNumero());
-            endereco.setEstado(usuarioRequest.getEstado());
-            endereco.setCidade(usuarioRequest.getCidade());
-            endereco.setBairro(usuarioRequest.getBairro());
-            endereco.setCep(usuarioRequest.getCep());
+            Endereco endereco = getEndereco(usuarioRequest);
             usuario.setEndereco(endereco);
             usuario = this.repository.save(usuario);
-            UsuarioResponse usuarioResponse = this.modelMapper.map(usuario, UsuarioResponse.class);
-            usuarioResponse.setLogradouro(usuario.getEndereco().getLogradouro());
-            usuarioResponse.setNumero(usuario.getEndereco().getNumero());
-            usuarioResponse.setEstado(usuario.getEndereco().getEstado());
-            usuarioResponse.setCidade(usuario.getEndereco().getCidade());
-            usuarioResponse.setBairro(usuario.getEndereco().getBairro());
-            usuarioResponse.setCep(usuario.getEndereco().getCep());
-            return  usuarioResponse;
+            return  gerarUsuarioResponse(usuario);
         }).orElseThrow(() -> new ObjetoNotFoundException("Usuário não encontrado!"));
     }
 
@@ -135,5 +109,26 @@ public class UsuarioService {
     public Usuario buscarUsuarioPeloId(Long id) {
         return this.repository.findById(id)
                 .orElseThrow(() -> new ObjetoNotFoundException("Usuário não encontrado!"));
+    }
+    private UsuarioResponse gerarUsuarioResponse(Usuario usuario) {
+        UsuarioResponse usuarioResponse = this.modelMapper.map(usuario, UsuarioResponse.class);
+        usuarioResponse.setLogradouro(usuario.getEndereco().getLogradouro());
+        usuarioResponse.setNumero(usuario.getEndereco().getNumero());
+        usuarioResponse.setEstado(usuario.getEndereco().getEstado());
+        usuarioResponse.setCidade(usuario.getEndereco().getCidade());
+        usuarioResponse.setBairro(usuario.getEndereco().getBairro());
+        usuarioResponse.setCep(usuario.getEndereco().getCep());
+        return usuarioResponse;
+    }
+
+    private Endereco getEndereco(UsuarioRequest usuarioRequest) {
+        Endereco endereco = new Endereco();
+        endereco.setLogradouro(usuarioRequest.getLogradouro());
+        endereco.setNumero(usuarioRequest.getNumero());
+        endereco.setEstado(usuarioRequest.getEstado());
+        endereco.setCidade(usuarioRequest.getCidade());
+        endereco.setBairro(usuarioRequest.getBairro());
+        endereco.setCep(usuarioRequest.getCep());
+        return endereco;
     }
 }
