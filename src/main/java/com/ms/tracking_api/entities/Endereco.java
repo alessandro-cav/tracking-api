@@ -10,16 +10,10 @@ import java.io.Serializable;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Entity
-@Table(name = "tb_endereco")
-@SequenceGenerator(name = "ENDERECO_SQ", allocationSize = 1, sequenceName = "ENDERECO_SQ")
+@Embeddable
 public class Endereco implements Serializable {
 
     private static final long serialVersionUID = 1L;
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "ENDERECO_SQ")
-    private Long idEndereco;
 
     private String logradouro;
 
@@ -32,13 +26,5 @@ public class Endereco implements Serializable {
     private String cidade;
 
     private String estado;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "evento")
-    private Evento evento;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "usuario")
-    private Usuario usuario;
 
 }
