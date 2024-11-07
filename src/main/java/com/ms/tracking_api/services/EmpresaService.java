@@ -5,6 +5,7 @@ import com.ms.tracking_api.configs.validations.Validator;
 import com.ms.tracking_api.dtos.requests.EmpresaRequest;
 import com.ms.tracking_api.dtos.responses.EmpresaResponse;
 import com.ms.tracking_api.entities.Empresa;
+import com.ms.tracking_api.entities.Endereco;
 import com.ms.tracking_api.handlers.BadRequestException;
 import com.ms.tracking_api.handlers.ObjetoNotFoundException;
 import com.ms.tracking_api.repositories.EmpresaRepository;
@@ -37,8 +38,23 @@ public class EmpresaService {
             throw new BadRequestException(empresa.getCnpj() + " já cadastrado no sistema!");
         });
         Empresa empresa = this.modelMapper.map(empresaRequest, Empresa.class);
+        Endereco endereco = new Endereco();
+        endereco.setLogradouro(empresaRequest.getLogradouro());
+        endereco.setNumero(empresaRequest.getNumero());
+        endereco.setEstado(empresaRequest.getEstado());
+        endereco.setCidade(empresaRequest.getCidade());
+        endereco.setBairro(empresaRequest.getBairro());
+        endereco.setCep(empresaRequest.getCep());
+        empresa.setEndereco(endereco);
         empresa = this.repository.save(empresa);
-        return this.modelMapper.map(empresa, EmpresaResponse.class);
+        EmpresaResponse empresaResponse = this.modelMapper.map(empresa, EmpresaResponse.class);
+        empresaResponse.setLogradouro(empresa.getEndereco().getLogradouro());
+        empresaResponse.setNumero(empresa.getEndereco().getNumero());
+        empresaResponse.setEstado(empresa.getEndereco().getEstado());
+        empresaResponse.setCidade(empresa.getEndereco().getCidade());
+        empresaResponse.setBairro(empresa.getEndereco().getBairro());
+        empresaResponse.setCep(empresa.getEndereco().getCep());
+        return  empresaResponse;
     }
 
     @Transactional(readOnly = true)
@@ -81,7 +97,23 @@ public class EmpresaService {
             empresaRequest.setIdEmpresa(empresa.getIdEmpresa());
             empresa = this.modelMapper.map(empresaRequest, Empresa.class);
             empresa = this.repository.save(empresa);
-            return this.modelMapper.map(empresa, EmpresaResponse.class);
+            Endereco endereco = new Endereco();
+            endereco.setLogradouro(empresaRequest.getLogradouro());
+            endereco.setNumero(empresaRequest.getNumero());
+            endereco.setEstado(empresaRequest.getEstado());
+            endereco.setCidade(empresaRequest.getCidade());
+            endereco.setBairro(empresaRequest.getBairro());
+            endereco.setCep(empresaRequest.getCep());
+            empresa.setEndereco(endereco);
+            empresa = this.repository.save(empresa);
+            EmpresaResponse empresaResponse = this.modelMapper.map(empresa, EmpresaResponse.class);
+            empresaResponse.setLogradouro(empresa.getEndereco().getLogradouro());
+            empresaResponse.setNumero(empresa.getEndereco().getNumero());
+            empresaResponse.setEstado(empresa.getEndereco().getEstado());
+            empresaResponse.setCidade(empresa.getEndereco().getCidade());
+            empresaResponse.setBairro(empresa.getEndereco().getBairro());
+            empresaResponse.setCep(empresa.getEndereco().getCep());
+            return  empresaResponse;
         }).orElseThrow(() -> new ObjetoNotFoundException("Empresa não encontrada!"));
     }
 

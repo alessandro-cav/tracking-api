@@ -33,11 +33,15 @@ public class Empresa implements Serializable {
 
     private String email;
 
-    @OneToMany(mappedBy = "empresa")
-    private List<Evento> eventos;
+    @Embedded
+    private Endereco endereco;
+
+    @Lob
+    @Column(columnDefinition = "TEXT")
+    private String imagem;
 
     @OneToMany(mappedBy = "empresa")
-    private List<Imagem> imagens;
+    private List<Evento> eventos;
 
     @CreationTimestamp
     private LocalDate dataCriacao;
