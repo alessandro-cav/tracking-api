@@ -40,20 +40,23 @@ public class Usuario implements Serializable {
     @OneToMany(mappedBy = "usuario")
     private List<RegistrarAtividade> registrarAtividades;
 
-    @OneToMany(mappedBy = "usuario")
-    private List<Endereco> enderecos;
+    @Embedded
+    private Endereco endereco;
 
     @OneToMany(mappedBy = "usuario")
     private List<Conta> contas;
 
-    @OneToMany(mappedBy = "usuario")
-    private List<Curriculo> curriculos;
+    @Lob
+    @Column(columnDefinition = "TEXT")
+    private String curriculo;
 
-    @OneToMany(mappedBy = "usuario")
-    private List<Aso> asos;
+    @Lob
+    @Column(columnDefinition = "TEXT")
+    private String aso;
 
-    @OneToMany(mappedBy = "usuario")
-    private List<Imagem> imagens;
+    @Lob
+    @Column(columnDefinition = "TEXT")
+    private String imagem;
 
     @CreationTimestamp
     private LocalDate dataCriacao;

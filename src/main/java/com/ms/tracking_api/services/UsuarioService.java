@@ -4,6 +4,7 @@ package com.ms.tracking_api.services;
 import com.ms.tracking_api.configs.validations.Validator;
 import com.ms.tracking_api.dtos.requests.UsuarioRequest;
 import com.ms.tracking_api.dtos.responses.UsuarioResponse;
+import com.ms.tracking_api.entities.Endereco;
 import com.ms.tracking_api.entities.Usuario;
 import com.ms.tracking_api.enuns.Genero;
 import com.ms.tracking_api.handlers.BadRequestException;
@@ -42,8 +43,23 @@ public class UsuarioService {
         Usuario usuario = this.modelMapper.map(usuarioRequest, Usuario.class);
         usuario.setGenero(Genero.buscarGenero(usuarioRequest.getGenero()));
         usuario.setIdUsuario(usuarioRequest.getIdUsuario());
+        Endereco endereco = new Endereco();
+        endereco.setLogradouro(usuarioRequest.getLogradouro());
+        endereco.setNumero(usuarioRequest.getNumero());
+        endereco.setEstado(usuarioRequest.getEstado());
+        endereco.setCidade(usuarioRequest.getCidade());
+        endereco.setBairro(usuarioRequest.getBairro());
+        endereco.setCep(usuarioRequest.getCep());
+        usuario.setEndereco(endereco);
         usuario = this.repository.save(usuario);
-        return this.modelMapper.map(usuario, UsuarioResponse.class);
+        UsuarioResponse usuarioResponse = this.modelMapper.map(usuario, UsuarioResponse.class);
+        usuarioResponse.setLogradouro(usuarioRequest.getLogradouro());
+        usuarioResponse.setNumero(usuarioRequest.getNumero());
+        usuarioResponse.setEstado(usuarioRequest.getEstado());
+        usuarioResponse.setCidade(usuarioRequest.getCidade());
+        usuarioResponse.setBairro(usuarioRequest.getBairro());
+        usuarioResponse.setCep(usuarioRequest.getCep());
+        return  usuarioResponse;
     }
 
     @Transactional(readOnly = true)
@@ -88,8 +104,23 @@ public class UsuarioService {
             usuarioRequest.setIdUsuario(usuario.getIdUsuario());
             usuario = this.modelMapper.map(usuarioRequest, Usuario.class);
             usuario.setGenero(genero);
+            Endereco endereco = new Endereco();
+            endereco.setLogradouro(usuarioRequest.getLogradouro());
+            endereco.setNumero(usuarioRequest.getNumero());
+            endereco.setEstado(usuarioRequest.getEstado());
+            endereco.setCidade(usuarioRequest.getCidade());
+            endereco.setBairro(usuarioRequest.getBairro());
+            endereco.setCep(usuarioRequest.getCep());
+            usuario.setEndereco(endereco);
             usuario = this.repository.save(usuario);
-            return this.modelMapper.map(usuario, UsuarioResponse.class);
+            UsuarioResponse usuarioResponse = this.modelMapper.map(usuario, UsuarioResponse.class);
+            usuarioResponse.setLogradouro(usuarioRequest.getLogradouro());
+            usuarioResponse.setNumero(usuarioRequest.getNumero());
+            usuarioResponse.setEstado(usuarioRequest.getEstado());
+            usuarioResponse.setCidade(usuarioRequest.getCidade());
+            usuarioResponse.setBairro(usuarioRequest.getBairro());
+            usuarioResponse.setCep(usuarioRequest.getCep());
+            return  usuarioResponse;
         }).orElseThrow(() -> new ObjetoNotFoundException("Usuário não encontrado!"));
     }
 
