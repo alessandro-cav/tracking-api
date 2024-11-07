@@ -3,8 +3,10 @@ package com.ms.tracking_api.services;
 
 import com.ms.tracking_api.configs.validations.Validator;
 import com.ms.tracking_api.dtos.requests.EventoRequest;
+import com.ms.tracking_api.dtos.responses.EmpresaResponse;
 import com.ms.tracking_api.dtos.responses.EventoResponse;
 import com.ms.tracking_api.entities.Empresa;
+import com.ms.tracking_api.entities.Endereco;
 import com.ms.tracking_api.entities.Evento;
 import com.ms.tracking_api.handlers.BadRequestException;
 import com.ms.tracking_api.handlers.ObjetoNotFoundException;
@@ -38,8 +40,9 @@ public class EventoService {
         Empresa empresa = this.empresaService.buscarEmpresaPeloId(eventoRequest.getIdEmpresa());
         Evento evento = this.modelMapper.map(eventoRequest, Evento.class);
         evento.setEmpresa(empresa);
+        evento.setEndereco(gerarEndereco(eventoRequest));
         evento = this.repository.save(evento);
-        return this.modelMapper.map(evento, EventoResponse.class);
+        return gerarEnderecoResponse(evento);
     }
 
     @Transactional(readOnly = true)
@@ -88,8 +91,9 @@ public class EventoService {
             eventoRequest.setIdEvento(evento.getIdEvento());
             evento = this.modelMapper.map(eventoRequest, Evento.class);
             evento.setEmpresa(empresa);
+            evento.setEndereco(gerarEndereco(eventoRequest));
             evento = this.repository.save(evento);
-            return this.modelMapper.map(evento, EventoResponse.class);
+             return  gerarEnderecoResponse(evento);
         }).orElseThrow(() -> new ObjetoNotFoundException("Evento não encontrado!"));
     }
 
@@ -103,6 +107,36 @@ public class EventoService {
     @Transactional(readOnly = true)
     public Evento buscarEventoPeloId(Long id) {
         return this.repository.findById(id).orElseThrow(() -> new ObjetoNotFoundException("Evento não encontrado!"));
+    }
+
+    private EventoResponse gerarEnderecoResponse(Evento evento) {
+        EventoResponse eventoResponse = this.modelMapper.map(evento, EventoResponse.class);
+        eventoResponse.setLogradouro(evento.getEndereco().getLogradouro());
+        eventoResponse.setNumero(evento.getEndereco().getNumero());
+        eventoResponse.setEstado(evento.getEndereco().getEstado());
+        eventoResponse.setCidade(evento.getEndereco().getCidade());
+        eventoResponse.setBairro(evento.getEndereco().getBairro());
+        eventoResponse.setCep(evento.getEndereco().getCep());
+        EmpresaResponse empresaResponse = this.modelMapper.map(evento.getEmpresa(), EmpresaResponse.class);
+        empresaResponse.setLogradouro(evento.getEmpresa().getEndereco().getLogradouro());
+        empresaResponse.setNumero(evento.getEmpresa().getEndereco().getNumero());
+        empresaResponse.setEstado(evento.getEmpresa().getEndereco().getEstado());
+        empresaResponse.setCidade(evento.getEmpresa().getEndereco().getCidade());
+        empresaResponse.setBairro(evento.getEmpresa().getEndereco().getBairro());
+        empresaResponse.setCep(evento.getEmpresa().getEndereco().getCep());
+        eventoResponse.setEmpresa(empresaResponse);
+        return eventoResponse;
+    }
+
+    private Endereco gerarEndereco(EventoRequest eventoRequest) {
+        Endereco endereco = new Endereco();
+        endereco.setLogradouro(eventoRequest.getLogradouro());
+        endereco.setNumero(eventoRequest.getNumero());
+        endereco.setEstado(eventoRequest.getEstado());
+        endereco.setCidade(eventoRequest.getCidade());
+        endereco.setBairro(eventoRequest.getBairro());
+        endereco.setCep(eventoRequest.getCep());
+        return endereco;
     }
 }
 

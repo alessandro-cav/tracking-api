@@ -31,15 +31,19 @@ public class Evento implements Serializable {
 
     private LocalDate data;
 
+    @Embedded
+    private Endereco endereco;
+
+    @Lob
+    @Column(columnDefinition = "TEXT")
+    private String imagem;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "empresa")
     private Empresa empresa;
 
     @OneToMany(mappedBy = "evento")
     private List<Vaga> vagas;
-
-    @OneToMany(mappedBy = "evento")
-    private List<Endereco> enderecos;
 
     @CreationTimestamp
     private LocalDate dataCriacao;
