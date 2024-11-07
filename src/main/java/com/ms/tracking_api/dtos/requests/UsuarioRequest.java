@@ -41,4 +41,22 @@ public class UsuarioRequest implements Serializable {
     @NotBlank(message = "O campo logradouro não pode ser vazio.")
     private String genero;
 
+    private String imagem;
+
+    private String aso;
+
+    private String curriculo;
+
+    private String logradouro;
+
+    private String numero;
+
+    private String bairro;
+
+    private String cep;
+
+    private String cidade;
+
+    private String estado;
+
 }

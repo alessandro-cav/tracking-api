@@ -1,6 +1,7 @@
 package com.ms.tracking_api.dtos.responses;
 
 import com.ms.tracking_api.enuns.Genero;
+import jakarta.persistence.Embedded;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -28,5 +29,23 @@ public class UsuarioResponse implements Serializable {
     private LocalDate dataNascimento;
 
     private Genero genero;
+
+    private String imagem;
+
+    private String aso;
+
+    private String curriculo;
+
+    private String logradouro;
+
+    private String numero;
+
+    private String bairro;
+
+    private String cep;
+
+    private String cidade;
+
+    private String estado;
 
 }
