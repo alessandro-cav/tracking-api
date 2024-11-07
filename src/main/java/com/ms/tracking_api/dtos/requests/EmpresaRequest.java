@@ -34,6 +34,8 @@ public class EmpresaRequest implements Serializable {
     @NotBlank(message = "O campo email não pode ser vazio.")
     private String email;
 
+    private String imagem;
+
     @NotNull(message = "O campo logradouro é obrigatório.")
     @NotBlank(message = "O campo logradouro não pode ser vazio.")
     private String logradouro;
