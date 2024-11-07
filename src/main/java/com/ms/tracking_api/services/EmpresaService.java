@@ -38,23 +38,9 @@ public class EmpresaService {
             throw new BadRequestException(empresa.getCnpj() + " já cadastrado no sistema!");
         });
         Empresa empresa = this.modelMapper.map(empresaRequest, Empresa.class);
-        Endereco endereco = new Endereco();
-        endereco.setLogradouro(empresaRequest.getLogradouro());
-        endereco.setNumero(empresaRequest.getNumero());
-        endereco.setEstado(empresaRequest.getEstado());
-        endereco.setCidade(empresaRequest.getCidade());
-        endereco.setBairro(empresaRequest.getBairro());
-        endereco.setCep(empresaRequest.getCep());
-        empresa.setEndereco(endereco);
+        empresa.setEndereco(getEndereco(empresaRequest));
         empresa = this.repository.save(empresa);
-        EmpresaResponse empresaResponse = this.modelMapper.map(empresa, EmpresaResponse.class);
-        empresaResponse.setLogradouro(empresa.getEndereco().getLogradouro());
-        empresaResponse.setNumero(empresa.getEndereco().getNumero());
-        empresaResponse.setEstado(empresa.getEndereco().getEstado());
-        empresaResponse.setCidade(empresa.getEndereco().getCidade());
-        empresaResponse.setBairro(empresa.getEndereco().getBairro());
-        empresaResponse.setCep(empresa.getEndereco().getCep());
-        return  empresaResponse;
+        return   gerarEmpresaResponse(empresa);
     }
 
     @Transactional(readOnly = true)
@@ -96,24 +82,9 @@ public class EmpresaService {
             }
             empresaRequest.setIdEmpresa(empresa.getIdEmpresa());
             empresa = this.modelMapper.map(empresaRequest, Empresa.class);
+            empresa.setEndereco(getEndereco(empresaRequest));
             empresa = this.repository.save(empresa);
-            Endereco endereco = new Endereco();
-            endereco.setLogradouro(empresaRequest.getLogradouro());
-            endereco.setNumero(empresaRequest.getNumero());
-            endereco.setEstado(empresaRequest.getEstado());
-            endereco.setCidade(empresaRequest.getCidade());
-            endereco.setBairro(empresaRequest.getBairro());
-            endereco.setCep(empresaRequest.getCep());
-            empresa.setEndereco(endereco);
-            empresa = this.repository.save(empresa);
-            EmpresaResponse empresaResponse = this.modelMapper.map(empresa, EmpresaResponse.class);
-            empresaResponse.setLogradouro(empresa.getEndereco().getLogradouro());
-            empresaResponse.setNumero(empresa.getEndereco().getNumero());
-            empresaResponse.setEstado(empresa.getEndereco().getEstado());
-            empresaResponse.setCidade(empresa.getEndereco().getCidade());
-            empresaResponse.setBairro(empresa.getEndereco().getBairro());
-            empresaResponse.setCep(empresa.getEndereco().getCep());
-            return  empresaResponse;
+            return  gerarEmpresaResponse(empresa);
         }).orElseThrow(() -> new ObjetoNotFoundException("Empresa não encontrada!"));
     }
 
@@ -129,4 +100,27 @@ public class EmpresaService {
         return this.repository.findById(id)
                 .orElseThrow(() -> new ObjetoNotFoundException("Empresa não encontrada!"));
     }
+
+    private Endereco getEndereco(EmpresaRequest empresaRequest) {
+        Endereco endereco = new Endereco();
+        endereco.setLogradouro(empresaRequest.getLogradouro());
+        endereco.setNumero(empresaRequest.getNumero());
+        endereco.setEstado(empresaRequest.getEstado());
+        endereco.setCidade(empresaRequest.getCidade());
+        endereco.setBairro(empresaRequest.getBairro());
+        endereco.setCep(empresaRequest.getCep());
+        return endereco;
+    }
+
+    private EmpresaResponse gerarEmpresaResponse(Empresa empresa) {
+        EmpresaResponse empresaResponse = this.modelMapper.map(empresa, EmpresaResponse.class);
+        empresaResponse.setLogradouro(empresa.getEndereco().getLogradouro());
+        empresaResponse.setNumero(empresa.getEndereco().getNumero());
+        empresaResponse.setEstado(empresa.getEndereco().getEstado());
+        empresaResponse.setCidade(empresa.getEndereco().getCidade());
+        empresaResponse.setBairro(empresa.getEndereco().getBairro());
+        empresaResponse.setCep(empresa.getEndereco().getCep());
+        return  empresaResponse;
+    }
+
 }
