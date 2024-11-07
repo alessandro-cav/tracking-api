@@ -41,6 +41,7 @@ public class UsuarioService {
         });
         Usuario usuario = this.modelMapper.map(usuarioRequest, Usuario.class);
         usuario.setGenero(Genero.buscarGenero(usuarioRequest.getGenero()));
+        usuario.setIdUsuario(usuarioRequest.getIdUsuario());
         usuario = this.repository.save(usuario);
         return this.modelMapper.map(usuario, UsuarioResponse.class);
     }
