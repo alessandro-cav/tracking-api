@@ -1,7 +1,7 @@
 package com.ms.tracking_api.services;
 
 import com.ms.tracking_api.dtos.requests.ContaRequest;
-import com.ms.tracking_api.dtos.responses.ContaResponse;;
+import com.ms.tracking_api.dtos.responses.ContaResponse;
 import com.ms.tracking_api.entities.Conta;
 import com.ms.tracking_api.entities.Usuario;
 import com.ms.tracking_api.enuns.Pix;
