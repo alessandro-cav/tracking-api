@@ -1,0 +1,35 @@
+services:
+  db:
+    image: postgres:15
+    restart: always
+    environment:
+      TZ: America/Sao_Paulo
+      POSTGRES_USER: docker
+      POSTGRES_PASSWORD: admin123
+      #POSTGRES_DB: rastb
+    ports:
+      - 5432:5432
+    networks:
+      - trancking-network
+
+  trancking-api:
+    image: levisanttos/trancking-api
+    restart: always
+    build: ./trancking-api
+    working_dir: /trancking-api
+    environment:
+      TZ: America/Sao_Paulo
+      SPRING.DATASOURCE.URL: jdbc:postgresql://db:5432/postgres?currentSchema=rastb
+      SPRING.DATASOURCE.USERNAME: docker
+      SPRING.DATASOURCE.PASSWORD: admin123
+    ports:
+      - 80:80
+    command: mvn spring-boot:run
+    depends_on:
+      - db
+    networks:
+      - trancking-network
+
+networks:
+  trancking-network:
+    driver: bridge
