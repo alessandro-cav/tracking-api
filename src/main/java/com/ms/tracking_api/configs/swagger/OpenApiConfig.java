@@ -27,7 +27,7 @@ public class OpenApiConfig {
                         .version(""))
                 .addServersItem(new Server()
                         .description("Url Local")
-                        .url("/ms-tracking"))
+                        .url("/"))
                 .components(new io.swagger.v3.oas.models.Components()
                         .addSecuritySchemes("bearerAuth", new SecurityScheme()
                                 .type(SecurityScheme.Type.HTTP)
