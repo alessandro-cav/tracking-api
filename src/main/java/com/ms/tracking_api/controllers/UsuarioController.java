@@ -26,14 +26,14 @@ public class UsuarioController {
     private final UsuarioService service;
 
     @PostMapping
-    @Operation(summary = "Criar funcionario", description = "Endpoint para criar funcionario")
+    @Operation(summary = "Criar usuario", description = "Endpoint para criar usuario")
     public ResponseEntity<UsuarioResponse> salvar(@Valid @RequestBody UsuarioRequest request) {
         return ResponseEntity.ok(this.service.salvar(request));
     }
 
 
     @GetMapping
-    @Operation(summary = "Listar funcionario", description = "Endpoint para listar funcionario")
+    @Operation(summary = "Listar usuario", description = "Endpoint para listar usuario")
     public ResponseEntity<List<UsuarioResponse>> buscarTodos(@RequestParam Integer pagina,
                                                              @RequestParam Integer quantidade,
                                                              @RequestParam String ordem,
@@ -44,27 +44,27 @@ public class UsuarioController {
     }
 
     @GetMapping("/{id}")
-    @Operation(summary = "Buscar funcionario pelo id", description = "Endpoint para buscar funcionario")
+    @Operation(summary = "Buscar usuario pelo id", description = "Endpoint para buscar usuario")
     public ResponseEntity<UsuarioResponse> buscarPeloId(@PathVariable(name = "id") Long id) {
         return ResponseEntity.ok(this.service.buscarPeloId(id));
     }
 
     @DeleteMapping("/{id}")
-    @Operation(summary = "Deletar funcionario", description = "Endpoint para deletar funcionario")
+    @Operation(summary = "Deletar usuario", description = "Endpoint para deletar usuario")
     public ResponseEntity<Void> deletePeloId(@PathVariable(name = "id") Long id) {
         this.service.delete(id);
         return ResponseEntity.noContent().build();
     }
 
     @PutMapping("/{id}")
-    @Operation(summary = "Atualizar funcionario", description = "Endpoint para atualizar funcionario")
+    @Operation(summary = "Atualizar usuario", description = "Endpoint para atualizar usuario")
     public ResponseEntity<UsuarioResponse> atualizar(@PathVariable(name = "id") Long id,
                                                      @Valid @RequestBody UsuarioRequest request) {
         return ResponseEntity.ok(this.service.atualizar(id, request));
     }
 
     @GetMapping("/buscarPorNome")
-    @Operation(summary = "Buscar funcionario por nome", description = "Endpoint para buscar funcionario")
+    @Operation(summary = "Buscar usuario por nome", description = "Endpoint para buscar usuario")
     public ResponseEntity<List<UsuarioResponse>> buscarPorNome(@RequestParam Integer pagina,
                                                                @RequestParam Integer quantidade,
                                                                @RequestParam String ordem,

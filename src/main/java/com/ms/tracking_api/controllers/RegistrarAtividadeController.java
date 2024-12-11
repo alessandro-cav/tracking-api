@@ -1,8 +1,8 @@
 package com.ms.tracking_api.controllers;
 
-import com.ms.tracking_api.configs.tokenConfig.TokenConfig;
-import com.ms.tracking_api.dtos.requests.RegistrarAtividadeRequest;
-import com.ms.tracking_api.dtos.requests.TokenRequest;
+import com.ms.tracking_api.dtos.requests.ReciboRequest;
+import com.ms.tracking_api.dtos.requests.QRCodeRequest;
+import com.ms.tracking_api.dtos.responses.ReciboResponse;
 import com.ms.tracking_api.dtos.responses.RegistrarAtividaderResponse;
 import com.ms.tracking_api.services.RegistrarAtividadeService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -25,25 +25,16 @@ public class RegistrarAtividadeController {
 
     private final RegistrarAtividadeService service;
 
-    private final TokenConfig tokenConfig;
-
-
-    @PostMapping("/gerarQrcode")
-    @Operation(summary = "Registrar gerarQrcode", description = "Endpoint para gerarQrcode")
-    public ResponseEntity<byte[]> gerarQrCodeEntrada(@RequestBody RegistrarAtividadeRequest request) {
-        return ResponseEntity.ok(this.service.gerarQrCode(request));
-    }
-
 
     @PostMapping("/registrarAtividade")
     @Operation(summary = "Registrar atividade", description = "Endpoint para registrar atividade")
-    public ResponseEntity<RegistrarAtividaderResponse> registrarAtividade(@RequestBody TokenRequest request) {
+    public ResponseEntity<RegistrarAtividaderResponse> registrarAtividade(@RequestBody QRCodeRequest request) {
         return ResponseEntity.ok(this.service.registrarAtividade(request));
     }
 
     @PostMapping("/gerarComprovante")
     @Operation(summary = "Gerar comprovante", description = "Endpoint para gerar comprovante")
-    public ResponseEntity<String> gerarComprovante(@RequestBody RegistrarAtividadeRequest request) {
+    public ResponseEntity<ReciboResponse> gerarComprovante(@RequestBody ReciboRequest request) {
         return ResponseEntity.ok(this.service.gerarComprovante(request));
     }
 }
