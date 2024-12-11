@@ -1,5 +1,8 @@
 package com.ms.tracking_api.entities;
 
+import com.ms.tracking_api.enuns.StatusCandidatura;
+import com.ms.tracking_api.enuns.StatusVaga;
+import com.ms.tracking_api.enuns.TipoAcesso;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -30,6 +33,9 @@ public class UsuarioVaga implements Serializable {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "usuario")
     private Usuario usuario;
+
+    @Enumerated(EnumType.STRING)
+    private StatusCandidatura statusCandidatura;
 
     @CreationTimestamp
     private LocalDate dataCriacao;

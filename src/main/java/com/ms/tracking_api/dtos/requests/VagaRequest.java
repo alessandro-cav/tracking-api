@@ -7,6 +7,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 
 @Data
 @NoArgsConstructor
@@ -24,8 +25,10 @@ public class VagaRequest implements Serializable {
     private String vaga;
 
     @NotNull(message = "O campo cachê é obrigatório.")
-    @NotBlank(message = "O campo cachê não pode ser vazio.")
-    private String chache;
+    private BigDecimal valor;
+
+    @NotNull(message = "O campo refeição é obrigatório.")
+    private Boolean refeicao;
 
     @NotNull(message = "O campo vestimenta é obrigatório.")
     @NotBlank(message = "O campo vestimenta não pode ser vazio.")

@@ -48,7 +48,7 @@ public class EventoService {
     @Transactional(readOnly = true)
     public List<EventoResponse> buscarTodos(PageRequest pageRequest) {
         return this.repository.findAll(pageRequest).stream()
-                .map(evento -> this.modelMapper.map(evento, EventoResponse.class))
+                .map(evento -> gerarEnderecoResponse(evento))
                 .collect(Collectors.toList());
     }
 
@@ -60,14 +60,14 @@ public class EventoService {
                 .filter(evento -> !evento.getData().isBefore(agora))
                 .collect(Collectors.toList());
         return novosEventos.stream()
-                .map(evento -> this.modelMapper.map(evento, EventoResponse.class))
+                .map(evento -> gerarEnderecoResponse(evento))
                 .collect(Collectors.toList());
     }
 
     @Transactional(readOnly = true)
     public EventoResponse buscarPeloId(Long id) {
         return this.repository.findById(id).map(evento -> {
-            return this.modelMapper.map(evento, EventoResponse.class);
+            return gerarEnderecoResponse(evento);
         }).orElseThrow(() -> new ObjetoNotFoundException("Evento não encontrado!"));
     }
 
@@ -100,7 +100,7 @@ public class EventoService {
     @Transactional(readOnly = true)
     public List<EventoResponse> buscarPorNome(String nome, PageRequest pageRequest) {
         return this.repository.findByNomeContainingIgnoreCase(nome, pageRequest).stream()
-                .map(evento -> this.modelMapper.map(evento, EventoResponse.class))
+                .map(evento -> gerarEnderecoResponse(evento))
                 .collect(Collectors.toList());
     }
 
