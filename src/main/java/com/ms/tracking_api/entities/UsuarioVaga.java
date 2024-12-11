@@ -14,14 +14,13 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @Entity
 @Table(name = "tb_usuario_vaga")
-@SequenceGenerator(name = "SQ_USUARIO_VAGA", allocationSize = 1, sequenceName = "SQ_USUARIO_VAGA")
 public class UsuarioVaga implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "SQ_USUARIO_VAGA")
-    private Long idUsuarioVaga;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "vaga")
