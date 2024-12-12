@@ -28,6 +28,7 @@ public class AvaliacaoService {
         avaliacao.setUsuario(usuario);
         avaliacao = this.avaliacaoRepository.save(avaliacao);
         AvaliacaoResponse avaliacaoResponse = new AvaliacaoResponse();
+        avaliacaoResponse.setIdAvalicao(avaliacao.getIdAvalicao());
         avaliacaoResponse.setIdUsuario(avaliacao.getUsuario().getIdUsuario());
         avaliacaoResponse.setEstrela(avaliacao.getEstrela());
         avaliacaoResponse.setComentario(avaliacao.getComentario());
