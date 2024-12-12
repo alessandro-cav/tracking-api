@@ -20,13 +20,12 @@ import java.util.List;
 @AllArgsConstructor
 @Entity
 @Table(name = "tb_vaga")
-@SequenceGenerator(name = "SQ_VAGA", allocationSize = 1, sequenceName = "SQ_VAGA")
 public class Vaga  implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "SQ_VAGA")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long idVaga;
 
     private String vaga;
