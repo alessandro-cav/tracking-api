@@ -1,5 +1,6 @@
 package com.ms.tracking_api.dtos.requests;
 
+import com.ms.tracking_api.enuns.StatusVaga;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -38,4 +39,7 @@ public class VagaRequest implements Serializable {
     private Integer quantidade;
 
     private String observacao;
+
+
+    private StatusVaga statusVaga;
 }
