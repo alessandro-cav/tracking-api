@@ -97,25 +97,6 @@ public class RegistrarAtividadeService {
         return response;
     }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    //-----------------
     private void validarIntervaloDeTempo(LocalDateTime ultimaAtividade) {
         if (ultimaAtividade != null) {
             long horasDeDiferenca = Duration.between(ultimaAtividade, LocalDateTime.now()).toHoursPart();
