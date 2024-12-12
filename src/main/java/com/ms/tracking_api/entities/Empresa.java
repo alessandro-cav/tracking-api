@@ -16,13 +16,12 @@ import java.util.List;
 @AllArgsConstructor
 @Entity
 @Table(name = "tb_empresa")
-@SequenceGenerator(name = "SQ_EMPRESA", allocationSize = 1, sequenceName = "SQ_EMPRESA")
 public class Empresa implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "SQ_EMPRESA")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long idEmpresa;
 
     private String nome;
