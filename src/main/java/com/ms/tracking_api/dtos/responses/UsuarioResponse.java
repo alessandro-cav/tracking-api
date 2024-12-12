@@ -22,6 +22,8 @@ public class UsuarioResponse implements Serializable {
 
     private String cpf;
 
+    private String rg;
+
     private String telefone;
 
     private String email;
@@ -33,6 +35,8 @@ public class UsuarioResponse implements Serializable {
     private String imagem;
 
     private String aso;
+
+    private LocalDate validadeASO;
 
     private String curriculo;
 

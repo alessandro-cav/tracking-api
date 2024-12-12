@@ -26,6 +26,10 @@ public class UsuarioRequest implements Serializable {
     @NotBlank(message = "O campo cpf não pode ser vazio.")
     private String cpf;
 
+    @NotNull(message = "O campo rg é obrigatório.")
+    @NotBlank(message = "O campo rg não pode ser vazio.")
+    private String rg;
+
     @NotNull(message = "O campo telefone é obrigatório.")
     @NotBlank(message = "O campo telefone não pode ser vazio.")
     private String telefone;
@@ -46,6 +50,9 @@ public class UsuarioRequest implements Serializable {
     private String aso;
 
     private String curriculo;
+
+    @NotNull(message = "O campo validade aso é obrigatório.")
+    private LocalDate validadeASO;
 
     @NotNull(message = "O campo logradouro é obrigatório.")
     @NotBlank(message = "O campo logradouro não pode ser vazio.")

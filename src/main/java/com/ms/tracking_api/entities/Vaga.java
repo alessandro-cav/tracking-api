@@ -1,6 +1,8 @@
 package com.ms.tracking_api.entities;
 
 
+import com.ms.tracking_api.enuns.Genero;
+import com.ms.tracking_api.enuns.StatusVaga;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -9,6 +11,7 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -17,24 +20,28 @@ import java.util.List;
 @AllArgsConstructor
 @Entity
 @Table(name = "tb_vaga")
-@SequenceGenerator(name = "SQ_VAGA", allocationSize = 1, sequenceName = "SQ_VAGA")
 public class Vaga  implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "SQ_VAGA")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long idVaga;
 
     private String vaga;
 
-    private String chache;
+    private BigDecimal valor;
 
     private String vestimenta;
+
+    private Boolean refeicao;
 
     private Integer quantidade;
 
     private String observacao;
+
+    @Enumerated(EnumType.STRING)
+    private StatusVaga statusVaga;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "evento")
@@ -45,7 +52,6 @@ public class Vaga  implements Serializable {
 
     @CreationTimestamp
     private LocalDate dataCriacao;
-
 
     @UpdateTimestamp
     private LocalDate dataAtualizacao;

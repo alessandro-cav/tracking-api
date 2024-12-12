@@ -33,4 +33,18 @@ public class UsuarioVagaController {
         service.excluirPeloUsuarioVagaPeloVagaEUsuario(request);
         return ResponseEntity.noContent().build();
     }
+
+    @PostMapping("/aceitar")
+    @Operation(summary = "Aceitar candidatura da vaga", description = "Endpoint para aceitar candidatura da vaga")
+    public ResponseEntity<Void> aceitarCandidatura(@RequestBody UsuarioVagaRequest request) {
+        service.aceitarCandidatura(request);
+        return new ResponseEntity<>(HttpStatus.CREATED);
+    }
+
+    @PostMapping("/recusar")
+    @Operation(summary = "Recusar candidatura da vaga", description = "Endpoint para recusar candidatura da vaga")
+    public ResponseEntity<Void> recusarCandidatura(@RequestBody UsuarioVagaRequest request) {
+        service.recusarCandidatura(request);
+        return new ResponseEntity<>(HttpStatus.CREATED);
+    }
 }

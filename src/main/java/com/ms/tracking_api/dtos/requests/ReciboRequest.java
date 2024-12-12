@@ -9,13 +9,9 @@ import java.io.Serializable;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class RegistrarAtividadeRequest implements Serializable {
+public class ReciboRequest implements Serializable {
 
     private static final long serialVersionUID = 1L;
-
-    private Long idRegistrarAtividade;
-
-    private String tipoAcesso;
 
     private Long idUsuario;
 

@@ -16,13 +16,12 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @Entity
 @Table(name = "tb_conta")
-@SequenceGenerator(name = "SQ_CONTA", allocationSize = 1, sequenceName = "SQ_CONTA")
 public class Conta implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "SQ_CONTA")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long idConta;
 
     private String banco;

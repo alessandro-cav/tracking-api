@@ -1,27 +1,24 @@
 package com.ms.tracking_api.dtos.responses;
 
-import com.ms.tracking_api.enuns.TipoAcesso;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class RegistrarAtividaderResponse implements Serializable {
+public class ReciboResponse implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    private Long idRegistrarAtividade;
-
-    private TipoAcesso tipoAcesso;
-
     private String nome;
 
-    private String vaga;
+    private String rg;
 
-    private String evento;
+    private String cpf;
 
+    private BigDecimal valor;
 }

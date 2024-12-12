@@ -11,7 +11,7 @@ import java.io.Serializable;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class TokenInfo implements Serializable {
+public class ControladorAcesso implements Serializable {
 
     private static final long serialVersionUID = 1L;
 

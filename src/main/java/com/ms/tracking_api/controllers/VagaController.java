@@ -1,10 +1,8 @@
 package com.ms.tracking_api.controllers;
 
-import com.ms.tracking_api.dtos.requests.EventoRequest;
+import com.ms.tracking_api.dtos.requests.StatusVagaFechadaRequest;
 import com.ms.tracking_api.dtos.requests.VagaRequest;
-import com.ms.tracking_api.dtos.responses.EventoResponse;
 import com.ms.tracking_api.dtos.responses.VagaResponse;
-import com.ms.tracking_api.services.EventoService;
 import com.ms.tracking_api.services.VagaService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
@@ -77,5 +75,11 @@ public class VagaController {
         return ResponseEntity.ok(this.service
                 .buscarPorNome(vaga, PageRequest.of(pagina, quantidade, Sort.by(Sort.Direction.valueOf(ordem), ordenarPor))));
 
+    }
+
+    @PutMapping("/fechar")
+    public ResponseEntity<Void> mudarsStatusParaFechada(@Valid @RequestBody StatusVagaFechadaRequest request) {
+            this.service.mudarsStatusParaFechada(request);
+            return ResponseEntity.ok().build();
     }
 }

@@ -1,7 +1,7 @@
 package com.ms.tracking_api.configs.tokenConfig;
 
 
-import com.ms.tracking_api.dtos.responses.TokenInfo;
+import com.ms.tracking_api.dtos.responses.ControladorAcesso;
 import com.ms.tracking_api.handlers.BadRequestException;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
@@ -34,7 +34,7 @@ public class TokenConfig {
                 .compact();
     }
 
-    public TokenInfo validateToken(String token) {
+    public ControladorAcesso validateToken(String token) {
         try {
             Claims claims = Jwts.parserBuilder()
                     .setSigningKey(getSigningKey())
@@ -45,7 +45,7 @@ public class TokenConfig {
             String idFuncionario = claims.get("idFuncionario", String.class);
             String tipoAtividade = claims.get("tipoAtividade", String.class);
             String idVaga = claims.get("idVaga", String.class);
-            return new TokenInfo(Long.parseLong(idFuncionario), tipoAtividade, Long.parseLong(idVaga));
+            return new ControladorAcesso(Long.parseLong(idFuncionario), tipoAtividade, Long.parseLong(idVaga));
         } catch (Exception e) {
             throw new BadRequestException("Token inválido ou expirado");
         }
