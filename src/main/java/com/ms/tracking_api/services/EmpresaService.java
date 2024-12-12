@@ -46,14 +46,14 @@ public class EmpresaService {
     @Transactional(readOnly = true)
     public List<EmpresaResponse> buscarTodos(PageRequest pageRequest) {
         return this.repository.findAll(pageRequest).stream()
-                .map(empresa -> this.modelMapper.map(empresa, EmpresaResponse.class))
+                .map(empresa ->  gerarEmpresaResponse(empresa))
                 .collect(Collectors.toList());
     }
 
     @Transactional(readOnly = true)
     public EmpresaResponse buscarPeloId(Long id) {
         return this.repository.findById(id).map(empresa -> {
-            return this.modelMapper.map(empresa, EmpresaResponse.class);
+            return   gerarEmpresaResponse(empresa);
         }).orElseThrow(() -> new ObjetoNotFoundException("Empresa não encontrada!"));
     }
 
@@ -91,7 +91,7 @@ public class EmpresaService {
     @Transactional(readOnly = true)
     public List<EmpresaResponse> buscarPorNome(String nome, PageRequest pageRequest) {
         return this.repository.findByNomeContainingIgnoreCase(nome, pageRequest).stream()
-                .map(empresa -> this.modelMapper.map(empresa, EmpresaResponse.class))
+                .map(empresa ->  gerarEmpresaResponse(empresa))
                 .collect(Collectors.toList());
     }
 
@@ -122,5 +122,4 @@ public class EmpresaService {
         empresaResponse.setCep(empresa.getEndereco().getCep());
         return  empresaResponse;
     }
-
 }

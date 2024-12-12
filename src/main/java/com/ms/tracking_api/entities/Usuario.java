@@ -28,6 +28,8 @@ public class Usuario implements Serializable {
 
     private String cpf;
 
+    private String rg;
+
     private String telefone;
 
     private String email;
@@ -37,6 +39,8 @@ public class Usuario implements Serializable {
     @Enumerated(EnumType.STRING)
     private Genero genero;
 
+    private LocalDate validadeASO;
+
     @OneToMany(mappedBy = "usuario")
     private List<RegistrarAtividade> registrarAtividades;
 
@@ -45,6 +49,10 @@ public class Usuario implements Serializable {
 
     @OneToMany(mappedBy = "usuario")
     private List<Conta> contas;
+
+    @OneToMany(mappedBy = "usuario")
+    private List<Avaliacao> avaliacao;
+
 
     @Lob
     @Column(columnDefinition = "TEXT")

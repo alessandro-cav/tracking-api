@@ -14,4 +14,6 @@ public interface UsuarioVagaRepository extends PagingAndSortingRepository<Usuari
     Optional<UsuarioVaga> findByVagaIdVagaAndUsuarioIdUsuario(Long idVaga, Long idUsuario);
 
     List<UsuarioVaga> findByUsuarioIdUsuario(Long idUsuario);
+
+
 }

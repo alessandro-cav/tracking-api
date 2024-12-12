@@ -52,14 +52,14 @@ public class UsuarioService {
     @Transactional(readOnly = true)
     public List<UsuarioResponse> buscarTodos(PageRequest pageRequest) {
         return this.repository.findAll(pageRequest).stream()
-                .map(usuario -> this.modelMapper.map(usuario, UsuarioResponse.class))
+                .map(usuario -> gerarUsuarioResponse(usuario))
                 .collect(Collectors.toList());
     }
 
     @Transactional(readOnly = true)
     public UsuarioResponse buscarPeloId(Long id) {
         return this.repository.findById(id).map(usuario -> {
-            return this.modelMapper.map(usuario, UsuarioResponse.class);
+            return gerarUsuarioResponse(usuario);
         }).orElseThrow(() -> new ObjetoNotFoundException("Usuário não encontrado!"));
     }
 
@@ -101,7 +101,7 @@ public class UsuarioService {
     @Transactional(readOnly = true)
     public List<UsuarioResponse> buscarPorNome(String nome, PageRequest pageRequest) {
         return this.repository.findByNomeContainingIgnoreCase(nome, pageRequest).stream()
-                .map(usuario -> modelMapper.map(usuario, UsuarioResponse.class))
+                .map(usuario -> gerarUsuarioResponse(usuario))
                 .collect(Collectors.toList());
     }
 

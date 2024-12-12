@@ -2,7 +2,7 @@ package com.ms.tracking_api.enuns;
 
 public enum Role {
 
-     ADMIN("ADMIN"), FUNCIONARIO("FUNCIONARIO");
+     ADMIN("ADMIN"), USUARIO("USUARIO");
 
      private String descricao;
 

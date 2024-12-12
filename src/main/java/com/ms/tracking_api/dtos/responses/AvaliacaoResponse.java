@@ -1,6 +1,5 @@
 package com.ms.tracking_api.dtos.responses;
 
-import com.ms.tracking_api.enuns.TipoAcesso;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -10,18 +9,16 @@ import java.io.Serializable;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class RegistrarAtividaderResponse implements Serializable {
+public class AvaliacaoResponse implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    private Long idRegistrarAtividade;
+    private Long idAvalicao;
 
-    private TipoAcesso tipoAcesso;
+    private Integer estrela;
 
-    private String nome;
+    private String comentario;
 
-    private String vaga;
-
-    private String evento;
-
+    private Long idUsuario;
+    
 }
