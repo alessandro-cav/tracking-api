@@ -17,13 +17,12 @@ import java.time.LocalDateTime;
 @Builder
 @Entity
 @Table(name = "tb_registrar_atividade")
-@SequenceGenerator(name = "SQ_REGISTRAR_ATIVIDADE", allocationSize = 1, sequenceName = "SQ_REGISTRAR_ATIVIDADE")
 public class RegistrarAtividade implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "SQ_REGISTRAR_ATIVIDADE")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long idRegistrarAtividade;
 
     @Enumerated(EnumType.STRING)
