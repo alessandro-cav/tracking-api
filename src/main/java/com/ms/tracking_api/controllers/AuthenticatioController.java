@@ -20,7 +20,7 @@ public class AuthenticatioController {
     private final AuthenticationService service;
 
     @PostMapping("/register")
-    @Operation(summary = "Registrar Usuario", description = "Endpoint para registrar um novo usuário")
+    @Operation(summary = "Registrar Usuario da web", description = "Endpoint para registrar um novo usuário na web")
     public ResponseEntity<AuthenticationResponseDTO> register(
             @RequestBody RegisterRequestDTO requestDTO
     ) {
