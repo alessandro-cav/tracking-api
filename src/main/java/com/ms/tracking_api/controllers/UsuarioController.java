@@ -25,12 +25,11 @@ public class UsuarioController {
 
     private final UsuarioService service;
 
-    @PostMapping
-    @Operation(summary = "Criar usuario", description = "Endpoint para criar usuario")
-    public ResponseEntity<UsuarioResponse> salvar(@Valid @RequestBody UsuarioRequest request) {
-        return ResponseEntity.ok(this.service.salvar(request));
+    @PostMapping("/mobile")
+    @Operation(summary = "Criar usuario para mobile", description = "Endpoint para criar usuario para mobile")
+    public ResponseEntity<UsuarioResponse> salvarMobile(@Valid @RequestBody UsuarioRequest request) {
+        return ResponseEntity.ok(this.service.salvarMobile(request));
     }
-
 
     @GetMapping
     @Operation(summary = "Listar usuario", description = "Endpoint para listar usuario")
