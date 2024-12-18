@@ -5,6 +5,7 @@ import com.ms.tracking_api.configs.validations.Validator;
 import com.ms.tracking_api.dtos.requests.UsuarioRequest;
 import com.ms.tracking_api.dtos.responses.UsuarioResponse;
 import com.ms.tracking_api.entities.Endereco;
+import com.ms.tracking_api.entities.User;
 import com.ms.tracking_api.entities.Usuario;
 import com.ms.tracking_api.enuns.Genero;
 import com.ms.tracking_api.handlers.BadRequestException;
@@ -13,6 +14,7 @@ import com.ms.tracking_api.repositories.UsuarioRepository;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -31,22 +33,25 @@ public class UsuarioService {
     private final Validator validator;
 
     @Transactional
-    public UsuarioResponse salvar(UsuarioRequest usuarioRequest) {
+    public UsuarioResponse salvarMobile(UsuarioRequest usuarioRequest) {
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         this.validator.validaCPF(usuarioRequest.getCpf());
         this.validator.validaEmail(usuarioRequest.getEmail());
-        this.repository.findByCpf(usuarioRequest.getCpf()).ifPresent(funcionario -> {
+        this.repository.findByCpf(usuarioRequest.getCpf()).ifPresent(usuario -> {
             throw new BadRequestException(usuarioRequest.getCpf() + " já cadastrado no sistema!");
         });
-        this.repository.findByEmail(usuarioRequest.getEmail()).ifPresent(funcionario -> {
-            throw new BadRequestException(usuarioRequest.getEmail() + " já cadastrado no sistema!");
-        });
+        if (!usuarioRequest.getEmail().equals(user.getEmail())) {
+            this.repository.findByEmail(usuarioRequest.getEmail()).ifPresent(usuario -> {
+                throw new BadRequestException(usuarioRequest.getEmail() + " já cadastrado no sistema!");
+            });
+        }
         Usuario usuario = this.modelMapper.map(usuarioRequest, Usuario.class);
         usuario.setGenero(Genero.buscarGenero(usuarioRequest.getGenero()));
-        usuario.setIdUsuario(usuarioRequest.getIdUsuario());
+        usuario.setIdUsuario(user.getId());
         Endereco endereco = getEndereco(usuarioRequest);
         usuario.setEndereco(endereco);
         usuario = this.repository.save(usuario);
-        return  gerarUsuarioResponse(usuario);
+        return gerarUsuarioResponse(usuario);
     }
 
     @Transactional(readOnly = true)
@@ -76,7 +81,7 @@ public class UsuarioService {
     public UsuarioResponse atualizar(Long id, UsuarioRequest usuarioRequest) {
         this.validator.validaCPF(usuarioRequest.getCpf());
         this.validator.validaEmail(usuarioRequest.getEmail());
-        Genero genero =  Genero.buscarGenero(usuarioRequest.getGenero());
+        Genero genero = Genero.buscarGenero(usuarioRequest.getGenero());
         return this.repository.findById(id).map(usuario -> {
             if (!(usuario.getCpf().equals(usuarioRequest.getCpf()))) {
                 this.repository.findByCpf(usuarioRequest.getCpf()).ifPresent(funcionario1 -> {
@@ -94,7 +99,7 @@ public class UsuarioService {
             Endereco endereco = getEndereco(usuarioRequest);
             usuario.setEndereco(endereco);
             usuario = this.repository.save(usuario);
-            return  gerarUsuarioResponse(usuario);
+            return gerarUsuarioResponse(usuario);
         }).orElseThrow(() -> new ObjetoNotFoundException("Usuário não encontrado!"));
     }
 
@@ -110,6 +115,7 @@ public class UsuarioService {
         return this.repository.findById(id)
                 .orElseThrow(() -> new ObjetoNotFoundException("Usuário não encontrado!"));
     }
+
     private UsuarioResponse gerarUsuarioResponse(Usuario usuario) {
         UsuarioResponse usuarioResponse = this.modelMapper.map(usuario, UsuarioResponse.class);
         usuarioResponse.setLogradouro(usuario.getEndereco().getLogradouro());

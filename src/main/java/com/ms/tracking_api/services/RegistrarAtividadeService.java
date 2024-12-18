@@ -15,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 @Service
 @RequiredArgsConstructor
@@ -102,10 +103,13 @@ public class RegistrarAtividadeService {
             long horasDeDiferenca = Duration.between(ultimaAtividade, LocalDateTime.now()).toHoursPart();
 
             if (horasDeDiferenca < 2) {
-                throw new BadRequestException("O registro de saída deve ser gerado pelo menos 2 horas após o inicio do evento.");
+                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm");
+                String horaFormatada = ultimaAtividade.format(formatter);
+                throw new BadRequestException("O registro de saída deve ser gerado no mínimo 2 horas após o início do evento. Registro de horário de entrada: " + horaFormatada);
             }
         }
     }
+
     @Transactional(readOnly = true)
     private RegistrarAtividade buscarUltimaAtividadePorUsuario(Long idUsuario, Long idVaga) {
         return this.repository.

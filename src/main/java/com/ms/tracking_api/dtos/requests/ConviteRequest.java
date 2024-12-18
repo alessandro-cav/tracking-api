@@ -1,4 +1,4 @@
-package com.ms.tracking_api.configs.auth;
+package com.ms.tracking_api.dtos.requests;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -13,7 +13,7 @@ import java.io.Serializable;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class RegisterRequestDTO implements Serializable {
+public class ConviteRequest implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -25,9 +25,4 @@ public class RegisterRequestDTO implements Serializable {
     @NotBlank(message = "O campo email  não pode ser vazio.")
     private String email;
 
-    @NotNull(message = "O campo senha é obrigatória.")
-    @NotBlank(message = "O campo senha não pode ser vazia.")
-    private String senha;
-
-    private String role;
 }
