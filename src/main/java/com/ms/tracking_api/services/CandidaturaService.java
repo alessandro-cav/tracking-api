@@ -3,6 +3,7 @@ package com.ms.tracking_api.services;
 import com.ms.tracking_api.dtos.requests.CandidaturaRequest;
 import com.ms.tracking_api.dtos.responses.CandidaturaResponse;
 import com.ms.tracking_api.dtos.responses.UsuarioCandidatoResponse;
+import com.ms.tracking_api.dtos.responses.VagaResponse;
 import com.ms.tracking_api.entities.Candidatura;
 import com.ms.tracking_api.entities.Evento;
 import com.ms.tracking_api.entities.Usuario;
@@ -12,7 +13,7 @@ import com.ms.tracking_api.enuns.StatusVaga;
 import com.ms.tracking_api.handlers.BadRequestException;
 import com.ms.tracking_api.repositories.CandidaturaRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.context.annotation.Lazy;
+import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,13 +26,15 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class CandidaturaService {
 
-    private final @Lazy VagaService vagaService;
+    private final VagaService vagaService;
 
-    private final  @Lazy UsuarioService usuarioService;
+    private final  UsuarioService usuarioService;
 
-    private final  @Lazy EventoService eventoService;
+    private final  EventoService eventoService;
 
     private final CandidaturaRepository repository;
+
+    private final ModelMapper modelMapper;
 
     @Transactional
     public void save(CandidaturaRequest request) {
@@ -158,6 +161,25 @@ public class CandidaturaService {
     @Transactional(readOnly = true)
     public List<Candidatura> findByVagaIdVaga(Long idVaga, PageRequest pageRequest) {
         return this.repository.findByVagaIdVaga(idVaga, pageRequest);
+    }
+
+    @Transactional(readOnly = true)
+    public CandidaturaResponse buscarVagasPorUsuario(Long idUsuario, PageRequest pageRequest) {
+        List<VagaResponse> vagaResponses = this.repository.findByUsuarioIdUsuario(idUsuario, pageRequest)
+                .stream()
+                .map(c -> this.modelMapper.map(c.getVaga(), VagaResponse.class))
+                .collect(Collectors.toList());
+        return CandidaturaResponse.builder().vagas(vagaResponses).quantidade(vagaResponses.size()).build();
+    }
+
+    @Transactional(readOnly = true)
+    public CandidaturaResponse buscarUsuariosPorVaga(Long idVaga, PageRequest pageRequest) {
+        List<UsuarioCandidatoResponse> ucrs = this.repository.findByVagaIdVaga(idVaga, pageRequest)
+                .stream()
+                .map(c -> this.modelMapper.map(c.getUsuario(), UsuarioCandidatoResponse.class))
+                .collect(Collectors.toList());
+
+        return CandidaturaResponse.builder().usuarios(ucrs).quantidade(ucrs.size()).build();
     }
 }
 

@@ -65,4 +65,30 @@ public class CandidaturaController {
                 .buscar(idEvento, idVaga, statusCandidatura, PageRequest.of(pagina, quantidade, Sort.by(Sort.Direction.valueOf(ordem), ordenarPor))));
 
     }
+
+    @GetMapping("/buscarVagasPorUsuario")
+    @Operation(summary = "Buscar vagas de um determinado usuario", description = "Buscar vagas de um determinado usuario")
+    public ResponseEntity<CandidaturaResponse> buscarVagasPorUsuario(
+            @RequestParam Integer pagina,
+            @RequestParam Integer quantidade,
+            @RequestParam String ordem,
+            @RequestParam String ordenarPor,
+            @RequestParam Long idUsuario) {
+        return ResponseEntity.ok(this.service
+                .buscarVagasPorUsuario(idUsuario, PageRequest.of(pagina, quantidade, Sort.by(Sort.Direction.valueOf(ordem), ordenarPor))));
+
+    }
+
+    @GetMapping("/buscarUsuariosPorVaga")
+    @Operation(summary = "Buscar vagas de um determinado usuario", description = "Buscar vagas de um determinado usuario")
+    public ResponseEntity<CandidaturaResponse> buscarUsuariosPorVaga(
+            @RequestParam Integer pagina,
+            @RequestParam Integer quantidade,
+            @RequestParam String ordem,
+            @RequestParam String ordenarPor,
+            @RequestParam Long idUsuario) {
+        return ResponseEntity.ok(this.service
+                .buscarUsuariosPorVaga(idUsuario, PageRequest.of(pagina, quantidade, Sort.by(Sort.Direction.valueOf(ordem), ordenarPor))));
+
+    }
 }
