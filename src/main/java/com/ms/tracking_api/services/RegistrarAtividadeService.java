@@ -29,7 +29,7 @@ public class RegistrarAtividadeService {
 
     private final RegistrarAtividadeRepository repository;
 
-    private final UsuarioVagaService usuarioVagaService;
+    private final CandidaturaService candidaturaService;
 
     @Transactional
     public RegistrarAtividaderResponse registrarAtividade(QRCodeRequest request) {
@@ -37,8 +37,8 @@ public class RegistrarAtividadeService {
         Usuario usuario = this.usuarioService.buscarUsuarioPeloId(request.getIdUsuario());
         Evento evento = this.eventoService.buscarEventoPeloId(request.getIdEvento());
 
-        UsuarioVaga usuarioVaga = buscarUsuarioVaga(usuario, vaga);
-        validarUsuarioVaga(usuarioVaga, evento);
+        Candidatura candidatura = buscarUsuarioVaga(usuario, vaga);
+        validarUsuarioVaga(candidatura, evento);
 
         RegistrarAtividade atividade = registrarEntradaOUSaida(usuario, vaga);
 
@@ -47,16 +47,16 @@ public class RegistrarAtividadeService {
     }
 
 
-    private UsuarioVaga buscarUsuarioVaga(Usuario usuario, Vaga vaga) {
-        return this.usuarioVagaService.findByUsuarioIdUsuarioAndVagaIdVaga(usuario.getIdUsuario(), vaga.getIdVaga());
+    private Candidatura buscarUsuarioVaga(Usuario usuario, Vaga vaga) {
+        return this.candidaturaService.findByUsuarioIdUsuarioAndVagaIdVaga(usuario.getIdUsuario(), vaga.getIdVaga());
     }
 
-    private void validarUsuarioVaga(UsuarioVaga usuarioVaga, Evento evento) {
-        if (!usuarioVaga.getVaga().getEvento().getIdEvento().equals(evento.getIdEvento())) {
+    private void validarUsuarioVaga(Candidatura candidatura, Evento evento) {
+        if (!candidatura.getVaga().getEvento().getIdEvento().equals(evento.getIdEvento())) {
             throw new BadRequestException("A vaga que o usuário está vinculado não pertence a esse evento");
         }
 
-        if (usuarioVaga.getStatusCandidatura() == StatusCandidatura.PENDENTE || usuarioVaga.getStatusCandidatura() == StatusCandidatura.RECUSADA) {
+        if (candidatura.getStatusCandidatura() == StatusCandidatura.PENDENTE || candidatura.getStatusCandidatura() == StatusCandidatura.RECUSADA) {
             throw new BadRequestException("A candidatura de trabalho está pendente ou foi recusada para este evento, portanto, não é possível realizar a entrada.");
         }
     }
