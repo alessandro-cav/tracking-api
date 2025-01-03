@@ -1,9 +1,8 @@
 package com.ms.tracking_api.services;
 
-import com.ms.tracking_api.dtos.requests.UsuarioVagaRequest;
+import com.ms.tracking_api.dtos.requests.CandidaturaRequest;
 import com.ms.tracking_api.dtos.responses.CandidaturaResponse;
 import com.ms.tracking_api.dtos.responses.UsuarioCandidatoResponse;
-import com.ms.tracking_api.dtos.responses.VagaResponse;
 import com.ms.tracking_api.entities.Candidatura;
 import com.ms.tracking_api.entities.Evento;
 import com.ms.tracking_api.entities.Usuario;
@@ -13,13 +12,11 @@ import com.ms.tracking_api.enuns.StatusVaga;
 import com.ms.tracking_api.handlers.BadRequestException;
 import com.ms.tracking_api.repositories.CandidaturaRepository;
 import lombok.RequiredArgsConstructor;
-import org.modelmapper.ModelMapper;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -37,7 +34,7 @@ public class CandidaturaService {
     private final CandidaturaRepository repository;
 
     @Transactional
-    public void save(UsuarioVagaRequest request) {
+    public void save(CandidaturaRequest request) {
         Evento evento = eventoService.buscarEventoPeloId(request.getIdEvento());
         Vaga vaga = this.vagaService.buscarVagaPeloId(request.getIdVaga());
         validarRelacionamentoEventoVaga(evento, vaga);
@@ -57,7 +54,7 @@ public class CandidaturaService {
     }
 
     @Transactional
-    public void excluirPeloUsuarioVagaPeloVagaEUsuario(UsuarioVagaRequest request) {
+    public void excluirPeloUsuarioVagaPeloVagaEUsuario(CandidaturaRequest request) {
         Evento evento = eventoService.buscarEventoPeloId(request.getIdEvento());
         Vaga vaga = this.vagaService.buscarVagaPeloId(request.getIdVaga());
         validarRelacionamentoEventoVaga(evento, vaga);
@@ -80,7 +77,7 @@ public class CandidaturaService {
     }
 
     @Transactional
-    public void aceitarCandidatura(UsuarioVagaRequest request) {
+    public void aceitarCandidatura(CandidaturaRequest request) {
         Evento evento = eventoService.buscarEventoPeloId(request.getIdEvento());
         Vaga vaga = this.vagaService.buscarVagaPeloId(request.getIdVaga());
         Usuario usuario = this.usuarioService.buscarUsuarioPeloId(request.getIdUsuario());
@@ -99,7 +96,7 @@ public class CandidaturaService {
     }
 
     @Transactional
-    public void recusarCandidatura(UsuarioVagaRequest request) {
+    public void recusarCandidatura(CandidaturaRequest request) {
         Evento evento = eventoService.buscarEventoPeloId(request.getIdEvento());
         Vaga vaga = this.vagaService.buscarVagaPeloId(request.getIdVaga());
         Usuario usuario = this.usuarioService.buscarUsuarioPeloId(request.getIdUsuario());
