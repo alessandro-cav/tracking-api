@@ -17,6 +17,10 @@ public class UsuarioCandidatoResponse implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
+    private String evento;
+
+    private String vaga;
+
     private Long idUsuario;
 
     private String nome;
