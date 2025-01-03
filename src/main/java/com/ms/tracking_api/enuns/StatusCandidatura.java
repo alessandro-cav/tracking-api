@@ -6,7 +6,7 @@ public enum StatusCandidatura {
 
      private String descricao;
 
-     public static StatusCandidatura buscarRole(String sc) {
+     public static StatusCandidatura buscarStatusCandatura(String sc) {
           StatusCandidatura candidatura = null;
           for (StatusCandidatura candidatura1 : StatusCandidatura.values()) {
                if (candidatura1.getDescricao().equals(sc.toUpperCase())) {

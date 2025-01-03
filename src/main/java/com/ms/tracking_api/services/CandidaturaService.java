@@ -3,7 +3,7 @@ package com.ms.tracking_api.services;
 import com.ms.tracking_api.dtos.requests.CandidaturaRequest;
 import com.ms.tracking_api.dtos.responses.CandidaturaResponse;
 import com.ms.tracking_api.dtos.responses.UsuarioCandidatoResponse;
-import com.ms.tracking_api.dtos.responses.VagaResponse;
+import com.ms.tracking_api.dtos.responses.VagaCandidatoResponse;
 import com.ms.tracking_api.entities.Candidatura;
 import com.ms.tracking_api.entities.Evento;
 import com.ms.tracking_api.entities.Usuario;
@@ -120,16 +120,14 @@ public class CandidaturaService {
     // ver como vai funcionar a concluida
 
     @Transactional(readOnly = true)
-    public CandidaturaResponse buscar(Long idEvento, Long idVaga, String statusCandidatura, PageRequest pageRequest) {
-        Evento evento = eventoService.buscarEventoPeloId(idEvento);
+    public CandidaturaResponse buscarPorTipoDeCandidatura(Long idVaga, String statusCandidatura, PageRequest pageRequest) {
         Vaga vaga = vagaService.buscarVagaPeloId(idVaga);
-        validarRelacionamentoEventoVaga(evento, vaga);
+        StatusCandidatura status = StatusCandidatura.buscarStatusCandatura(statusCandidatura);
         List<Candidatura> candidaturas = repository.findByVagaIdVagaAndStatusCandidatura(
-                vaga.getIdVaga(), statusCandidatura, pageRequest);
-
+                vaga.getIdVaga(), status, pageRequest);
         List<UsuarioCandidatoResponse> usuarios = candidaturas
                 .stream()
-                .map(c -> gerarUsuarioCandidatoResponse(c.getUsuario()))
+                .map(c -> gerarUsuarioCandidatoResponse(c))
                 .collect(Collectors.toList());
 
         return CandidaturaResponse.builder().usuarios(usuarios).quantidade(usuarios.size()).build();
@@ -141,46 +139,51 @@ public class CandidaturaService {
         }
     }
 
-    private UsuarioCandidatoResponse gerarUsuarioCandidatoResponse(Usuario usuario) {
+    private UsuarioCandidatoResponse gerarUsuarioCandidatoResponse(Candidatura candidatura) {
         return UsuarioCandidatoResponse.builder()
-                .idUsuario(usuario.getIdUsuario())
-                .nome(usuario.getNome())
-                .cpf(usuario.getCpf())
-                .rg(usuario.getRg())
-                .email(usuario.getEmail())
-                .telefone(usuario.getTelefone())
-                .imagem(usuario.getImagem())
+                .idUsuario(candidatura.getUsuario().getIdUsuario())
+                .nome(candidatura.getUsuario().getNome())
+                .cpf(candidatura.getUsuario().getCpf())
+                .rg(candidatura.getUsuario().getRg())
+                .email(candidatura.getUsuario().getEmail())
+                .telefone(candidatura.getUsuario().getTelefone())
+                .imagem(candidatura.getUsuario().getImagem())
+                .evento(candidatura.getVaga().getEvento().getNome())
+                .vaga(candidatura.getVaga().getVaga())
                 .build();
     }
 
     @Transactional(readOnly = true)
-    public List<Candidatura> findByUsuarioIdUsuario(Long idUsuario, PageRequest pageRequest) {
-        return this.repository.findByUsuarioIdUsuario(idUsuario, pageRequest);
-    }
-
-    @Transactional(readOnly = true)
-    public List<Candidatura> findByVagaIdVaga(Long idVaga, PageRequest pageRequest) {
-        return this.repository.findByVagaIdVaga(idVaga, pageRequest);
+    public CandidaturaResponse buscarUsuariosPorVaga(Long idVaga, PageRequest pageRequest) {
+        Vaga vaga = vagaService.buscarVagaPeloId(idVaga);
+        List<UsuarioCandidatoResponse> ucrs = repository.findByVagaIdVaga(vaga.getIdVaga(), pageRequest)
+                .stream()
+                .map(usuario -> {
+                    UsuarioCandidatoResponse response = modelMapper.map(usuario, UsuarioCandidatoResponse.class);
+                    response.setEvento(vaga.getEvento().getNome());
+                    response.setVaga(vaga.getVaga());
+                    return response;
+                })
+                .collect(Collectors.toList());
+        return CandidaturaResponse.builder().usuarios(ucrs).quantidade(ucrs.size()).build();
     }
 
     @Transactional(readOnly = true)
     public CandidaturaResponse buscarVagasPorUsuario(Long idUsuario, PageRequest pageRequest) {
-        List<VagaResponse> vagaResponses = this.repository.findByUsuarioIdUsuario(idUsuario, pageRequest)
-                .stream()
-                .map(c -> this.modelMapper.map(c.getVaga(), VagaResponse.class))
-                .collect(Collectors.toList());
-        return CandidaturaResponse.builder().vagas(vagaResponses).quantidade(vagaResponses.size()).build();
-    }
-
-    @Transactional(readOnly = true)
-    public CandidaturaResponse buscarUsuariosPorVaga(Long idVaga, PageRequest pageRequest) {
-        List<UsuarioCandidatoResponse> ucrs = this.repository.findByVagaIdVaga(idVaga, pageRequest)
-                .stream()
-                .map(c -> this.modelMapper.map(c.getUsuario(), UsuarioCandidatoResponse.class))
+        Usuario usuario = this.usuarioService.buscarUsuarioPeloId(idUsuario);
+        List<VagaCandidatoResponse> vagasResponses = this.repository.findVagasByUsuarioIdUsuario(usuario.getIdUsuario(), pageRequest).stream()
+                .map(vaga -> {
+                   VagaCandidatoResponse response = new VagaCandidatoResponse();
+                   response.setNome(usuario.getNome());
+                    response.setEvento(vaga.getEvento().getNome());
+                    response.setVaga(vaga.getVaga());
+                    return  response;
+                })
                 .collect(Collectors.toList());
 
-        return CandidaturaResponse.builder().usuarios(ucrs).quantidade(ucrs.size()).build();
+         return CandidaturaResponse.builder().vagas(vagasResponses).quantidade(vagasResponses.size()).build();
     }
+
 }
 
 
