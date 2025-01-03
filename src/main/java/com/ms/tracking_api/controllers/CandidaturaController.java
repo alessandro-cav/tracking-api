@@ -1,8 +1,7 @@
 package com.ms.tracking_api.controllers;
 
-import com.ms.tracking_api.dtos.requests.UsuarioVagaRequest;
+import com.ms.tracking_api.dtos.requests.CandidaturaRequest;
 import com.ms.tracking_api.dtos.responses.CandidaturaResponse;
-import com.ms.tracking_api.dtos.responses.VagaResponse;
 import com.ms.tracking_api.services.CandidaturaService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
@@ -13,8 +12,6 @@ import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/candidaturas")
@@ -28,28 +25,28 @@ public class CandidaturaController {
 
     @PostMapping
     @Operation(summary = "Criar a candidatura", description = "Endpoint para candidatar o usuário a vaga do evento")
-    public ResponseEntity<Void> salvarUsuarioVaga(@RequestBody UsuarioVagaRequest request) {
+    public ResponseEntity<Void> salvarUsuarioVaga(@RequestBody CandidaturaRequest request) {
         service.save(request);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
     @DeleteMapping
     @Operation(summary = "Desvincular a candidatura", description = "Endpoint para descandidatar o usuário da vaga do evento")
-    public ResponseEntity<Void> excluirUsuarioVaga(@RequestBody UsuarioVagaRequest request) {
+    public ResponseEntity<Void> excluirUsuarioVaga(@RequestBody CandidaturaRequest request) {
         service.excluirPeloUsuarioVagaPeloVagaEUsuario(request);
         return ResponseEntity.noContent().build();
     }
 
     @PostMapping("/aceitar")
     @Operation(summary = "Aceitar candidatura da vaga", description = "Endpoint para aceitar candidatura do usuario a vaga do evento")
-    public ResponseEntity<Void> aceitarCandidatura(@RequestBody UsuarioVagaRequest request) {
+    public ResponseEntity<Void> aceitarCandidatura(@RequestBody CandidaturaRequest request) {
         service.aceitarCandidatura(request);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
     @PostMapping("/recusar")
     @Operation(summary = "Recusar candidatura da vaga", description = "Endpoint para recusar candidatura do usuario a vaga do evento")
-    public ResponseEntity<Void> recusarCandidatura(@RequestBody UsuarioVagaRequest request) {
+    public ResponseEntity<Void> recusarCandidatura(@RequestBody CandidaturaRequest request) {
         service.recusarCandidatura(request);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }

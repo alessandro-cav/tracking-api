@@ -9,11 +9,13 @@ import java.io.Serializable;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class UsuarioVagaRequest implements Serializable {
+public class CandidaturaRequest implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    private Long idUsuarioVaga;
+    private Long idCandidatura;
+
+    private Long idEvento;
 
     private Long idVaga;
 
