@@ -37,7 +37,7 @@ public class VagaService {
         Evento evento = this.eventoService.buscarEventoPeloId(vagaRequest.getIdEvento());
         Vaga vaga = this.modelMapper.map(vagaRequest, Vaga.class);
         vaga.setEvento(evento);
-        vaga.setStatusVaga(StatusVaga.ABERTA); // criar o endiponi para fechar atividade
+        vaga.setStatusVaga(StatusVaga.ABERTA);
         vaga = this.repository.save(vaga);
         return gerarEnderecoResponse(vaga);
     }
