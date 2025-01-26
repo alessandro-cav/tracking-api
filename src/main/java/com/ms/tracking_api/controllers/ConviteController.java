@@ -1,14 +1,18 @@
 package com.ms.tracking_api.controllers;
 
 import com.ms.tracking_api.dtos.requests.ConviteRequest;
-import com.ms.tracking_api.dtos.responses.ConviteResponse;
+import com.ms.tracking_api.dtos.requests.ValidarConviteRequest;
 import com.ms.tracking_api.services.ConviteService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/convites")
@@ -19,11 +23,16 @@ public class ConviteController {
 
     private final ConviteService service;
 
-    @PostMapping
-    @Operation(summary = "Convite Usuario", description = "Endpoint para convidar um novo usuário")
-    public ResponseEntity<ConviteResponse> convite(
-            @RequestBody ConviteRequest requestDTO) {
-        return ResponseEntity.ok(service.criarUsuarioConvidado(requestDTO));
+    @PostMapping("/enviarConvite")
+    @Operation(summary = "Enviar convite ao Usuário", description = "Endpoint para enviar convite a um novo usuário")
+    public ResponseEntity<Void> enviarConvite(@Valid  @RequestBody ConviteRequest requestDTO) {
+        service.enviarConvite(requestDTO);
+        return ResponseEntity.ok().build();
     }
 
+    @PostMapping("/validarConvite")
+    @Operation(summary = "Valida o  convite do Usuário", description = "Endpoint para valida o convite de um novo usuário")
+    public ResponseEntity<Boolean> validarConvite(@Valid @RequestBody ValidarConviteRequest requestDTO) {
+        return ResponseEntity.ok( service.validarConvite(requestDTO));
+    }
 }
