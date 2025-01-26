@@ -36,7 +36,7 @@ public class Empresa implements Serializable {
     private Endereco endereco;
 
     @Lob
-    @Column(columnDefinition = "TEXT")
+    @Column(columnDefinition = "LONGTEXT")
     private String imagem;
 
     @OneToMany(mappedBy = "empresa")

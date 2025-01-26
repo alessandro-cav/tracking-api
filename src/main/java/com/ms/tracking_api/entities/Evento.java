@@ -34,7 +34,7 @@ public class Evento implements Serializable {
     private Endereco endereco;
 
     @Lob
-    @Column(columnDefinition = "TEXT")
+    @Column(columnDefinition = "LONGTEXT")
     private String imagem;
 
     @ManyToOne(fetch = FetchType.LAZY)

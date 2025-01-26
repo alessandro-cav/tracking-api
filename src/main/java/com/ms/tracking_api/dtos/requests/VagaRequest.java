@@ -40,6 +40,4 @@ public class VagaRequest implements Serializable {
 
     private String observacao;
 
-
-    private StatusVaga statusVaga;
 }

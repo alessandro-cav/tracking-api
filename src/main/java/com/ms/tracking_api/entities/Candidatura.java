@@ -1,8 +1,6 @@
 package com.ms.tracking_api.entities;
 
 import com.ms.tracking_api.enuns.StatusCandidatura;
-import com.ms.tracking_api.enuns.StatusVaga;
-import com.ms.tracking_api.enuns.TipoAcesso;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -16,14 +14,14 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "tb_usuario_vaga")
-public class UsuarioVaga implements Serializable {
+@Table(name = "tb_candidatura")
+public class Candidatura implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long idUsuarioVaga;
+    private Long idCandidatura;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "vaga")
