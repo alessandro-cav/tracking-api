@@ -4,6 +4,7 @@ import com.ms.tracking_api.configs.jwt.JwtService;
 import com.ms.tracking_api.configs.validations.Validator;
 import com.ms.tracking_api.entities.User;
 import com.ms.tracking_api.enuns.Role;
+import com.ms.tracking_api.enuns.StatusUsuario;
 import com.ms.tracking_api.handlers.BadRequestException;
 import com.ms.tracking_api.repositories.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -36,7 +37,8 @@ public class AuthenticationService {
                 .nome(requestDTO.getNome())
                 .email(requestDTO.getEmail())
                 .senha(passwordEncoder.encode(requestDTO.getSenha()))
-                .role(Role.ADMIN) // criar usuario web ADMIN
+                .role(Role.buscarRole(requestDTO.getRole()))
+                .statusUsuario(StatusUsuario.ATIVO)
                 .build();
         repository.save(user);
 
@@ -48,9 +50,15 @@ public class AuthenticationService {
 
     public AuthenticationResponseDTO authenticate(AuthenticationRequestDTO requestDTO) {
         this.validator.validaEmail(requestDTO.getEmail());
-
         var user = repository.findByEmail(requestDTO.getEmail())
-                .orElseThrow(() -> new UsernameNotFoundException("Usuario não encontrado com esse email: " + requestDTO.getEmail()));
+                .map(usuario -> {
+                    if (usuario.getStatusUsuario() == StatusUsuario.ATIVO) {
+                        return usuario;
+                    } else {
+                        throw new BadRequestException("Usuário com status INATIVO. Por favor, entre em contato com a empresa para mais informações.");
+                    }
+                })
+                .orElseThrow(() -> new UsernameNotFoundException("Usuário não encontrado com esse e-mail: " + requestDTO.getEmail()));
 
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
@@ -58,9 +66,7 @@ public class AuthenticationService {
                         requestDTO.getSenha()
                 )
         );
-
         var jwtToken = jwtService.generateToken(user);
-
         return AuthenticationResponseDTO.builder()
                 .token(jwtToken)
                 .build();
