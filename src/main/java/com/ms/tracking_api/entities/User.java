@@ -1,6 +1,7 @@
 package com.ms.tracking_api.entities;
 
 import com.ms.tracking_api.enuns.Role;
+import com.ms.tracking_api.enuns.StatusUsuario;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -44,6 +45,9 @@ public class User implements UserDetails {
 
     @Enumerated(EnumType.STRING)
     private Role role;
+
+    @Enumerated(EnumType.STRING)
+    private StatusUsuario statusUsuario;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

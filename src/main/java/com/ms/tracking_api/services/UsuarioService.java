@@ -8,6 +8,7 @@ import com.ms.tracking_api.entities.Endereco;
 import com.ms.tracking_api.entities.User;
 import com.ms.tracking_api.entities.Usuario;
 import com.ms.tracking_api.enuns.Genero;
+import com.ms.tracking_api.enuns.StatusUsuario;
 import com.ms.tracking_api.handlers.BadRequestException;
 import com.ms.tracking_api.handlers.ObjetoNotFoundException;
 import com.ms.tracking_api.repositories.UsuarioRepository;
@@ -31,6 +32,8 @@ public class UsuarioService {
     private final UsuarioRepository repository;
 
     private final Validator validator;
+
+    private final UserService userService;
 
     @Transactional
     public UsuarioResponse salvarMobile(UsuarioRequest usuarioRequest) {
@@ -65,7 +68,7 @@ public class UsuarioService {
     public UsuarioResponse buscarPeloId(Long id) {
         return this.repository.findById(id).map(usuario -> {
             return gerarUsuarioResponse(usuario);
-        }).orElseThrow(() -> new ObjetoNotFoundException("Usuário não encontrado!"));
+        }).orElseThrow(() -> new BadRequestException("Usuário não encontrado!"));
     }
 
     @Transactional
@@ -73,7 +76,7 @@ public class UsuarioService {
         this.repository.findById(id).ifPresentOrElse(funcionario -> {
             this.repository.delete(funcionario);
         }, () -> {
-            throw new ObjetoNotFoundException("Usuário não encontrado!");
+            throw new BadRequestException("Usuário não encontrado!");
         });
     }
 
@@ -100,7 +103,28 @@ public class UsuarioService {
             usuario.setEndereco(endereco);
             usuario = this.repository.save(usuario);
             return gerarUsuarioResponse(usuario);
-        }).orElseThrow(() -> new ObjetoNotFoundException("Usuário não encontrado!"));
+        }).orElseThrow(() -> new BadRequestException("Usuário não encontrado!"));
+    }
+
+    @Transactional
+    public void inativarUsuario(String email) {
+        User user = this.userService.findByEmail(email);
+        if (user.getStatusUsuario() == StatusUsuario.INATIVO) {
+            throw new BadRequestException("O usuário já está com o status INATIVO.");
+        }
+        user.setStatusUsuario(StatusUsuario.INATIVO);
+        this.userService.salvarNovoStatus(user);
+    }
+
+
+    @Transactional
+    public void ativarUsuario(String email) {
+        User user = this.userService.findByEmail(email);
+        if (user.getStatusUsuario() == StatusUsuario.ATIVO) {
+            throw new BadRequestException("O usuário já está com o status ATIVO.");
+        }
+        user.setStatusUsuario(StatusUsuario.ATIVO);
+        this.userService.salvarNovoStatus(user);
     }
 
     @Transactional(readOnly = true)

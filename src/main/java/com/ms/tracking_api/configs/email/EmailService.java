@@ -36,7 +36,7 @@ public class EmailService {
 
         String link = "http://localhost:8080/ms-tracking/users/reset_password?token=" + token;
 
-        email.enviarEmail(user.getEmail(), user.getNome(), link);
+        email.emailAlterarSenha(user.getEmail(), user.getNome(), link);
     }
 
     public MensagemResponseDTO resetarSenha(String token, SenhasRequestDTO senhasRequestDTO) {

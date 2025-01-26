@@ -1,5 +1,6 @@
 package com.ms.tracking_api.controllers;
 
+import com.ms.tracking_api.dtos.requests.InativarUsuarioRequest;
 import com.ms.tracking_api.dtos.requests.UsuarioRequest;
 import com.ms.tracking_api.dtos.responses.UsuarioResponse;
 import com.ms.tracking_api.services.UsuarioService;
@@ -72,6 +73,21 @@ public class UsuarioController {
         return ResponseEntity.ok(this.service
                 .buscarPorNome(nome, PageRequest.of(pagina, quantidade, Sort.by(Sort.Direction.valueOf(ordem), ordenarPor))));
 
+    }
+
+
+    @PutMapping("/inativar")
+    @Operation(summary = "Inativar Usuário", description = "Endpoint para inativar um usuário pelo e-mail")
+    public ResponseEntity<Void> inativarUsuario(@RequestBody InativarUsuarioRequest requestDTO) {
+        service.inativarUsuario(requestDTO.getEmail());
+        return ResponseEntity.ok().build();
+    }
+
+    @PutMapping("/ativar")
+    @Operation(summary = "Ativar Usuário", description = "Endpoint para ativar um usuário pelo e-mail")
+    public ResponseEntity<Void> ativarUsuario(@RequestBody InativarUsuarioRequest requestDTO) {
+        service.ativarUsuario(requestDTO.getEmail());
+        return ResponseEntity.ok().build();
     }
 }
 

@@ -53,17 +53,16 @@ public class Usuario implements Serializable {
     @OneToMany(mappedBy = "usuario")
     private List<Avaliacao> avaliacao;
 
-
     @Lob
-    @Column(columnDefinition = "TEXT")
+    @Column(columnDefinition = "LONGTEXT")
     private String curriculo;
 
     @Lob
-    @Column(columnDefinition = "TEXT")
+    @Column(columnDefinition = "LONGTEXT")
     private String aso;
 
     @Lob
-    @Column(columnDefinition = "TEXT")
+    @Column(columnDefinition = "LONGTEXT")
     private String imagem;
 
     @CreationTimestamp
