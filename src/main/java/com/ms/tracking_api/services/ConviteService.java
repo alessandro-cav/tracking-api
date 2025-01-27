@@ -54,7 +54,7 @@ public class ConviteService {
                 .build();
 
         convite = this.repository.save(convite);
-        email.emailConvite(convite.getEmail(), convite.getNome(), convite.getCodigo());
+        this.enviarEmailConvite(convite);
     }
 
     private String generateUniqueCode() {
@@ -73,13 +73,25 @@ public class ConviteService {
                 .orElse(false);
     }
 
-    public Boolean reenviarConvite(ValidarConviteRequest request) {
-        return this.repository.findByEmailAndCodigo(request.getEmail(), request.getCodigo())
-                .map(conv -> {
-                    email.emailConvite(conv.getEmail(), conv.getNome(), conv.getCodigo());
+    public Boolean reenviarConvite(ConviteRequest request) {
+        return this.repository.findByEmailAndNome(request.getEmail(), request.getNome())
+                .map(convite -> {
+                   this.validarStatusConvite(convite);
+                    this.enviarEmailConvite(convite);
                     return true;
-                }).orElse(false);
+                })
+                .orElseThrow(() -> new BadRequestException("Convite não encontrado para os dados fornecidos."));
+    }
 
+    private void validarStatusConvite(Convite convite) {
+        if (convite.getStatusConvite() == StatusConvite.VALIDADO) {
+            throw new BadRequestException(
+                    "Não é possível reenviar o convite, pois o acesso ao aplicativo já foi validado com sucesso!");
+        }
+    }
+
+    private void enviarEmailConvite(Convite convite) {
+        email.emailConvite(convite.getEmail(), convite.getNome(), convite.getCodigo());
     }
 
     public List<ConviteResponseDTO> filtroConvite(FiltroConviteRequestDTO filtroConviteRequestDTO,
