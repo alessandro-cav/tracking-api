@@ -6,6 +6,7 @@ import com.ms.tracking_api.dtos.requests.ConviteRequest;
 import com.ms.tracking_api.dtos.requests.FiltroConviteRequestDTO;
 import com.ms.tracking_api.dtos.requests.ValidarConviteRequest;
 import com.ms.tracking_api.dtos.responses.ConviteResponseDTO;
+import com.ms.tracking_api.dtos.responses.EmpresaResponse;
 import com.ms.tracking_api.entities.Convite;
 import com.ms.tracking_api.enuns.StatusConvite;
 import com.ms.tracking_api.handlers.BadRequestException;
@@ -89,8 +90,14 @@ public class ConviteService {
         Example<Convite> example = Example.of(convite, exampleMatcher);
 
         Page<Convite> usuarios = this.repository.findAll(example, pageRequest);
-        return usuarios.stream().map(user -> {
-            return this.modelMapper.map(user, ConviteResponseDTO.class);
+        return usuarios.stream().map(conv -> {
+            return this.modelMapper.map(conv, ConviteResponseDTO.class);
         }).collect(Collectors.toList());
+    }
+
+    public List<ConviteResponseDTO> buscarTodos(PageRequest pageRequest) {
+        return this.repository.findAll(pageRequest).stream()
+                .map(conv -> this.modelMapper.map(conv, ConviteResponseDTO.class))
+                .collect(Collectors.toList());
     }
 }
