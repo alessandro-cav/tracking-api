@@ -35,4 +35,10 @@ public class ConviteController {
     public ResponseEntity<Boolean> validarConvite(@Valid @RequestBody ValidarConviteRequest requestDTO) {
         return ResponseEntity.ok( service.validarConvite(requestDTO));
     }
+
+    @PostMapping("/reenviarConvite")
+    @Operation(summary = "Reenviar o  convite do Usuário", description = "Endpoint para reenviar o convite de um novo usuário")
+    public ResponseEntity<Boolean> reenviar(@Valid @RequestBody ValidarConviteRequest requestDTO) {
+        return ResponseEntity.ok( service.reenviarConvite(requestDTO));
+    }
 }

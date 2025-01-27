@@ -5,6 +5,7 @@ import com.ms.tracking_api.configs.validations.Validator;
 import com.ms.tracking_api.dtos.requests.ConviteRequest;
 import com.ms.tracking_api.dtos.requests.ValidarConviteRequest;
 import com.ms.tracking_api.entities.Convite;
+import com.ms.tracking_api.enuns.StatusConvite;
 import com.ms.tracking_api.handlers.BadRequestException;
 import com.ms.tracking_api.repositories.ConviteRepository;
 import lombok.RequiredArgsConstructor;
@@ -32,11 +33,12 @@ public class ConviteService {
             );
         });
         String codigo = this.generateUniqueCode();
-        Convite convite =  Convite.
+        Convite convite = Convite.
                 builder()
                 .email(request.getEmail())
                 .nome(request.getNome())
                 .codigo(codigo)
+                .statusConvite(StatusConvite.PENDENTE)
                 .build();
 
         convite = this.repository.save(convite);
@@ -44,12 +46,27 @@ public class ConviteService {
     }
 
     private String generateUniqueCode() {
-       return UUID.randomUUID().toString().replaceAll("[^0-9]", "").substring(0, 6);
+        return UUID.randomUUID().toString().replaceAll("[^0-9]", "").substring(0, 6);
     }
 
+    @Transactional
     public boolean validarConvite(ValidarConviteRequest request) {
         this.validator.validaEmail(request.getEmail());
-        return this.repository.findByEmailAndCodigo(request.getEmail(), request.getCodigo()).isPresent();
+        return this.repository.findByEmailAndCodigo(request.getEmail(), request.getCodigo())
+                .map(convite -> {
+                    convite.setStatusConvite(StatusConvite.VALIDADO);
+                    this.repository.save(convite);
+                    return true;
+                })
+                .orElse(false);
     }
 
+    public Boolean reenviarConvite(ValidarConviteRequest request) {
+        return this.repository.findByEmailAndCodigo(request.getEmail(), request.getCodigo())
+                .map(conv -> {
+                    email.emailConvite(conv.getEmail(), conv.getNome(), conv.getCodigo());
+                    return true;
+                }).orElse(false);
+
+    }
 }
