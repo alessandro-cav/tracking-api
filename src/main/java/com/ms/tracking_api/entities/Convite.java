@@ -1,5 +1,7 @@
 package com.ms.tracking_api.entities;
 
+import com.ms.tracking_api.enuns.StatusCandidatura;
+import com.ms.tracking_api.enuns.StatusConvite;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -27,4 +29,7 @@ public class Convite implements Serializable {
     private String email;
 
     private String nome;
+
+    @Enumerated(EnumType.STRING)
+    private StatusConvite statusConvite;
 }
