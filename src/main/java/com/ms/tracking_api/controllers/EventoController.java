@@ -3,6 +3,7 @@ package com.ms.tracking_api.controllers;
 import com.ms.tracking_api.dtos.requests.EventoRequest;
 import com.ms.tracking_api.dtos.responses.EmpresaResponse;
 import com.ms.tracking_api.dtos.responses.EventoResponse;
+import com.ms.tracking_api.dtos.responses.VagaResponse;
 import com.ms.tracking_api.services.EventoService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
@@ -86,4 +87,11 @@ public class EventoController {
                 .buscarPorNome(nome, PageRequest.of(pagina, quantidade, Sort.by(Sort.Direction.valueOf(ordem), ordenarPor))));
 
     }
+
+    @GetMapping("/{id}/vagas")
+    @Operation(summary = "Buscar vagas pelo id do evento", description = "Endpoint para buscar vagas pelo id do evento")
+    public ResponseEntity<List<VagaResponse>> buscarVagasPeloIdEvento(@PathVariable(name = "id") Long id) {
+        return ResponseEntity.ok((this.service.buscarVagasPeloIdEvento(id)));
+    }
+
 }

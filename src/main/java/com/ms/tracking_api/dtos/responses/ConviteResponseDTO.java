@@ -1,10 +1,8 @@
-package com.ms.tracking_api.entities;
+package com.ms.tracking_api.dtos.responses;
 
-import com.ms.tracking_api.enuns.StatusCandidatura;
 import com.ms.tracking_api.enuns.StatusConvite;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -13,15 +11,10 @@ import java.io.Serializable;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
-@Entity
-@Table(name = "tb_convite")
-public class Convite implements Serializable {
+public class ConviteResponseDTO implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long idConvite;
 
     private String codigo;
