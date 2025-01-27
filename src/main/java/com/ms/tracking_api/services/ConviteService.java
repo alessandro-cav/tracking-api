@@ -3,16 +3,25 @@ package com.ms.tracking_api.services;
 import com.ms.tracking_api.configs.email.EnviaEmail;
 import com.ms.tracking_api.configs.validations.Validator;
 import com.ms.tracking_api.dtos.requests.ConviteRequest;
+import com.ms.tracking_api.dtos.requests.FiltroConviteRequestDTO;
 import com.ms.tracking_api.dtos.requests.ValidarConviteRequest;
+import com.ms.tracking_api.dtos.responses.ConviteResponseDTO;
 import com.ms.tracking_api.entities.Convite;
 import com.ms.tracking_api.enuns.StatusConvite;
 import com.ms.tracking_api.handlers.BadRequestException;
 import com.ms.tracking_api.repositories.ConviteRepository;
 import lombok.RequiredArgsConstructor;
+import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Example;
+import org.springframework.data.domain.ExampleMatcher;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -23,6 +32,8 @@ public class ConviteService {
     private final Validator validator;
 
     private final EnviaEmail email;
+
+    private final ModelMapper modelMapper;
 
     @Transactional
     public void enviarConvite(ConviteRequest request) {
@@ -68,5 +79,18 @@ public class ConviteService {
                     return true;
                 }).orElse(false);
 
+    }
+
+    public List<ConviteResponseDTO> filtroConvite(FiltroConviteRequestDTO filtroConviteRequestDTO,
+                                                  PageRequest pageRequest) {
+        Convite convite = this.modelMapper.map(filtroConviteRequestDTO, Convite.class);
+        ExampleMatcher exampleMatcher = ExampleMatcher.matching().withIgnoreCase()
+                .withStringMatcher(ExampleMatcher.StringMatcher.CONTAINING);
+        Example<Convite> example = Example.of(convite, exampleMatcher);
+
+        Page<Convite> usuarios = this.repository.findAll(example, pageRequest);
+        return usuarios.stream().map(user -> {
+            return this.modelMapper.map(user, ConviteResponseDTO.class);
+        }).collect(Collectors.toList());
     }
 }
