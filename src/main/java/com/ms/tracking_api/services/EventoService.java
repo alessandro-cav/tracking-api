@@ -5,6 +5,7 @@ import com.ms.tracking_api.configs.validations.Validator;
 import com.ms.tracking_api.dtos.requests.EventoRequest;
 import com.ms.tracking_api.dtos.responses.EmpresaResponse;
 import com.ms.tracking_api.dtos.responses.EventoResponse;
+import com.ms.tracking_api.dtos.responses.EventoVagaResponse;
 import com.ms.tracking_api.dtos.responses.VagaResponse;
 import com.ms.tracking_api.entities.Empresa;
 import com.ms.tracking_api.entities.Endereco;
@@ -111,15 +112,13 @@ public class EventoService {
         return this.repository.findById(id).orElseThrow(() -> new ObjetoNotFoundException("Evento não encontrado!"));
     }
 
-    public List<VagaResponse> buscarVagasPeloIdEvento(Long idEvento) {
+    public List<EventoVagaResponse> buscarVagasPeloIdEvento(Long idEvento) {
         List<Vaga> vagas = this.repository.findVagasByIdEvento(idEvento);
-
         if (vagas.isEmpty()) {
-            throw new BadRequestException("Nenhuma vaga cadastra para o evento");
+            throw new BadRequestException("Nenhuma vaga cadastrada para o evento especificado.");
         }
-
         return vagas.stream()
-                .map(vaga -> modelMapper.map(vaga, VagaResponse.class))
+                .map(vaga -> modelMapper.map(vaga, EventoVagaResponse.class))
                 .collect(Collectors.toList());
     }
 

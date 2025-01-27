@@ -3,6 +3,7 @@ package com.ms.tracking_api.controllers;
 import com.ms.tracking_api.dtos.requests.EventoRequest;
 import com.ms.tracking_api.dtos.responses.EmpresaResponse;
 import com.ms.tracking_api.dtos.responses.EventoResponse;
+import com.ms.tracking_api.dtos.responses.EventoVagaResponse;
 import com.ms.tracking_api.dtos.responses.VagaResponse;
 import com.ms.tracking_api.services.EventoService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -90,7 +91,7 @@ public class EventoController {
 
     @GetMapping("/{id}/vagas")
     @Operation(summary = "Buscar vagas pelo id do evento", description = "Endpoint para buscar vagas pelo id do evento")
-    public ResponseEntity<List<VagaResponse>> buscarVagasPeloIdEvento(@PathVariable(name = "id") Long id) {
+    public ResponseEntity<List<EventoVagaResponse>> buscarVagasPeloIdEvento(@PathVariable(name = "id") Long id) {
         return ResponseEntity.ok((this.service.buscarVagasPeloIdEvento(id)));
     }
 
