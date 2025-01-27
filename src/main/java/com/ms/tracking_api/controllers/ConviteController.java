@@ -53,4 +53,15 @@ public class ConviteController {
         return ResponseEntity.ok(this.service.filtroConvite(filtroConviteRequestDTO,
                 PageRequest.of(pagina, quantidade, Sort.by(Sort.Direction.valueOf(ordem), ordenarPor))));
     }
+    @GetMapping
+    @Operation(summary = "Listar  convite", description = "Endpoint para listar convite")
+    public ResponseEntity<List<ConviteResponseDTO>> buscarTodos(@RequestParam Integer pagina,
+                                                                @RequestParam Integer quantidade,
+                                                                @RequestParam String ordem,
+                                                                @RequestParam String ordenarPor) {
+        return ResponseEntity.ok(this.service
+                .buscarTodos(PageRequest.of(pagina, quantidade, Sort.by(Sort.Direction.valueOf(ordem), ordenarPor))));
+
+    }
+
 }
