@@ -3,10 +3,9 @@ package com.ms.tracking_api.services;
 import com.ms.tracking_api.configs.email.EnviaEmail;
 import com.ms.tracking_api.configs.validations.Validator;
 import com.ms.tracking_api.dtos.requests.ConviteRequest;
-import com.ms.tracking_api.dtos.requests.FiltroConviteRequestDTO;
+import com.ms.tracking_api.dtos.requests.FiltroConviteRequest;
 import com.ms.tracking_api.dtos.requests.ValidarConviteRequest;
 import com.ms.tracking_api.dtos.responses.ConviteResponseDTO;
-import com.ms.tracking_api.dtos.responses.EmpresaResponse;
 import com.ms.tracking_api.entities.Convite;
 import com.ms.tracking_api.enuns.StatusConvite;
 import com.ms.tracking_api.handlers.BadRequestException;
@@ -94,7 +93,7 @@ public class ConviteService {
         email.emailConvite(convite.getEmail(), convite.getNome(), convite.getCodigo());
     }
 
-    public List<ConviteResponseDTO> filtroConvite(FiltroConviteRequestDTO filtroConviteRequestDTO,
+    public List<ConviteResponseDTO> filtroConvite(FiltroConviteRequest filtroConviteRequestDTO,
                                                   PageRequest pageRequest) {
         Convite convite = this.modelMapper.map(filtroConviteRequestDTO, Convite.class);
         ExampleMatcher exampleMatcher = ExampleMatcher.matching().withIgnoreCase()

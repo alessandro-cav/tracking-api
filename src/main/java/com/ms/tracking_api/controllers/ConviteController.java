@@ -1,7 +1,7 @@
 package com.ms.tracking_api.controllers;
 
 import com.ms.tracking_api.dtos.requests.ConviteRequest;
-import com.ms.tracking_api.dtos.requests.FiltroConviteRequestDTO;
+import com.ms.tracking_api.dtos.requests.FiltroConviteRequest;
 import com.ms.tracking_api.dtos.requests.ValidarConviteRequest;
 import com.ms.tracking_api.dtos.responses.ConviteResponseDTO;
 import com.ms.tracking_api.services.ConviteService;
@@ -48,7 +48,7 @@ public class ConviteController {
 
     @PostMapping("/filtro")
     public ResponseEntity<List<ConviteResponseDTO>> filtroUsuario(
-            @RequestBody FiltroConviteRequestDTO filtroConviteRequestDTO, @RequestParam Integer pagina,
+            @RequestBody FiltroConviteRequest filtroConviteRequestDTO, @RequestParam Integer pagina,
             @RequestParam Integer quantidade, @RequestParam String ordem, @RequestParam String ordenarPor) {
         return ResponseEntity.ok(this.service.filtroConvite(filtroConviteRequestDTO,
                 PageRequest.of(pagina, quantidade, Sort.by(Sort.Direction.valueOf(ordem), ordenarPor))));
