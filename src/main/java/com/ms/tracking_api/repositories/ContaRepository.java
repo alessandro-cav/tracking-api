@@ -2,7 +2,7 @@ package com.ms.tracking_api.repositories;
 
 
 import com.ms.tracking_api.entities.Conta;
-import com.ms.tracking_api.enuns.Pix;
+import com.ms.tracking_api.enuns.TipoChave;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.repository.PagingAndSortingRepository;
@@ -18,5 +18,5 @@ public interface ContaRepository extends PagingAndSortingRepository<Conta, Long>
 
     Optional<Conta> findByUsuarioIdUsuarioAndIdConta(Long idUsuario, Long idConta);
 
-    List<Conta> findByUsuarioIdUsuarioAndPix(Long idUsuario, Pix pix, PageRequest pageRequest);
+    List<Conta> findByUsuarioIdUsuarioAndPix(Long idUsuario, TipoChave tipoChave, PageRequest pageRequest);
 }
