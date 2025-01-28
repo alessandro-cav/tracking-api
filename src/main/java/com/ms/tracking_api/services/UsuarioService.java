@@ -2,8 +2,14 @@ package com.ms.tracking_api.services;
 
 
 import com.ms.tracking_api.configs.validations.Validator;
+import com.ms.tracking_api.dtos.requests.FiltroConviteRequest;
+import com.ms.tracking_api.dtos.requests.FiltroUsuarioMobileRequest;
+import com.ms.tracking_api.dtos.requests.FiltroUsuarioRequest;
 import com.ms.tracking_api.dtos.requests.UsuarioRequest;
+import com.ms.tracking_api.dtos.responses.ConviteResponse;
+import com.ms.tracking_api.dtos.responses.UserResponse;
 import com.ms.tracking_api.dtos.responses.UsuarioResponse;
+import com.ms.tracking_api.entities.Convite;
 import com.ms.tracking_api.entities.Endereco;
 import com.ms.tracking_api.entities.User;
 import com.ms.tracking_api.entities.Usuario;
@@ -11,9 +17,13 @@ import com.ms.tracking_api.enuns.Genero;
 import com.ms.tracking_api.enuns.StatusUsuario;
 import com.ms.tracking_api.handlers.BadRequestException;
 import com.ms.tracking_api.handlers.ObjetoNotFoundException;
+import com.ms.tracking_api.repositories.UserRepository;
 import com.ms.tracking_api.repositories.UsuarioRepository;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Example;
+import org.springframework.data.domain.ExampleMatcher;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -30,6 +40,8 @@ public class UsuarioService {
     private final ModelMapper modelMapper;
 
     private final UsuarioRepository repository;
+
+    private final UserRepository userRepository;
 
     private final Validator validator;
 
@@ -127,18 +139,26 @@ public class UsuarioService {
         this.userService.salvarNovoStatus(user);
     }
 
-    @Transactional(readOnly = true)
-    public List<UsuarioResponse> buscarPorNome(String nome, PageRequest pageRequest) {
-        return this.repository.findByNomeContainingIgnoreCase(nome, pageRequest).stream()
-                .map(usuario -> gerarUsuarioResponse(usuario))
-                .collect(Collectors.toList());
+    public List<UserResponse> filtroUsuarioWeb(FiltroUsuarioRequest filtroUsuarioRequest,
+                                            PageRequest pageRequest) {
+        User user = this.modelMapper.map(filtroUsuarioRequest, User.class);
+        ExampleMatcher exampleMatcher = ExampleMatcher.matching().withIgnoreCase()
+                .withStringMatcher(ExampleMatcher.StringMatcher.CONTAINING);
+        Example<User> example = Example.of(user, exampleMatcher);
+
+        Page<User> users = this.userRepository.findAll(example, pageRequest);
+        return users.stream().map(user1 -> {
+            return this.modelMapper.map(user1, UserResponse.class);
+        }).collect(Collectors.toList());
     }
+
 
     @Transactional(readOnly = true)
     public Usuario buscarUsuarioPeloId(Long id) {
-        return this.repository.findById(id)
-                .orElseThrow(() -> new ObjetoNotFoundException("Usuário não encontrado!"));
+        return this.repository.findById(id).get();
+               // .orElseThrow(() -> new ObjetoNotFoundException("Usuário não encontrado!"));
     }
+
 
     private UsuarioResponse gerarUsuarioResponse(Usuario usuario) {
         UsuarioResponse usuarioResponse = this.modelMapper.map(usuario, UsuarioResponse.class);
@@ -161,4 +181,5 @@ public class UsuarioService {
         endereco.setCep(usuarioRequest.getCep());
         return endereco;
     }
+
 }
