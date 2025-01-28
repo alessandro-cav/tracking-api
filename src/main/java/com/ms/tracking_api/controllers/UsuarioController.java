@@ -1,7 +1,10 @@
 package com.ms.tracking_api.controllers;
 
+import com.ms.tracking_api.dtos.requests.FiltroUsuarioMobileRequest;
+import com.ms.tracking_api.dtos.requests.FiltroUsuarioRequest;
 import com.ms.tracking_api.dtos.requests.InativarUsuarioRequest;
 import com.ms.tracking_api.dtos.requests.UsuarioRequest;
+import com.ms.tracking_api.dtos.responses.UserResponse;
 import com.ms.tracking_api.dtos.responses.UsuarioResponse;
 import com.ms.tracking_api.services.UsuarioService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -63,19 +66,6 @@ public class UsuarioController {
         return ResponseEntity.ok(this.service.atualizar(id, request));
     }
 
-    @GetMapping("/buscarPorNome")
-    @Operation(summary = "Buscar usuario por nome", description = "Endpoint para buscar usuario")
-    public ResponseEntity<List<UsuarioResponse>> buscarPorNome(@RequestParam Integer pagina,
-                                                               @RequestParam Integer quantidade,
-                                                               @RequestParam String ordem,
-                                                               @RequestParam String ordenarPor,
-                                                               @RequestParam String nome) {
-        return ResponseEntity.ok(this.service
-                .buscarPorNome(nome, PageRequest.of(pagina, quantidade, Sort.by(Sort.Direction.valueOf(ordem), ordenarPor))));
-
-    }
-
-
     @PutMapping("/inativar")
     @Operation(summary = "Inativar Usuário", description = "Endpoint para inativar um usuário pelo e-mail")
     public ResponseEntity<Void> inativarUsuario(@RequestBody InativarUsuarioRequest requestDTO) {
@@ -88,6 +78,15 @@ public class UsuarioController {
     public ResponseEntity<Void> ativarUsuario(@RequestBody InativarUsuarioRequest requestDTO) {
         service.ativarUsuario(requestDTO.getEmail());
         return ResponseEntity.ok().build();
+    }
+
+
+    @PostMapping("/filtro/web")
+    public ResponseEntity<List<UserResponse>> filtroUsuarioWeb(
+            @RequestBody FiltroUsuarioRequest filtroUsuarioRequest, @RequestParam Integer pagina,
+            @RequestParam Integer quantidade, @RequestParam String ordem, @RequestParam String ordenarPor) {
+        return ResponseEntity.ok(this.service.filtroUsuarioWeb(filtroUsuarioRequest,
+                PageRequest.of(pagina, quantidade, Sort.by(Sort.Direction.valueOf(ordem), ordenarPor))));
     }
 }
 
