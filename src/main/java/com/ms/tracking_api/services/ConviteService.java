@@ -4,7 +4,6 @@ import com.ms.tracking_api.configs.email.EnviaEmail;
 import com.ms.tracking_api.configs.validations.Validator;
 import com.ms.tracking_api.dtos.requests.ConviteRequest;
 import com.ms.tracking_api.dtos.requests.FiltroConviteRequest;
-import com.ms.tracking_api.dtos.requests.FiltroUsuarioMobileRequest;
 import com.ms.tracking_api.dtos.requests.ValidarConviteRequest;
 import com.ms.tracking_api.dtos.responses.ConviteResponse;
 import com.ms.tracking_api.entities.Convite;

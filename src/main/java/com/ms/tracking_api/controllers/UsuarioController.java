@@ -1,6 +1,5 @@
 package com.ms.tracking_api.controllers;
 
-import com.ms.tracking_api.dtos.requests.FiltroUsuarioMobileRequest;
 import com.ms.tracking_api.dtos.requests.FiltroUsuarioRequest;
 import com.ms.tracking_api.dtos.requests.InativarUsuarioRequest;
 import com.ms.tracking_api.dtos.requests.UsuarioRequest;
