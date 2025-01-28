@@ -92,10 +92,10 @@ public class ContaService {
     }
 
     @Transactional(readOnly = true)
-    public List<ContaResponse> buscarContaDoUsuarioPorTipoConta(Long idUsuario, String tipoPix, PageRequest pageRequest) {
+    public List<ContaResponse> buscarContaDoUsuarioPorTipoChave(Long idUsuario, String tipoPix, PageRequest pageRequest) {
         Usuario usuario = this.usuarioService.buscarUsuarioPeloId(idUsuario);
         TipoChave tipoChave = TipoChave.buscarChavePix(tipoPix);
-        return this.contaRepository.findByUsuarioIdUsuarioAndPix(usuario.getIdUsuario(), tipoChave, pageRequest).stream()
+        return this.contaRepository.findByUsuarioIdUsuarioAndTipoChave(usuario.getIdUsuario(), tipoChave, pageRequest).stream()
                 .map(conta -> this.modelMapper.map(conta, ContaResponse.class))
                 .collect(Collectors.toList());
     }
