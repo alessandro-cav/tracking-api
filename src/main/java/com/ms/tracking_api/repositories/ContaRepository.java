@@ -18,5 +18,5 @@ public interface ContaRepository extends PagingAndSortingRepository<Conta, Long>
 
     Optional<Conta> findByUsuarioIdUsuarioAndIdConta(Long idUsuario, Long idConta);
 
-    List<Conta> findByUsuarioIdUsuarioAndPix(Long idUsuario, TipoChave tipoChave, PageRequest pageRequest);
+    List<Conta> findByUsuarioIdUsuarioAndTipoChave(Long idUsuario, TipoChave tipoChave, PageRequest pageRequest);
 }
