@@ -1,7 +1,7 @@
 package com.ms.tracking_api.dtos.responses;
 
 
-import com.ms.tracking_api.enuns.Pix;
+import com.ms.tracking_api.enuns.TipoChave;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -19,6 +19,8 @@ public class ContaResponse implements Serializable {
 
     private Long idConta;
 
+    private String titularConta;
+
     private String banco;
 
     private String agencia;
@@ -27,5 +29,7 @@ public class ContaResponse implements Serializable {
 
     private String chavePix;
 
-    private Pix pix;
+    private String tipoChave;
+
+    private String tipoConta;
 }

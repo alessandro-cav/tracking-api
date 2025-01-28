@@ -1,6 +1,7 @@
 package com.ms.tracking_api.entities;
 
-import com.ms.tracking_api.enuns.Pix;
+import com.ms.tracking_api.enuns.TipoChave;
+import com.ms.tracking_api.enuns.TipoConta;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -24,6 +25,8 @@ public class Conta implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long idConta;
 
+    private String titularConta;
+
     private String banco;
 
     private String agencia;
@@ -31,7 +34,10 @@ public class Conta implements Serializable {
     private String  numero;
 
     @Enumerated(EnumType.STRING)
-    private Pix pix;
+    private TipoChave tipoChave;
+
+    @Enumerated(EnumType.STRING)
+    private TipoConta tipoConta;
 
     private String chavePix;
 

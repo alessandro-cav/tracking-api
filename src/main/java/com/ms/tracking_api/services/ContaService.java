@@ -4,7 +4,8 @@ import com.ms.tracking_api.dtos.requests.ContaRequest;
 import com.ms.tracking_api.dtos.responses.ContaResponse;
 import com.ms.tracking_api.entities.Conta;
 import com.ms.tracking_api.entities.Usuario;
-import com.ms.tracking_api.enuns.Pix;
+import com.ms.tracking_api.enuns.TipoChave;
+import com.ms.tracking_api.enuns.TipoConta;
 import com.ms.tracking_api.handlers.BadRequestException;
 import com.ms.tracking_api.handlers.ObjetoNotFoundException;
 import com.ms.tracking_api.repositories.ContaRepository;
@@ -32,10 +33,12 @@ public class ContaService {
     @Transactional
     public ContaResponse salvarContaDoUsuario(Long idUsuario, ContaRequest request) {
         Usuario usuario = this.usuarioService.buscarUsuarioPeloId(idUsuario);
-        Pix pix = Pix.buscarChavePix(request.getPix());
+        TipoChave tipoChave = TipoChave.buscarChavePix(request.getChavePix());
+        TipoConta tipoConta = TipoConta.buscarTipoConta(request.getTipoConta());
         Conta conta = this.modelMapper.map(request, Conta.class);
         conta.setUsuario(usuario);
-        conta.setPix(pix);
+        conta.setTipoChave(tipoChave);
+        conta.setTipoConta(tipoConta);
         conta = this.contaRepository.save(conta);
         return this.modelMapper.map(conta, ContaResponse.class);
     }
@@ -74,12 +77,15 @@ public class ContaService {
     @Transactional
     public ContaResponse atualizarContaDoUsuario(Long idFuncionarios, Long idConta, ContaRequest request) {
         Usuario usuario = this.usuarioService.buscarUsuarioPeloId(idFuncionarios);
-        Pix pix = Pix.buscarChavePix(request.getPix());
+        TipoChave tipoChave = TipoChave.buscarChavePix(request.getTipoChave());
+        TipoConta tipoConta = TipoConta.buscarTipoConta(request.getTipoConta());
+
         return  this.contaRepository.findByUsuarioIdUsuarioAndIdConta(usuario.getIdUsuario(), idConta).map(conta -> {
             request.setIdConta(conta.getIdConta());
             conta = this.modelMapper.map(request, Conta.class);
             conta.setUsuario(usuario);
-            conta.setPix(pix);
+            conta.setTipoChave(tipoChave);
+            conta.setTipoConta(tipoConta);
             conta = this.contaRepository.save(conta);
             return this.modelMapper.map(conta, ContaResponse.class);
         }).orElseThrow(() -> new ObjetoNotFoundException("Conta não encontrada!"));
@@ -88,8 +94,8 @@ public class ContaService {
     @Transactional(readOnly = true)
     public List<ContaResponse> buscarContaDoUsuarioPorTipoConta(Long idUsuario, String tipoPix, PageRequest pageRequest) {
         Usuario usuario = this.usuarioService.buscarUsuarioPeloId(idUsuario);
-        Pix pix = Pix.buscarChavePix(tipoPix);
-        return this.contaRepository.findByUsuarioIdUsuarioAndPix(usuario.getIdUsuario(), pix, pageRequest).stream()
+        TipoChave tipoChave = TipoChave.buscarChavePix(tipoPix);
+        return this.contaRepository.findByUsuarioIdUsuarioAndPix(usuario.getIdUsuario(), tipoChave, pageRequest).stream()
                 .map(conta -> this.modelMapper.map(conta, ContaResponse.class))
                 .collect(Collectors.toList());
     }
