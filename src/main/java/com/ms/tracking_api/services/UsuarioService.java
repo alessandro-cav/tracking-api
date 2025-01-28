@@ -2,21 +2,16 @@ package com.ms.tracking_api.services;
 
 
 import com.ms.tracking_api.configs.validations.Validator;
-import com.ms.tracking_api.dtos.requests.FiltroConviteRequest;
-import com.ms.tracking_api.dtos.requests.FiltroUsuarioMobileRequest;
 import com.ms.tracking_api.dtos.requests.FiltroUsuarioRequest;
 import com.ms.tracking_api.dtos.requests.UsuarioRequest;
-import com.ms.tracking_api.dtos.responses.ConviteResponse;
 import com.ms.tracking_api.dtos.responses.UserResponse;
 import com.ms.tracking_api.dtos.responses.UsuarioResponse;
-import com.ms.tracking_api.entities.Convite;
 import com.ms.tracking_api.entities.Endereco;
 import com.ms.tracking_api.entities.User;
 import com.ms.tracking_api.entities.Usuario;
 import com.ms.tracking_api.enuns.Genero;
 import com.ms.tracking_api.enuns.StatusUsuario;
 import com.ms.tracking_api.handlers.BadRequestException;
-import com.ms.tracking_api.handlers.ObjetoNotFoundException;
 import com.ms.tracking_api.repositories.UserRepository;
 import com.ms.tracking_api.repositories.UsuarioRepository;
 import lombok.RequiredArgsConstructor;
