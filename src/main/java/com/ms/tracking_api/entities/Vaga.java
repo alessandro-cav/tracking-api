@@ -28,7 +28,21 @@ public class Vaga  implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long idVaga;
 
-    private String vaga;
+    private String descricaoVaga;
+
+    private String responsabilidades;
+
+    private String requisitos;
+
+    private String advertencias;
+
+    @Lob
+    @Column(columnDefinition = "LONGTEXT")
+    private String imagemVaga;
+
+    @Lob
+    @Column(columnDefinition = "LONGTEXT")
+    private String iconeVaga;
 
     private BigDecimal valor;
 
@@ -37,10 +51,6 @@ public class Vaga  implements Serializable {
     private Boolean refeicao;
 
     private Integer quantidade;
-
-    @Lob
-    @Column(columnDefinition = "LONGTEXT")
-    private String imagem;
 
     private String observacao;
 

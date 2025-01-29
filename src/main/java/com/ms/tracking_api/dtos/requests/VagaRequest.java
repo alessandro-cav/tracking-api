@@ -1,6 +1,8 @@
 package com.ms.tracking_api.dtos.requests;
 
 import com.ms.tracking_api.enuns.StatusVaga;
+import jakarta.persistence.Column;
+import jakarta.persistence.Lob;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -23,7 +25,7 @@ public class VagaRequest implements Serializable {
 
     @NotNull(message = "O campo vaga é obrigatório.")
     @NotBlank(message = "O campo vaga não pode ser vazio.")
-    private String vaga;
+    private String descricaoVaga;
 
     @NotNull(message = "O campo cachê é obrigatório.")
     private BigDecimal valor;
@@ -38,8 +40,25 @@ public class VagaRequest implements Serializable {
     @NotNull(message = "O campo quantidade de vagas disponivel é obrigatório.")
     private Integer quantidade;
 
-    private String imagem;
-
     private String observacao;
+
+    @NotNull(message = "O campo responsabilidades é obrigatório.")
+    @NotBlank(message = "O campo responsabilidades não pode ser vazio.")
+    private String responsabilidades;
+
+    @NotNull(message = "O campo requisitos é obrigatório.")
+    @NotBlank(message = "O campo requisitos não pode ser vazio.")
+    private String requisitos;
+
+    @NotNull(message = "O campo advertencias é obrigatório.")
+    @NotBlank(message = "O campo advertencias não pode ser vazio.")
+    private String advertencias;
+
+    private String imagemVaga;
+
+    private String iconeVaga;
+
+
+
 
 }

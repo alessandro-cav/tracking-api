@@ -2,6 +2,8 @@ package com.ms.tracking_api.dtos.responses;
 
 
 import com.ms.tracking_api.enuns.StatusVaga;
+import jakarta.persistence.Column;
+import jakarta.persistence.Lob;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -18,10 +20,6 @@ public class VagaResponse implements Serializable {
 
     private Long idVaga;
 
-    private String vaga;
-
-    private String imagem;
-
     private Integer quantidade;
 
     private BigDecimal valor;
@@ -35,4 +33,17 @@ public class VagaResponse implements Serializable {
     private StatusVaga statusVaga;
 
     private EventoResponse evento;
+
+    private String descricaoVaga;
+
+    private String responsabilidades;
+
+    private String requisitos;
+
+    private String advertencias;
+
+    private String imagemVaga;
+
+    private String iconeVaga;
+
 }
