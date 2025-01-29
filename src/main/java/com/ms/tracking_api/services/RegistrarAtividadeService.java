@@ -67,7 +67,7 @@ public class RegistrarAtividadeService {
         if (atividade == null) {
             return registrarEntrada(usuario, vaga);
         } else {
-            validarIntervaloDeTempo(atividade.getDataHora());
+          validarIntervaloDeTempo(atividade.getDataHora());
             return registrarSaida(usuario, vaga);
         }
     }
@@ -92,7 +92,7 @@ public class RegistrarAtividadeService {
         RegistrarAtividaderResponse response = new RegistrarAtividaderResponse();
         response.setIdRegistrarAtividade(atividade.getIdRegistrarAtividade());
         response.setNome(atividade.getUsuario().getNome());
-        response.setVaga(atividade.getVaga().getVaga());
+        response.setDescricaoVaga(atividade.getVaga().getDescricaoVaga());
         response.setTipoAcesso(atividade.getTipoAcesso());
         response.setEvento(atividade.getVaga().getEvento().getNome());
         return response;
