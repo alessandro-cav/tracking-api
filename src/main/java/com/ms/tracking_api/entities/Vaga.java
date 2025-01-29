@@ -38,6 +38,10 @@ public class Vaga  implements Serializable {
 
     private Integer quantidade;
 
+    @Lob
+    @Column(columnDefinition = "LONGTEXT")
+    private String imagem;
+
     private String observacao;
 
     @Enumerated(EnumType.STRING)

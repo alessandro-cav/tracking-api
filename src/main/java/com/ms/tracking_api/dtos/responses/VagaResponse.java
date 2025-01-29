@@ -20,6 +20,8 @@ public class VagaResponse implements Serializable {
 
     private String vaga;
 
+    private String imagem;
+
     private Integer quantidade;
 
     private BigDecimal valor;
