@@ -3,7 +3,6 @@ package com.ms.tracking_api.controllers;
 import com.ms.tracking_api.dtos.requests.ReciboRequest;
 import com.ms.tracking_api.dtos.requests.QRCodeRequest;
 import com.ms.tracking_api.dtos.responses.ReciboResponse;
-import com.ms.tracking_api.dtos.responses.RegistrarAtividaderResponse;
 import com.ms.tracking_api.services.RegistrarAtividadeService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
@@ -28,7 +27,7 @@ public class RegistrarAtividadeController {
 
     @PostMapping("/registrarAtividade")
     @Operation(summary = "Registrar atividade", description = "Endpoint para registrar atividade")
-    public ResponseEntity<RegistrarAtividaderResponse> registrarAtividade(@RequestBody QRCodeRequest request) {
+    public ResponseEntity<String> registrarAtividade(@RequestBody QRCodeRequest request) {
         return ResponseEntity.ok(this.service.registrarAtividade(request));
     }
 

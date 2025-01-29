@@ -156,7 +156,7 @@ public class CandidaturaService {
     @Transactional(readOnly = true)
     public CandidaturaResponse buscarCandidatosPorVaga(Long idVaga, PageRequest pageRequest) {
         Vaga vaga = vagaService.buscarVagaPeloId(idVaga);
-        List<UsuarioCandidatoResponse> ucrs = repository.findByVagaIdVaga(vaga.getIdVaga(), pageRequest)
+        List<UsuarioCandidatoResponse> ucrs = this.repository.findByVagaIdVaga(vaga.getIdVaga(), pageRequest)
                 .stream()
                 .map(usuario -> {
                     UsuarioCandidatoResponse response = modelMapper.map(usuario, UsuarioCandidatoResponse.class);
@@ -182,6 +182,15 @@ public class CandidaturaService {
                 .collect(Collectors.toList());
 
          return CandidaturaResponse.builder().vagas(vagasResponses).quantidade(vagasResponses.size()).build();
+    }
+
+    public List<Vaga> findVagasByIdUsuario(Long idUsuario) {
+        Usuario usuario = this.usuarioService.buscarUsuarioPeloId(idUsuario);
+        return this.repository.findVagasByUsuarioIdUsuario(usuario.getIdUsuario());
+    }
+
+    public Candidatura findByVagaIdVaga(Long idVaga) {
+        return this.repository.findByVagaIdVaga(idVaga);
     }
 }
 
