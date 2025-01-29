@@ -32,6 +32,8 @@ public class Evento implements Serializable {
 
     private LocalDate data;
 
+    private String detalhes;
+
     @Embedded
     private Endereco endereco;
 

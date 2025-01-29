@@ -23,6 +23,8 @@ public class EventoResponse implements Serializable {
 
     private String horaInicio;
 
+    private String detalhes;
+
     private String horaFim;
 
     private LocalDate data;

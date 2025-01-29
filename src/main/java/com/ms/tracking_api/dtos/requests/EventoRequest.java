@@ -35,6 +35,8 @@ public class EventoRequest implements Serializable {
     @NotNull(message = "O campo data é obrigatório.")
     private LocalDate data;
 
+    private String detalhes;
+
     private String imagem;
 
     @NotNull(message = "O campo logradouro é obrigatório.")
