@@ -34,6 +34,7 @@ public class Conta implements Serializable {
     private String  numero;
 
     @Enumerated(EnumType.STRING)
+    @Column(length = 50)
     private TipoChave tipoChave;
 
     @Enumerated(EnumType.STRING)
