@@ -163,7 +163,7 @@ public class CandidaturaService {
     }
 
     public Candidatura findByVagaIdVaga(Long idVaga) {
-        return this.repository.findByVagaIdVaga(idVaga);
+        return this.repository.findByVagaIdVaga(idVaga).get();
     }
 }
 

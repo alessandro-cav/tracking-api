@@ -83,7 +83,7 @@ public class VagaService {
 
     @Transactional(readOnly = true)
     public List<VagaResponse> buscarPorNome(String nome, PageRequest pageRequest) {
-        return this.repository.findByVagaContainingIgnoreCase(nome, pageRequest).stream()
+        return this.repository.findByDescricaoVagaContainingIgnoreCase(nome, pageRequest).stream()
                 .map(vaga -> gerarEnderecoResponse(vaga))
                 .collect(Collectors.toList());
     }

@@ -33,5 +33,5 @@ public interface CandidaturaRepository extends PagingAndSortingRepository<Candid
     List<Vaga> findVagasByUsuarioIdUsuario(Long idUsuario);
 
     @Query("SELECT c FROM Candidatura c WHERE c.vaga.idVaga = :idVaga")
-    Candidatura findByVagaIdVaga(Long idVaga);
+    Optional<Candidatura> findByVagaIdVaga(Long idVaga);
 }
