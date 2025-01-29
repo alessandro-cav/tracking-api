@@ -68,17 +68,6 @@ public class CandidaturaService {
         });
     }
 
-    @Transactional(readOnly = true)
-    public List<Candidatura> findByUsuarioIdUsuario(Long idUsuario) {
-        return this.repository.findByUsuarioIdUsuario(idUsuario);
-    }
-
-    @Transactional(readOnly = true)
-    public Candidatura findByUsuarioIdUsuarioAndVagaIdVaga(Long idUsuario, Long idVaga) {
-        return this.repository.findByVagaIdVagaAndUsuarioIdUsuario(idVaga, idUsuario)
-                .orElseThrow(() -> new BadRequestException("Usuário não vinculado a esta vaga"));
-    }
-
     @Transactional
     public void aceitarCandidatura(CandidaturaRequest request) {
         Evento evento = eventoService.buscarEventoPeloId(request.getIdEvento());
@@ -166,22 +155,6 @@ public class CandidaturaService {
                 })
                 .collect(Collectors.toList());
         return CandidaturaResponse.builder().usuarios(ucrs).quantidade(ucrs.size()).build();
-    }
-
-    @Transactional(readOnly = true)
-    public CandidaturaResponse validarDoCanditatoPeloIdUsuario(Long idUsuario, PageRequest pageRequest) {
-        Usuario usuario = this.usuarioService.buscarUsuarioPeloId(idUsuario);
-        List<VagaCandidatoResponse> vagasResponses = this.repository.findVagasByUsuarioIdUsuario(usuario.getIdUsuario(), pageRequest).stream()
-                .map(vaga -> {
-                   VagaCandidatoResponse response = new VagaCandidatoResponse();
-                   response.setNome(usuario.getNome());
-                    response.setEvento(vaga.getEvento().getNome());
-                    response.setDescricaoVaga(vaga.getDescricaoVaga());
-                    return  response;
-                })
-                .collect(Collectors.toList());
-
-         return CandidaturaResponse.builder().vagas(vagasResponses).quantidade(vagasResponses.size()).build();
     }
 
     public List<Vaga> findVagasByIdUsuario(Long idUsuario) {
