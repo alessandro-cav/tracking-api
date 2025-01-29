@@ -38,6 +38,8 @@ public class VagaRequest implements Serializable {
     @NotNull(message = "O campo quantidade de vagas disponivel é obrigatório.")
     private Integer quantidade;
 
+    private String imagem;
+
     private String observacao;
 
 }
