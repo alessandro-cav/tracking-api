@@ -149,19 +149,19 @@ public class CandidaturaService {
                 .telefone(candidatura.getUsuario().getTelefone())
                 .imagem(candidatura.getUsuario().getImagem())
                 .evento(candidatura.getVaga().getEvento().getNome())
-                .vaga(candidatura.getVaga().getVaga())
+                .descricaoVaga(candidatura.getVaga().getDescricaoVaga())
                 .build();
     }
 
     @Transactional(readOnly = true)
-    public CandidaturaResponse buscarUsuariosPorVaga(Long idVaga, PageRequest pageRequest) {
+    public CandidaturaResponse buscarCandidatosPorVaga(Long idVaga, PageRequest pageRequest) {
         Vaga vaga = vagaService.buscarVagaPeloId(idVaga);
         List<UsuarioCandidatoResponse> ucrs = repository.findByVagaIdVaga(vaga.getIdVaga(), pageRequest)
                 .stream()
                 .map(usuario -> {
                     UsuarioCandidatoResponse response = modelMapper.map(usuario, UsuarioCandidatoResponse.class);
                     response.setEvento(vaga.getEvento().getNome());
-                    response.setVaga(vaga.getVaga());
+                    response.setDescricaoVaga(vaga.getDescricaoVaga());
                     return response;
                 })
                 .collect(Collectors.toList());
@@ -169,21 +169,20 @@ public class CandidaturaService {
     }
 
     @Transactional(readOnly = true)
-    public CandidaturaResponse buscarVagasPorUsuario(Long idUsuario, PageRequest pageRequest) {
+    public CandidaturaResponse validarDoCanditatoPeloIdUsuario(Long idUsuario, PageRequest pageRequest) {
         Usuario usuario = this.usuarioService.buscarUsuarioPeloId(idUsuario);
         List<VagaCandidatoResponse> vagasResponses = this.repository.findVagasByUsuarioIdUsuario(usuario.getIdUsuario(), pageRequest).stream()
                 .map(vaga -> {
                    VagaCandidatoResponse response = new VagaCandidatoResponse();
                    response.setNome(usuario.getNome());
                     response.setEvento(vaga.getEvento().getNome());
-                    response.setVaga(vaga.getVaga());
+                    response.setDescricaoVaga(vaga.getDescricaoVaga());
                     return  response;
                 })
                 .collect(Collectors.toList());
 
          return CandidaturaResponse.builder().vagas(vagasResponses).quantidade(vagasResponses.size()).build();
     }
-
 }
 
 
