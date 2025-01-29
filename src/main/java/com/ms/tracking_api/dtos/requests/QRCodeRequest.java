@@ -15,7 +15,5 @@ public class QRCodeRequest implements Serializable {
 
     private Long idUsuario;
 
-    private Long idVaga;
-
     private Long idEvento;
 }

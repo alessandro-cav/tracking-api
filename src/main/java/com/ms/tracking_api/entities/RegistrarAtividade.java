@@ -39,5 +39,9 @@ public class RegistrarAtividade implements Serializable {
     @JoinColumn(name = "vaga")
     private Vaga vaga;
 
+    private LocalDateTime horaEntrada;
+
+    private LocalDateTime horaSaida;
+
 
 }

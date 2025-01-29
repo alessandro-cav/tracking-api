@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
 
 @Data
 @NoArgsConstructor
@@ -23,5 +24,9 @@ public class RegistrarAtividaderResponse implements Serializable {
     private String descricaoVaga;
 
     private String evento;
+
+    private LocalDateTime horaEntrada;
+
+    private LocalDateTime horaSaida;
 
 }
