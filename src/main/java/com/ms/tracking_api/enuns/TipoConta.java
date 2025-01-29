@@ -2,7 +2,7 @@ package com.ms.tracking_api.enuns;
 
 public enum TipoConta {
 
-    CONTA_CORRENTE("CONTA_CORRENTE"), CONTA_POUPANCA("CONTA_POUPANCA");
+    CONTA_CORRENTE("CONTA CORRENTE"), CONTA_POUPANCA("CONTA POUPANCA");
 
     private String descricao;
 

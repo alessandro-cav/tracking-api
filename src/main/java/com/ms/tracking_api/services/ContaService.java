@@ -33,7 +33,7 @@ public class ContaService {
     @Transactional
     public ContaResponse salvarContaDoUsuario(Long idUsuario, ContaRequest request) {
         Usuario usuario = this.usuarioService.buscarUsuarioPeloId(idUsuario);
-        TipoChave tipoChave = TipoChave.buscarChavePix(request.getChavePix());
+        TipoChave tipoChave = TipoChave.buscartipoChave(request.getTipoChave());
         TipoConta tipoConta = TipoConta.buscarTipoConta(request.getTipoConta());
         Conta conta = this.modelMapper.map(request, Conta.class);
         conta.setUsuario(usuario);
@@ -77,7 +77,7 @@ public class ContaService {
     @Transactional
     public ContaResponse atualizarContaDoUsuario(Long idFuncionarios, Long idConta, ContaRequest request) {
         Usuario usuario = this.usuarioService.buscarUsuarioPeloId(idFuncionarios);
-        TipoChave tipoChave = TipoChave.buscarChavePix(request.getTipoChave());
+        TipoChave tipoChave = TipoChave.buscartipoChave(request.getTipoChave());
         TipoConta tipoConta = TipoConta.buscarTipoConta(request.getTipoConta());
 
         return  this.contaRepository.findByUsuarioIdUsuarioAndIdConta(usuario.getIdUsuario(), idConta).map(conta -> {
@@ -92,9 +92,9 @@ public class ContaService {
     }
 
     @Transactional(readOnly = true)
-    public List<ContaResponse> buscarContaDoUsuarioPorTipoChave(Long idUsuario, String tipoPix, PageRequest pageRequest) {
+    public List<ContaResponse> buscarContaDoUsuarioPorTipoChave(Long idUsuario, String tipo, PageRequest pageRequest) {
         Usuario usuario = this.usuarioService.buscarUsuarioPeloId(idUsuario);
-        TipoChave tipoChave = TipoChave.buscarChavePix(tipoPix);
+        TipoChave tipoChave = TipoChave.buscartipoChave(tipo);
         return this.contaRepository.findByUsuarioIdUsuarioAndTipoChave(usuario.getIdUsuario(), tipoChave, pageRequest).stream()
                 .map(conta -> this.modelMapper.map(conta, ContaResponse.class))
                 .collect(Collectors.toList());
