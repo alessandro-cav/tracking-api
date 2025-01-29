@@ -20,7 +20,7 @@ public class RegistrarAtividaderResponse implements Serializable {
 
     private String nome;
 
-    private String vaga;
+    private String descricaoVaga;
 
     private String evento;
 
