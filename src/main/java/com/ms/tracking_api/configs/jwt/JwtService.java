@@ -1,5 +1,6 @@
 package com.ms.tracking_api.configs.jwt;
 
+import com.ms.tracking_api.entities.Usuario;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -36,7 +37,9 @@ public class JwtService {
             Map<String, Object> extraClaims,
             UserDetails userDetails
     ) {
-
+        if (userDetails instanceof Usuario usuario) {
+            extraClaims.put("id", usuario.getIdUsuario()); // Adicionando o id ao token
+        }
         return Jwts
                 .builder()
                 .setClaims(extraClaims)
@@ -46,6 +49,7 @@ public class JwtService {
                 .signWith(getSignInKey(), SignatureAlgorithm.HS256)
                 .compact();
     }
+
 
     public boolean isTokenValid(String token, UserDetails userDetails) {
         final String username = extractUsername(token);
