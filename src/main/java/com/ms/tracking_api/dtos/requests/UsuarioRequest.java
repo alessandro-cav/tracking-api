@@ -51,7 +51,6 @@ public class UsuarioRequest implements Serializable {
 
     private String curriculo;
 
-    @NotNull(message = "O campo validade aso é obrigatório.")
     private LocalDate validadeASO;
 
     @NotNull(message = "O campo logradouro é obrigatório.")
