@@ -76,5 +76,4 @@ public class UsuarioRequest implements Serializable {
     @NotNull(message = "O campo estado é obrigatório.")
     @NotBlank(message = "O campo estado não pode ser vazio.")
     private String estado;
-
 }
