@@ -1,7 +1,5 @@
 package com.ms.tracking_api.entities;
 
-import com.ms.tracking_api.enuns.TipoChave;
-import com.ms.tracking_api.enuns.TipoConta;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -33,12 +31,9 @@ public class Conta implements Serializable {
 
     private String  numero;
 
-    @Enumerated(EnumType.STRING)
-    @Column(length = 50)
-    private TipoChave tipoChave;
+    private String tipoChave;
 
-    @Enumerated(EnumType.STRING)
-    private TipoConta tipoConta;
+    private String tipoConta;
 
     private String chavePix;
 
