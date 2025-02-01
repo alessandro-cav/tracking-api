@@ -38,7 +38,7 @@ public class EmpresaService {
             throw new BadRequestException(empresa.getCnpj() + " já cadastrado no sistema!");
         });
         Empresa empresa = this.modelMapper.map(empresaRequest, Empresa.class);
-        empresa.setEndereco(getEndereco(empresaRequest));
+        empresa.setEndereco(getEndereco(empresa, empresaRequest));
         empresa = this.repository.save(empresa);
         return   gerarEmpresaResponse(empresa);
     }
@@ -80,9 +80,8 @@ public class EmpresaService {
                     throw new BadRequestException(empresa1.getCnpj() + " já cadastrado!");
                 });
             }
-            empresaRequest.setIdEmpresa(empresa.getIdEmpresa());
-            empresa = this.modelMapper.map(empresaRequest, Empresa.class);
-            empresa.setEndereco(getEndereco(empresaRequest));
+            empresa = this.atualizarEmpresa(empresa, empresaRequest);
+            empresa.setEndereco(getEndereco(empresa, empresaRequest));
             empresa = this.repository.save(empresa);
             return  gerarEmpresaResponse(empresa);
         }).orElseThrow(() -> new ObjetoNotFoundException("Empresa não encontrada!"));
@@ -101,15 +100,24 @@ public class EmpresaService {
                 .orElseThrow(() -> new ObjetoNotFoundException("Empresa não encontrada!"));
     }
 
-    private Endereco getEndereco(EmpresaRequest empresaRequest) {
-        Endereco endereco = new Endereco();
-        endereco.setLogradouro(empresaRequest.getLogradouro());
-        endereco.setNumero(empresaRequest.getNumero());
-        endereco.setEstado(empresaRequest.getEstado());
-        endereco.setCidade(empresaRequest.getCidade());
-        endereco.setBairro(empresaRequest.getBairro());
-        endereco.setCep(empresaRequest.getCep());
+    private Endereco getEndereco(Empresa empresa, EmpresaRequest empresaRequest) {
+        Endereco endereco = empresa.getEndereco() != null ? empresa.getEndereco() : new Endereco();
+        endereco.setLogradouro(empresaRequest.getLogradouro() == null ? endereco.getLogradouro() : empresaRequest.getLogradouro());
+        endereco.setNumero(empresaRequest.getNumero() == null ? endereco.getNumero() : empresaRequest.getNumero());
+        endereco.setEstado(empresaRequest.getEstado() == null ? endereco.getEstado() : empresaRequest.getEstado());
+        endereco.setCidade(empresaRequest.getCidade() == null ? endereco.getCidade() : empresaRequest.getCidade());
+        endereco.setBairro(empresaRequest.getBairro() == null ? endereco.getBairro() : empresaRequest.getBairro());
+        endereco.setCep(empresaRequest.getCep() == null ? endereco.getCep() : empresaRequest.getCep());
         return endereco;
+    }
+
+    public Empresa atualizarEmpresa(Empresa empresa, EmpresaRequest empresaRequest) {
+        empresa.setNome(empresaRequest.getNome() == null ? empresa.getNome() : empresaRequest.getNome());
+        empresa.setCnpj(empresaRequest.getCnpj() == null ? empresa.getCnpj() : empresaRequest.getCnpj());
+        empresa.setTelefone(empresaRequest.getTelefone() == null ? empresa.getTelefone() : empresaRequest.getTelefone());
+        empresa.setEmail(empresaRequest.getEmail() == null ? empresa.getEmail() : empresaRequest.getEmail());
+        empresa.setImagem(empresaRequest.getImagem() == null ? empresa.getImagem() : empresaRequest.getImagem());
+        return empresa;
     }
 
     private EmpresaResponse gerarEmpresaResponse(Empresa empresa) {
