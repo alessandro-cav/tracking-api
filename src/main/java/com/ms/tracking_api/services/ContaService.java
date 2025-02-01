@@ -72,8 +72,7 @@ public class ContaService {
     public ContaResponse atualizarContaDoUsuario(Long idFuncionarios, Long idConta, ContaRequest request) {
         Usuario usuario = this.usuarioService.buscarUsuarioPeloId(idFuncionarios);
         return  this.contaRepository.findByUsuarioIdUsuarioAndIdConta(usuario.getIdUsuario(), idConta).map(conta -> {
-            request.setIdConta(conta.getIdConta());
-            conta = this.modelMapper.map(request, Conta.class);
+            this.atualizarConta(conta, request);
             conta.setUsuario(usuario);
             conta = this.contaRepository.save(conta);
             return this.modelMapper.map(conta, ContaResponse.class);
@@ -86,5 +85,16 @@ public class ContaService {
         return this.contaRepository.findByUsuarioIdUsuarioAndTipoChave(usuario.getIdUsuario(), tipo, pageRequest).stream()
                 .map(conta -> this.modelMapper.map(conta, ContaResponse.class))
                 .collect(Collectors.toList());
+    }
+
+    private Conta atualizarConta(Conta conta, ContaRequest contaRequest) {
+        conta.setTitularConta(contaRequest.getTitularConta() == null ? conta.getTitularConta() : contaRequest.getTitularConta());
+        conta.setBanco(contaRequest.getBanco() == null ? conta.getBanco() : contaRequest.getBanco());
+        conta.setAgencia(contaRequest.getAgencia() == null ? conta.getAgencia() : contaRequest.getAgencia());
+        conta.setNumero(contaRequest.getNumeroConta() == null ? conta.getNumero() : contaRequest.getNumeroConta());
+        conta.setTipoChave(contaRequest.getTipoChave() == null ? conta.getTipoChave() : contaRequest.getTipoChave());
+        conta.setTipoConta(contaRequest.getTipoConta() == null ? conta.getTipoConta() : contaRequest.getTipoConta());
+        conta.setChavePix(contaRequest.getChavePix() == null ? conta.getChavePix() : contaRequest.getChavePix());
+        return conta;
     }
 }

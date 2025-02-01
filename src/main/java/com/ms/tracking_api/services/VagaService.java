@@ -73,8 +73,7 @@ public class VagaService {
     public VagaResponse atualizar(Long id, VagaRequest vagaRequest) {
         Evento evento = this.eventoService.buscarEventoPeloId(vagaRequest.getIdEvento());
         return this.repository.findById(id).map(vaga -> {
-            vagaRequest.setIdVaga(vaga.getIdVaga());
-            vaga = this.modelMapper.map(vagaRequest, Vaga.class);
+            this.atualizarVaga(vaga,vagaRequest);
             vaga.setEvento(evento);
             vaga = this.repository.save(vaga);
             return gerarEnderecoResponse(vaga);
@@ -124,4 +123,21 @@ public class VagaService {
         vagaResponse.setEvento(eventoResponse);
         return vagaResponse;
     }
+
+    private Vaga atualizarVaga(Vaga vaga, VagaRequest vagaRequest) {
+        vaga.setDescricaoVaga(vagaRequest.getDescricaoVaga() == null ? vaga.getDescricaoVaga() : vagaRequest.getDescricaoVaga());
+        vaga.setResponsabilidades(vagaRequest.getResponsabilidades() == null ? vaga.getResponsabilidades() : vagaRequest.getResponsabilidades());
+        vaga.setRequisitos(vagaRequest.getRequisitos() == null ? vaga.getRequisitos() : vagaRequest.getRequisitos());
+        vaga.setAdvertencias(vagaRequest.getAdvertencias() == null ? vaga.getAdvertencias() : vagaRequest.getAdvertencias());
+        vaga.setImagemVaga(vagaRequest.getImagemVaga() == null ? vaga.getImagemVaga() : vagaRequest.getImagemVaga());
+        vaga.setIconeVaga(vagaRequest.getIconeVaga() == null ? vaga.getIconeVaga() : vagaRequest.getIconeVaga());
+        vaga.setValor(vagaRequest.getValor() == null ? vaga.getValor() : vagaRequest.getValor());
+        vaga.setVestimenta(vagaRequest.getVestimenta() == null ? vaga.getVestimenta() : vagaRequest.getVestimenta());
+        vaga.setRefeicao(vagaRequest.getRefeicao() == null ? vaga.getRefeicao() : vagaRequest.getRefeicao());
+        vaga.setQuantidade(vagaRequest.getQuantidade() == null ? vaga.getQuantidade() : vagaRequest.getQuantidade());
+        vaga.setObservacao(vagaRequest.getObservacao() == null ? vaga.getObservacao() : vagaRequest.getObservacao());
+        vaga.setStatusVaga(vaga.getStatusVaga());
+        return vaga;
+    }
+
 }

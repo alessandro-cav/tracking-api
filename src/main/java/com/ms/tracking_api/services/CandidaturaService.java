@@ -128,20 +128,6 @@ public class CandidaturaService {
         }
     }
 
-    private UsuarioCandidatoResponse gerarUsuarioCandidatoResponse(Candidatura candidatura) {
-        return UsuarioCandidatoResponse.builder()
-                .idUsuario(candidatura.getUsuario().getIdUsuario())
-                .nome(candidatura.getUsuario().getNome())
-                .cpf(candidatura.getUsuario().getCpf())
-                .rg(candidatura.getUsuario().getRg())
-                .email(candidatura.getUsuario().getEmail())
-                .telefone(candidatura.getUsuario().getTelefone())
-                .imagem(candidatura.getUsuario().getImagem())
-                .evento(candidatura.getVaga().getEvento().getNome())
-                .descricaoVaga(candidatura.getVaga().getDescricaoVaga())
-                .build();
-    }
-
     @Transactional(readOnly = true)
     public CandidaturaResponse buscarCandidatosPorVaga(Long idVaga, PageRequest pageRequest) {
         Vaga vaga = vagaService.buscarVagaPeloId(idVaga);
@@ -165,6 +151,21 @@ public class CandidaturaService {
     public Candidatura findByVagaIdVaga(Long idVaga) {
         return this.repository.findByVagaIdVaga(idVaga).get();
     }
+
+    private UsuarioCandidatoResponse gerarUsuarioCandidatoResponse(Candidatura candidatura) {
+        return UsuarioCandidatoResponse.builder()
+                .idUsuario(candidatura.getUsuario().getIdUsuario())
+                .nome(candidatura.getUsuario().getNome())
+                .cpf(candidatura.getUsuario().getCpf())
+                .rg(candidatura.getUsuario().getRg())
+                .email(candidatura.getUsuario().getEmail())
+                .telefone(candidatura.getUsuario().getTelefone())
+                .imagem(candidatura.getUsuario().getImagem())
+                .evento(candidatura.getVaga().getEvento().getNome())
+                .descricaoVaga(candidatura.getVaga().getDescricaoVaga())
+                .build();
+    }
+
 }
 
 
