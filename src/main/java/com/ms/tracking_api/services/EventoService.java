@@ -43,7 +43,7 @@ public class EventoService {
         Empresa empresa = this.empresaService.buscarEmpresaPeloId(eventoRequest.getIdEmpresa());
         Evento evento = this.modelMapper.map(eventoRequest, Evento.class);
         evento.setEmpresa(empresa);
-        evento.setEndereco(gerarEndereco(eventoRequest));
+        evento.setEndereco(gerarEndereco(evento, eventoRequest));
         evento = this.repository.save(evento);
         return gerarEnderecoResponse(evento);
     }
@@ -91,10 +91,9 @@ public class EventoService {
     public EventoResponse atualizar(Long id, EventoRequest eventoRequest) {
         Empresa empresa = this.empresaService.buscarEmpresaPeloId(eventoRequest.getIdEmpresa());
         return this.repository.findById(id).map(evento -> {
-            eventoRequest.setIdEvento(evento.getIdEvento());
-            evento = this.modelMapper.map(eventoRequest, Evento.class);
+            this.atualizarEvento(evento, eventoRequest);
             evento.setEmpresa(empresa);
-            evento.setEndereco(gerarEndereco(eventoRequest));
+            evento.setEndereco(gerarEndereco(evento, eventoRequest));
             evento = this.repository.save(evento);
              return  gerarEnderecoResponse(evento);
         }).orElseThrow(() -> new ObjetoNotFoundException("Evento não encontrado!"));
@@ -141,15 +140,25 @@ public class EventoService {
         return eventoResponse;
     }
 
-    private Endereco gerarEndereco(EventoRequest eventoRequest) {
-        Endereco endereco = new Endereco();
-        endereco.setLogradouro(eventoRequest.getLogradouro());
-        endereco.setNumero(eventoRequest.getNumero());
-        endereco.setEstado(eventoRequest.getEstado());
-        endereco.setCidade(eventoRequest.getCidade());
-        endereco.setBairro(eventoRequest.getBairro());
-        endereco.setCep(eventoRequest.getCep());
+    private Endereco gerarEndereco(Evento evento, EventoRequest eventoRequest) {
+        Endereco endereco = evento.getEndereco() != null ? evento.getEndereco() : new Endereco();
+        endereco.setLogradouro(eventoRequest.getLogradouro() == null ? endereco.getLogradouro() : eventoRequest.getLogradouro());
+        endereco.setNumero(eventoRequest.getNumero() == null ? endereco.getNumero() : eventoRequest.getNumero());
+        endereco.setEstado(eventoRequest.getEstado() == null ? endereco.getEstado() : eventoRequest.getEstado());
+        endereco.setCidade(eventoRequest.getCidade() == null ? endereco.getCidade() : eventoRequest.getCidade());
+        endereco.setBairro(eventoRequest.getBairro() == null ? endereco.getBairro() : eventoRequest.getBairro());
+        endereco.setCep(eventoRequest.getCep() == null ? endereco.getCep() : eventoRequest.getCep());
         return endereco;
+    }
+
+    private Evento atualizarEvento(Evento evento, EventoRequest eventoRequest) {
+        evento.setNome(eventoRequest.getNome() == null ? evento.getNome() : eventoRequest.getNome());
+        evento.setHoraInicio(eventoRequest.getHoraInicio() == null ? evento.getHoraInicio() : eventoRequest.getHoraInicio());
+        evento.setHoraFim(eventoRequest.getHoraFim() == null ? evento.getHoraFim() : eventoRequest.getHoraFim());
+        evento.setData(eventoRequest.getData() == null ? evento.getData() : eventoRequest.getData());
+        evento.setDetalhes(eventoRequest.getDetalhes() == null ? evento.getDetalhes() : eventoRequest.getDetalhes());
+
+        return evento;
     }
 }
 

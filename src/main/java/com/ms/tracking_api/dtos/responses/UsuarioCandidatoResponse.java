@@ -19,7 +19,7 @@ public class UsuarioCandidatoResponse implements Serializable {
 
     private String evento;
 
-    private String vaga;
+    private String descricaoVaga;
 
     private Long idUsuario;
 

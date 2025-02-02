@@ -13,5 +13,5 @@ import java.util.Optional;
 @Repository
 public interface VagaRepository extends PagingAndSortingRepository<Vaga, Long>, JpaRepository<Vaga, Long>{
 
-    List<Vaga> findByVagaContainingIgnoreCase(String nome, PageRequest pageRequest);
+    List<Vaga> findByDescricaoVagaContainingIgnoreCase(String nome, PageRequest pageRequest);
 }

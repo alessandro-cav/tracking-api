@@ -24,12 +24,18 @@ public class EventoRequest implements Serializable {
     @NotBlank(message = "O campo nome não pode ser vazio.")
     private String nome;
 
-    @NotNull(message = "O campo horario é obrigatório.")
-    @NotBlank(message = "O campo horario não pode ser vazio.")
-    private String horario;
+    @NotNull(message = "O campo horario inicio é obrigatório.")
+    @NotBlank(message = "O campo horario inicio não pode ser vazio.")
+    private String horaInicio;
+
+    @NotNull(message = "O campo horario fim é obrigatório.")
+    @NotBlank(message = "O campo horario fim não pode ser vazio.")
+    private String horaFim;
 
     @NotNull(message = "O campo data é obrigatório.")
     private LocalDate data;
+
+    private String detalhes;
 
     private String imagem;
 

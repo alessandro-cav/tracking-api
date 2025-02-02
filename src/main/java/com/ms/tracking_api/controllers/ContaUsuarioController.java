@@ -72,7 +72,7 @@ public class ContaUsuarioController {
                                                              @RequestParam String ordenarPor,
                                                              @RequestParam String tipoPix) {
         return ResponseEntity.ok(this.service
-                .buscarContaDoUsuarioPorTipoConta(idUsuarios, tipoPix, PageRequest.of(pagina, quantidade, Sort.by(Sort.Direction.valueOf(ordem), ordenarPor))));
+                .buscarContaDoUsuarioPorTipoChave(idUsuarios, tipoPix, PageRequest.of(pagina, quantidade, Sort.by(Sort.Direction.valueOf(ordem), ordenarPor))));
 
     }
 }

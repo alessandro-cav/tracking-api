@@ -1,9 +1,9 @@
 package com.ms.tracking_api.controllers;
 
 import com.ms.tracking_api.dtos.requests.ConviteRequest;
-import com.ms.tracking_api.dtos.requests.FiltroConviteRequestDTO;
+import com.ms.tracking_api.dtos.requests.FiltroConviteRequest;
 import com.ms.tracking_api.dtos.requests.ValidarConviteRequest;
-import com.ms.tracking_api.dtos.responses.ConviteResponseDTO;
+import com.ms.tracking_api.dtos.responses.ConviteResponse;
 import com.ms.tracking_api.services.ConviteService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
@@ -45,23 +45,22 @@ public class ConviteController {
         return ResponseEntity.ok( service.reenviarConvite(requestDTO));
     }
 
-
     @PostMapping("/filtro")
-    public ResponseEntity<List<ConviteResponseDTO>> filtroUsuario(
-            @RequestBody FiltroConviteRequestDTO filtroConviteRequestDTO, @RequestParam Integer pagina,
+    public ResponseEntity<List<ConviteResponse>> filtroUsuario(
+            @RequestBody FiltroConviteRequest filtroConviteRequestDTO, @RequestParam Integer pagina,
             @RequestParam Integer quantidade, @RequestParam String ordem, @RequestParam String ordenarPor) {
         return ResponseEntity.ok(this.service.filtroConvite(filtroConviteRequestDTO,
                 PageRequest.of(pagina, quantidade, Sort.by(Sort.Direction.valueOf(ordem), ordenarPor))));
     }
+
     @GetMapping
     @Operation(summary = "Listar  convite", description = "Endpoint para listar convite")
-    public ResponseEntity<List<ConviteResponseDTO>> buscarTodos(@RequestParam Integer pagina,
-                                                                @RequestParam Integer quantidade,
-                                                                @RequestParam String ordem,
-                                                                @RequestParam String ordenarPor) {
+    public ResponseEntity<List<ConviteResponse>> buscarTodos(@RequestParam Integer pagina,
+                                                             @RequestParam Integer quantidade,
+                                                             @RequestParam String ordem,
+                                                             @RequestParam String ordenarPor) {
         return ResponseEntity.ok(this.service
                 .buscarTodos(PageRequest.of(pagina, quantidade, Sort.by(Sort.Direction.valueOf(ordem), ordenarPor))));
-
     }
 
 }

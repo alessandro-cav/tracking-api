@@ -15,7 +15,7 @@ public class VagaCandidatoResponse implements Serializable {
 
     private String evento;
 
-    private String vaga;
+    private String descricaoVaga;
 
     private String nome;
 

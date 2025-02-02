@@ -1,19 +1,21 @@
 package com.ms.tracking_api.dtos.requests;
 
+
+import com.ms.tracking_api.enuns.StatusUsuario;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.io.Serializable;
-
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class QRCodeRequest implements Serializable {
-
-    private static final long serialVersionUID = 1L;
+public class FiltroUsuarioRequest {
 
     private Long idUsuario;
 
-    private Long idEvento;
+    private String nome;
+
+    private String email;
+
+    private StatusUsuario statusUsuario;
 }

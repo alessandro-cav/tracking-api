@@ -14,7 +14,7 @@ public class Validator {
     public void validaCPF(String cpf) {
         CPFValidator cpfValidator = new CPFValidator();
         try {
-            cpfValidator.assertValid(cpf);
+            cpfValidator.assertValid(cpf.replaceAll("[^0-9]", "")); // Remove pontos e traços
         } catch (InvalidStateException e) {
             throw new BadRequestException("CPF inválido");
         }
@@ -23,7 +23,7 @@ public class Validator {
     public void validaCNPJ(String cnpj) {
         CNPJValidator cnpjValidator = new CNPJValidator();
         try {
-            cnpjValidator.assertValid(cnpj);
+            cnpjValidator.assertValid(cnpj.replaceAll("[^0-9]", "")); // Remove pontos e traços
         } catch (InvalidStateException e) {
             throw new BadRequestException("CNPJ inválido");
         }
