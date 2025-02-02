@@ -1,16 +1,21 @@
 package com.ms.tracking_api.dtos.requests;
 
+import com.ms.tracking_api.entities.Evento;
+import com.ms.tracking_api.entities.RegistrarAtividade;
 import com.ms.tracking_api.enuns.StatusVaga;
-import jakarta.persistence.Column;
-import jakarta.persistence.Lob;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.util.List;
 
 @Data
 @NoArgsConstructor
@@ -58,7 +63,14 @@ public class VagaRequest implements Serializable {
 
     private String iconeVaga;
 
+    @NotNull(message = "O campo titulo é obrigatório.")
+    @NotBlank(message = "O campo titulo não pode ser vazio.")
+    private String titulo;
 
+    private String subtitulo;
 
+    @NotNull(message = "O campo cargo é obrigatório.")
+    @NotBlank(message = "O campo cargo não pode ser vazio.")
+    private String cargoVaga;
 
 }

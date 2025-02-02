@@ -49,4 +49,10 @@ public class EventoVagaResponse implements Serializable {
 
     private StatusVaga statusVaga;
 
+    private String titulo;
+
+    private String subtitulo;
+
+    private String cargoVaga;
+
 }
