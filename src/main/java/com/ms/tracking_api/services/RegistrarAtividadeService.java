@@ -16,6 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -32,30 +33,28 @@ public class RegistrarAtividadeService {
     private final CandidaturaService candidaturaService;
 
     @Transactional
-    public RegistrarAtividaderResponse registrarAtividade(QRCodeRequest request) {
-        Vaga vaga = this.vagaService.buscarVagaPeloId(request.getIdVaga());
+    public String registrarAtividade(QRCodeRequest request) {
         Usuario usuario = this.usuarioService.buscarUsuarioPeloId(request.getIdUsuario());
-        Evento evento = this.eventoService.buscarEventoPeloId(request.getIdEvento());
+        List<Vaga> vagas = this.candidaturaService.findVagasByIdUsuario(usuario.getIdUsuario());
 
-        Candidatura candidatura = buscarUsuarioVaga(usuario, vaga);
-        validarUsuarioVaga(candidatura, evento);
+        RegistrarAtividade atividade = vagas.stream()
+                .filter(vaga -> vaga.getEvento().getIdEvento().equals(request.getIdEvento()))
+                .findFirst()
+                .map(vaga -> {
+                    this.validarVagaAprovada(vaga);
+                    RegistrarAtividade novaAtividade = registrarEntradaOUSaida(usuario, vaga);
+                    return this.repository.save(novaAtividade);
+                })
+                .orElseThrow(() -> new RuntimeException("Nenhuma vaga encontrada para o evento informado"));
 
-        RegistrarAtividade atividade = registrarEntradaOUSaida(usuario, vaga);
+        return atividade == null
+                ? "Ocorreu um erro ao registrar o acesso. Por favor, tente novamente. Se o problema persistir, entre em contato com o setor responsável."
+                : atividade.getTipoAcesso() + " registrada com sucesso!";
 
-        atividade = this.repository.save(atividade);
-        return gerarRespostaAtividade(atividade);
     }
 
-
-    private Candidatura buscarUsuarioVaga(Usuario usuario, Vaga vaga) {
-        return this.candidaturaService.findByUsuarioIdUsuarioAndVagaIdVaga(usuario.getIdUsuario(), vaga.getIdVaga());
-    }
-
-    private void validarUsuarioVaga(Candidatura candidatura, Evento evento) {
-        if (!candidatura.getVaga().getEvento().getIdEvento().equals(evento.getIdEvento())) {
-            throw new BadRequestException("A vaga que o usuário está vinculado não pertence a esse evento");
-        }
-
+    private void validarVagaAprovada(Vaga vaga) {
+         Candidatura candidatura = this.candidaturaService.findByVagaIdVaga(vaga.getIdVaga());
         if (candidatura.getStatusCandidatura() == StatusCandidatura.PENDENTE || candidatura.getStatusCandidatura() == StatusCandidatura.RECUSADA) {
             throw new BadRequestException("A candidatura de trabalho está pendente ou foi recusada para este evento, portanto, não é possível realizar a entrada.");
         }
@@ -67,7 +66,7 @@ public class RegistrarAtividadeService {
         if (atividade == null) {
             return registrarEntrada(usuario, vaga);
         } else {
-            validarIntervaloDeTempo(atividade.getDataHora());
+         // validarIntervaloDeTempo(atividade.getDataHora());
             return registrarSaida(usuario, vaga);
         }
     }
@@ -77,6 +76,7 @@ public class RegistrarAtividadeService {
         atividade.setTipoAcesso(TipoAcesso.ENTRADA);
         atividade.setUsuario(usuario);
         atividade.setVaga(vaga);
+        atividade.setDataHora(LocalDateTime.now());
         return atividade;
     }
 
@@ -85,17 +85,8 @@ public class RegistrarAtividadeService {
         atividade.setTipoAcesso(TipoAcesso.SAIDA);
         atividade.setUsuario(usuario);
         atividade.setVaga(vaga);
+        atividade.setHoraSaida(LocalDateTime.now());
         return atividade;
-    }
-
-    private RegistrarAtividaderResponse gerarRespostaAtividade(RegistrarAtividade atividade) {
-        RegistrarAtividaderResponse response = new RegistrarAtividaderResponse();
-        response.setIdRegistrarAtividade(atividade.getIdRegistrarAtividade());
-        response.setNome(atividade.getUsuario().getNome());
-        response.setVaga(atividade.getVaga().getVaga());
-        response.setTipoAcesso(atividade.getTipoAcesso());
-        response.setEvento(atividade.getVaga().getEvento().getNome());
-        return response;
     }
 
     private void validarIntervaloDeTempo(LocalDateTime ultimaAtividade) {

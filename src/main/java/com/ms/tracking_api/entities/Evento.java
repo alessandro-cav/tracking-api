@@ -26,9 +26,13 @@ public class Evento implements Serializable {
 
     private String nome;
 
-    private String horario;
+    private String horaInicio;
+
+    private String horaFim;
 
     private LocalDate data;
+
+    private String detalhes;
 
     @Embedded
     private Endereco endereco;

@@ -23,11 +23,15 @@ public interface CandidaturaRepository extends PagingAndSortingRepository<Candid
 
     List<Candidatura>  findByVagaIdVagaAndStatusCandidatura(Long idVaga, StatusCandidatura statusCandidatura, Pageable pageable);
 
-    List<Candidatura> findByUsuarioIdUsuario(Long idUsuario, Pageable pageable);
-
     @Query("SELECT c.usuario FROM Candidatura c WHERE c.vaga.idVaga = :idVaga")
     List<Usuario> findByVagaIdVaga(Long idVaga, PageRequest pageRequest);
 
     @Query("SELECT c.vaga FROM Candidatura c WHERE c.usuario.idUsuario = :idUsuario")
     List<Vaga> findVagasByUsuarioIdUsuario(Long idUsuario, Pageable pageable);
+
+    @Query("SELECT c.vaga FROM Candidatura c WHERE c.usuario.idUsuario = :idUsuario")
+    List<Vaga> findVagasByUsuarioIdUsuario(Long idUsuario);
+
+    @Query("SELECT c FROM Candidatura c WHERE c.vaga.idVaga = :idVaga")
+    Optional<Candidatura> findByVagaIdVaga(Long idVaga);
 }
