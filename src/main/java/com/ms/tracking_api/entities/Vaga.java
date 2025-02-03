@@ -1,7 +1,6 @@
 package com.ms.tracking_api.entities;
 
 
-import com.ms.tracking_api.enuns.Genero;
 import com.ms.tracking_api.enuns.StatusVaga;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;

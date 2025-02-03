@@ -1,6 +1,5 @@
 package com.ms.tracking_api.entities;
 
-import com.ms.tracking_api.enuns.Genero;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -36,8 +35,7 @@ public class Usuario implements Serializable {
 
     private LocalDate dataNascimento;
 
-    @Enumerated(EnumType.STRING)
-    private Genero genero;
+    private String genero;
 
     private LocalDate validadeASO;
 

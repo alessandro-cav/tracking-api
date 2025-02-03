@@ -35,7 +35,6 @@ public class UsuarioRequest implements Serializable {
 
     private LocalDate dataNascimento;
 
-
     private String genero;
 
     private String imagem;
