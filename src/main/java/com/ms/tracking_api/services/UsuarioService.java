@@ -89,8 +89,12 @@ public class UsuarioService {
 
     @Transactional
     public UsuarioResponse atualizar(Long id, UsuarioRequest usuarioRequest) {
+        if(usuarioRequest.getCpf() != null) {
         this.validator.validaCPF(usuarioRequest.getCpf());
-        this.validator.validaEmail(usuarioRequest.getEmail());
+        }
+        if(usuarioRequest.getEmail() != null) {
+            this.validator.validaEmail(usuarioRequest.getEmail());
+        }
         return this.repository.findById(id).map(usuario -> {
             if(usuarioRequest.getCpf() != null) {
                 if (!(usuario.getCpf().equals(usuarioRequest.getCpf()))) {

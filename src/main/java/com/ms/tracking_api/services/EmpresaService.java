@@ -72,8 +72,12 @@ public class EmpresaService {
 
     @Transactional
     public EmpresaResponse atualizar(Long id, EmpresaRequest empresaRequest) {
-        this.validator.validaCNPJ(empresaRequest.getCnpj());
-        this.validator.validaEmail(empresaRequest.getEmail());
+        if(empresaRequest.getCnpj() != null) {
+            this.validator.validaCNPJ(empresaRequest.getCnpj());
+        }
+        if(empresaRequest.getEmail() != null) {
+            this.validator.validaEmail(empresaRequest.getEmail());
+        }
         return this.repository.findById(id).map(empresa -> {
             if(empresaRequest.getCnpj() != null) {
                 if (!(empresa.getCnpj().equals(empresaRequest.getCnpj()))) {
