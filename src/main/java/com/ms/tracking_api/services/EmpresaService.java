@@ -75,10 +75,19 @@ public class EmpresaService {
         this.validator.validaCNPJ(empresaRequest.getCnpj());
         this.validator.validaEmail(empresaRequest.getEmail());
         return this.repository.findById(id).map(empresa -> {
-            if (!(empresa.getCnpj().equals(empresaRequest.getCnpj()))) {
-                this.repository.findByCnpj(empresaRequest.getCnpj()).ifPresent(empresa1 -> {
-                    throw new BadRequestException(empresa1.getCnpj() + " já cadastrado!");
-                });
+            if(empresaRequest.getCnpj() != null) {
+                if (!(empresa.getCnpj().equals(empresaRequest.getCnpj()))) {
+                    this.repository.findByCnpj(empresaRequest.getCnpj()).ifPresent(empresa1 -> {
+                        throw new BadRequestException(empresa1.getCnpj() + " já cadastrado!");
+                    });
+                }
+            }
+            if(empresaRequest.getEmail() != null) {
+                if (!(empresa.getEmail().equals(empresaRequest.getEmail()))) {
+                    this.repository.findByEmail(empresaRequest.getEmail()).ifPresent(funcionario1 -> {
+                        throw new BadRequestException(empresaRequest.getEmail() + " já cadastrado no sistema!");
+                    });
+                }
             }
             empresa = this.atualizarEmpresa(empresa, empresaRequest);
             empresa.setEndereco(getEndereco(empresa, empresaRequest));
