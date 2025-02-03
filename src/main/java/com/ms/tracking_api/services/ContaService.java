@@ -31,6 +31,13 @@ public class ContaService {
     @Transactional
     public ContaResponse salvarContaDoUsuario(Long idUsuario, ContaRequest request) {
         Usuario usuario = this.usuarioService.buscarUsuarioPeloId(idUsuario);
+        this.contaRepository.findByNumero(request.getNumeroConta()).ifPresent(conta -> {
+            throw new BadRequestException("Numero da conta: " + request.getNumeroConta() + " já cadastrado no sistema!");
+        });
+        this.contaRepository.findByChavePix(request.getChavePix()).ifPresent(conta -> {
+            throw new BadRequestException("Chave pix: " + request.getChavePix() + " já cadastrado no sistema!");
+        });
+
         Conta conta = this.modelMapper.map(request, Conta.class);
         conta.setUsuario(usuario);
         conta = this.contaRepository.save(conta);
@@ -72,6 +79,20 @@ public class ContaService {
     public ContaResponse atualizarContaDoUsuario(Long idFuncionarios, Long idConta, ContaRequest request) {
         Usuario usuario = this.usuarioService.buscarUsuarioPeloId(idFuncionarios);
         return  this.contaRepository.findByUsuarioIdUsuarioAndIdConta(usuario.getIdUsuario(), idConta).map(conta -> {
+            if(request.getNumeroConta() != null) {
+                if (!(conta.getNumero().equals(request.getNumeroConta()))) {
+                    this.contaRepository.findByNumero(request.getNumeroConta()).ifPresent(c -> {
+                        throw new BadRequestException("Numero da conta: " + request.getNumeroConta() + " já cadastrado no sistema!");
+                    });
+                }
+            }
+            if(request.getChavePix() != null) {
+                if (!(conta.getChavePix().equals(request.getChavePix()))) {
+                    this.contaRepository.findByChavePix(request.getChavePix()).ifPresent(c -> {
+                        throw new BadRequestException("Chave pix: " + request.getChavePix() + " já cadastrado no sistema!");
+                    });
+                }
+            }
             this.atualizarConta(conta, request);
             conta.setUsuario(usuario);
             conta = this.contaRepository.save(conta);

@@ -89,18 +89,26 @@ public class UsuarioService {
 
     @Transactional
     public UsuarioResponse atualizar(Long id, UsuarioRequest usuarioRequest) {
+        if(usuarioRequest.getCpf() != null) {
         this.validator.validaCPF(usuarioRequest.getCpf());
-        this.validator.validaEmail(usuarioRequest.getEmail());
+        }
+        if(usuarioRequest.getEmail() != null) {
+            this.validator.validaEmail(usuarioRequest.getEmail());
+        }
         return this.repository.findById(id).map(usuario -> {
-            if (!(usuario.getCpf().equals(usuarioRequest.getCpf()))) {
-                this.repository.findByCpf(usuarioRequest.getCpf()).ifPresent(funcionario1 -> {
-                    throw new BadRequestException(usuarioRequest.getCpf() + " já cadastrado no sistema!");
-                });
+            if(usuarioRequest.getCpf() != null) {
+                if (!(usuario.getCpf().equals(usuarioRequest.getCpf()))) {
+                    this.repository.findByCpf(usuarioRequest.getCpf()).ifPresent(funcionario1 -> {
+                        throw new BadRequestException(usuarioRequest.getCpf() + " já cadastrado no sistema!");
+                    });
+                }
             }
-            if (!(usuario.getEmail().equals(usuarioRequest.getEmail()))) {
-                this.repository.findByEmail(usuarioRequest.getEmail()).ifPresent(funcionario1 -> {
-                    throw new BadRequestException(usuarioRequest.getEmail() + " já cadastrado no sistema!");
-                });
+            if(usuarioRequest.getEmail() != null) {
+                if (!(usuario.getEmail().equals(usuarioRequest.getEmail()))) {
+                    this.repository.findByEmail(usuarioRequest.getEmail()).ifPresent(funcionario1 -> {
+                        throw new BadRequestException(usuarioRequest.getEmail() + " já cadastrado no sistema!");
+                    });
+                }
             }
             usuario = this.atualizarUsuario(usuario, usuarioRequest);
             usuario.setEndereco(getEndereco(usuario, usuarioRequest));

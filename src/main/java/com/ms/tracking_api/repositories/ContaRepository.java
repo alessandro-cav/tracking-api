@@ -18,4 +18,8 @@ public interface ContaRepository extends PagingAndSortingRepository<Conta, Long>
     Optional<Conta> findByUsuarioIdUsuarioAndIdConta(Long idUsuario, Long idConta);
 
     List<Conta> findByUsuarioIdUsuarioAndTipoChave(Long idUsuario, String tipoChave, PageRequest pageRequest);
+
+    Optional<Conta> findByNumero(String numeroConta);
+
+    Optional<Conta> findByChavePix(String chavePix);
 }
