@@ -28,6 +28,12 @@ public class Vaga  implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long idVaga;
 
+    private String titulo;
+
+    private String subtitulo;
+
+    private String cargoVaga;
+
     private String descricaoVaga;
 
     private String responsabilidades;
