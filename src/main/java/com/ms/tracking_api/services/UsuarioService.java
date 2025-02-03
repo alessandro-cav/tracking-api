@@ -9,7 +9,6 @@ import com.ms.tracking_api.dtos.responses.UsuarioResponse;
 import com.ms.tracking_api.entities.Endereco;
 import com.ms.tracking_api.entities.User;
 import com.ms.tracking_api.entities.Usuario;
-import com.ms.tracking_api.enuns.Genero;
 import com.ms.tracking_api.enuns.StatusUsuario;
 import com.ms.tracking_api.handlers.BadRequestException;
 import com.ms.tracking_api.repositories.UserRepository;
@@ -56,7 +55,6 @@ public class UsuarioService {
             });
         }
         Usuario usuario = this.modelMapper.map(usuarioRequest, Usuario.class);
-        usuario.setGenero(Genero.buscarGenero(usuarioRequest.getGenero()));
         usuario.setIdUsuario(user.getId());
         Endereco endereco = getEndereco(usuario, usuarioRequest);
         usuario.setEndereco(endereco);
@@ -157,14 +155,13 @@ public class UsuarioService {
     }
 
     private Usuario atualizarUsuario(Usuario usuario, UsuarioRequest usuarioRequest) {
-        Genero genero = Genero.buscarGenero(usuarioRequest.getGenero());
         usuario.setNome(usuarioRequest.getNome() == null ? usuario.getNome() : usuarioRequest.getNome());
         usuario.setCpf(usuarioRequest.getCpf() == null ? usuario.getCpf() : usuarioRequest.getCpf());
         usuario.setRg(usuarioRequest.getRg() == null ? usuario.getRg() : usuarioRequest.getRg());
         usuario.setTelefone(usuarioRequest.getTelefone() == null ? usuario.getTelefone() : usuarioRequest.getTelefone());
         usuario.setEmail(usuarioRequest.getEmail() == null ? usuario.getEmail() : usuarioRequest.getEmail());
         usuario.setDataNascimento(usuarioRequest.getDataNascimento() == null ? usuario.getDataNascimento() : usuarioRequest.getDataNascimento());
-        usuario.setGenero(usuarioRequest.getGenero() == null ? usuario.getGenero() : genero);
+        usuario.setGenero(usuarioRequest.getGenero() == null ? usuario.getGenero() : usuarioRequest.getGenero());
         usuario.setValidadeASO(usuarioRequest.getValidadeASO() == null ? usuario.getValidadeASO() : usuarioRequest.getValidadeASO());
         usuario.setCurriculo(usuarioRequest.getCurriculo() == null ? usuario.getCurriculo() : usuarioRequest.getCurriculo());
         usuario.setAso(usuarioRequest.getAso() == null ? usuario.getAso() : usuarioRequest.getAso());
@@ -185,6 +182,7 @@ public class UsuarioService {
 
     private UsuarioResponse gerarUsuarioResponse(Usuario usuario) {
         UsuarioResponse usuarioResponse = this.modelMapper.map(usuario, UsuarioResponse.class);
+        usuarioResponse.setGenero(usuario.getGenero());
         usuarioResponse.setLogradouro(usuario.getEndereco().getLogradouro());
         usuarioResponse.setNumero(usuario.getEndereco().getNumero());
         usuarioResponse.setEstado(usuario.getEndereco().getEstado());
