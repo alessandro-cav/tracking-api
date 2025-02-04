@@ -22,6 +22,12 @@ public class Comprovante implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long idComprovante;
+
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "usuario")
     private Usuario usuario;
