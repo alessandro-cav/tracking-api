@@ -1,8 +1,8 @@
 package com.ms.tracking_api.services;
 
-import com.ms.tracking_api.dtos.requests.ReciboRequest;
+import com.ms.tracking_api.dtos.requests.ComprovanteRequest;
 import com.ms.tracking_api.dtos.requests.QRCodeRequest;
-import com.ms.tracking_api.dtos.responses.ReciboResponse;
+import com.ms.tracking_api.dtos.responses.ComprovanteResponse;
 import com.ms.tracking_api.dtos.responses.RegistrarAtividaderResponse;
 import com.ms.tracking_api.entities.*;
 import com.ms.tracking_api.enuns.StatusCandidatura;
@@ -10,23 +10,24 @@ import com.ms.tracking_api.enuns.TipoAcesso;
 import com.ms.tracking_api.handlers.BadRequestException;
 import com.ms.tracking_api.repositories.RegistrarAtividadeRepository;
 import lombok.RequiredArgsConstructor;
+import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Duration;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 public class RegistrarAtividadeService {
 
-    private final VagaService vagaService;
+    private final ModelMapper modelMapper;
 
     private final UsuarioService usuarioService;
-
-    private final EventoService eventoService;
 
     private final RegistrarAtividadeRepository repository;
 
@@ -107,17 +108,12 @@ public class RegistrarAtividadeService {
                 findTopByUsuarioIdUsuarioAndVagaIdVagaOrderByDataHoraDesc(idUsuario, idVaga).orElse(null);
     }
 
-    @Transactional(readOnly = true)
-    public ReciboResponse gerarComprovante(ReciboRequest request) {
-        Vaga vaga = this.vagaService.buscarVagaPeloId(request.getIdVaga());
-        Usuario usuario = this.usuarioService.buscarUsuarioPeloId(request.getIdUsuario());
-
-        ReciboResponse cr = new ReciboResponse();
-        cr.setNome(usuario.getNome());
-        cr.setRg(usuario.getRg());
-        cr.setValor(vaga.getValor());
-        cr.setCpf(usuario.getCpf());
-        return cr;
+    public List<RegistrarAtividaderResponse> listarRegistroAtividades(Long idUsuario) {
+        Usuario usuario = this.usuarioService.buscarUsuarioPeloId(idUsuario);
+        return this.repository.findRegistrarAtividadeByUsuarioIdUsuario(usuario.getIdUsuario())
+                .stream()
+                .map(ra -> this.modelMapper.map(ra, RegistrarAtividaderResponse.class))
+                .collect(Collectors.toList());
     }
 
 }
