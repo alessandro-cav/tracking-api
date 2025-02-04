@@ -9,7 +9,7 @@ import java.io.Serializable;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class ReciboRequest implements Serializable {
+public class ComprovanteRequest implements Serializable {
 
     private static final long serialVersionUID = 1L;
 

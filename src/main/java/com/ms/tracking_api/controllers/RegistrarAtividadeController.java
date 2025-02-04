@@ -1,18 +1,16 @@
 package com.ms.tracking_api.controllers;
 
-import com.ms.tracking_api.dtos.requests.ReciboRequest;
 import com.ms.tracking_api.dtos.requests.QRCodeRequest;
-import com.ms.tracking_api.dtos.responses.ReciboResponse;
+import com.ms.tracking_api.dtos.responses.RegistrarAtividaderResponse;
 import com.ms.tracking_api.services.RegistrarAtividadeService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/registrarAtividades")
@@ -31,9 +29,9 @@ public class RegistrarAtividadeController {
         return ResponseEntity.ok(this.service.registrarAtividade(request));
     }
 
-    @PostMapping("/gerarComprovante")
-    @Operation(summary = "Gerar comprovante", description = "Endpoint para gerar comprovante")
-    public ResponseEntity<ReciboResponse> gerarComprovante(@RequestBody ReciboRequest request) {
-        return ResponseEntity.ok(this.service.gerarComprovante(request));
+    @GetMapping("/registroAtividades/{idUsuario}")
+    @Operation(summary = "Lista de atividades", description = "Endpoint para listar as atividades pelo id do usuario")
+    public ResponseEntity<List<RegistrarAtividaderResponse>> listarRegistroAtividades(@PathVariable(name = "idUsuario") Long idUsuario) {
+        return ResponseEntity.ok(this.service.listarRegistroAtividades(idUsuario));
     }
 }
