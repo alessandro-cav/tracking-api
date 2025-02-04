@@ -51,6 +51,9 @@ public class Usuario implements Serializable {
     @OneToMany(mappedBy = "usuario")
     private List<Avaliacao> avaliacao;
 
+    @OneToMany(mappedBy = "usuario")
+    private List<Comprovante> recibos;
+
     @Lob
     @Column(columnDefinition = "LONGTEXT")
     private String curriculo;
