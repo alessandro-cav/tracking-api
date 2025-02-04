@@ -2,6 +2,7 @@ package com.ms.tracking_api.services;
 
 import com.ms.tracking_api.configs.email.EnviaEmail;
 import com.ms.tracking_api.configs.validations.Validator;
+import com.ms.tracking_api.dtos.requests.ConviteDTO;
 import com.ms.tracking_api.dtos.requests.ConviteRequest;
 import com.ms.tracking_api.dtos.requests.FiltroConviteRequest;
 import com.ms.tracking_api.dtos.requests.ValidarConviteRequest;
@@ -43,43 +44,44 @@ public class ConviteService {
     public void enviarConvite(ConviteRequest request) {
         List<String> emailsInvalidos = new ArrayList<>();
         List<String> emailsJaUtilizados = new ArrayList<>();
-        List<String> todosErros = new ArrayList<>();
+        List<String> erros = new ArrayList<>();
 
-        List<String> emailsValidos = request.getEmails().stream()
-                .filter(email -> {
-                    if (!this.validator.isEmailValid(email)) {
-                        emailsInvalidos.add(email);
+        List<ConviteDTO> convitesValidos = request.getConvites().stream()
+                .filter(conviteDTO -> {
+                    if (!validator.isEmailValid(conviteDTO.getEmail())) {
+                        emailsInvalidos.add(conviteDTO.getEmail());
                         return false;
                     }
                     return true;
                 })
                 .collect(Collectors.toList());
 
-        emailsValidos.forEach(email -> {
-            if (this.repository.findByEmail(email).isPresent()) {
-                emailsJaUtilizados.add(email);
+        convitesValidos.forEach(conviteDTO -> {
+            if (repository.findByEmail(conviteDTO.getEmail()).isPresent()) {
+                emailsJaUtilizados.add(conviteDTO.getEmail());
             } else {
-                String codigo = this.generateUniqueCode();
+                String codigo = generateUniqueCode();
                 Convite convite = Convite.builder()
-                        .email(email)
-                        .nome(request.getNome())
+                        .email(conviteDTO.getEmail())
+                        .nome(conviteDTO.getNome())
                         .codigo(codigo)
                         .statusConvite(StatusConvite.PENDENTE)
                         .build();
-                this.repository.save(convite);
-                this.enviarEmailConvite(convite);
+
+                repository.save(convite);
+                enviarEmailConvite(convite);
             }
         });
 
-        if (!emailsInvalidos.isEmpty()) {
-            todosErros.add("Os seguintes e-mails são inválidos: " + String.join(", ", emailsInvalidos));
-        }
-        if (!emailsJaUtilizados.isEmpty()) {
-            todosErros.add("Os seguintes e-mails já foram utilizados para convidar um usuário: " + String.join(", ", emailsJaUtilizados));
-        }
-        if (!todosErros.isEmpty()) {
-            throw new BadRequestException(String.join("\n", todosErros));
-        }
+        if (!emailsInvalidos.isEmpty())
+            erros.add("Os seguintes e-mails são inválidos: " + String.join(", ", emailsInvalidos));
+
+        if (!emailsJaUtilizados.isEmpty())
+            erros.add("Os seguintes e-mails já foram utilizados para convidar um usuário: "
+                    + String.join(", ", emailsJaUtilizados));
+
+        if (!erros.isEmpty())
+            throw new BadRequestException(String.join("\n", erros));
     }
 
     @Transactional
@@ -98,46 +100,45 @@ public class ConviteService {
         List<String> emailsInvalidos = new ArrayList<>();
         List<String> emailsComStatusDiferenteDePendente = new ArrayList<>();
         List<String> emailsNaoEncontrados = new ArrayList<>();
-        List<String> todosErros = new ArrayList<>();
+        List<String> erros = new ArrayList<>();
 
-        // Filtra e-mails inválidos
-        List<String> emailsValidos = request.getEmails().stream()
-                .filter(email -> {
-                    if (!this.validator.isEmailValid(email)) {
-                        emailsInvalidos.add(email);
+        List<ConviteDTO> convitesValidos = request.getConvites().stream()
+                .filter(conviteDTO -> {
+                    if (!validator.isEmailValid(conviteDTO.getEmail())) {
+                        emailsInvalidos.add(conviteDTO.getEmail());
                         return false;
                     }
                     return true;
                 })
                 .collect(Collectors.toList());
 
-        emailsValidos.forEach(email -> {
-            this.repository.findByEmailAndNome(email, request.getNome())
+        convitesValidos.forEach(conviteDTO -> {
+            repository.findByEmailAndNome(conviteDTO.getEmail(), conviteDTO.getNome())
                     .ifPresentOrElse(convite -> {
                         if (convite.getStatusConvite() == StatusConvite.VALIDADO) {
-                            emailsComStatusDiferenteDePendente.add(email);
+                            emailsComStatusDiferenteDePendente.add(conviteDTO.getEmail());
                         } else {
-                            this.enviarEmailConvite(convite);
+                            // Cria um convite com base no DTO e envia o convite
+                            enviarEmailConvite(convite);
                         }
-                    }, () -> emailsNaoEncontrados.add(email));
+                    }, () -> emailsNaoEncontrados.add(conviteDTO.getEmail()));
         });
 
-        if (!emailsInvalidos.isEmpty()) {
-            todosErros.add("Os seguintes e-mails são inválidos: " + String.join(", ", emailsInvalidos));
-        }
-        if (!emailsNaoEncontrados.isEmpty()) {
-            todosErros.add("Convite não encontrado para os seguintes e-mails: " + String.join(", ", emailsNaoEncontrados));
-        }
-        if (!emailsComStatusDiferenteDePendente.isEmpty()) {
-            todosErros.add("Os seguintes e-mails já foram utilizados para acesso à aplicação e não podem receber um novo convite: "
+        if (!emailsInvalidos.isEmpty())
+            erros.add("Os seguintes e-mails são inválidos: " + String.join(", ", emailsInvalidos));
+
+        if (!emailsNaoEncontrados.isEmpty())
+            erros.add("Convite não encontrado para os seguintes e-mails: " + String.join(", ", emailsNaoEncontrados));
+
+        if (!emailsComStatusDiferenteDePendente.isEmpty())
+            erros.add("Os seguintes e-mails já foram utilizados para acesso à aplicação e não podem receber um novo convite: "
                     + String.join(", ", emailsComStatusDiferenteDePendente));
-        }
-        if (!todosErros.isEmpty()) {
-            throw new BadRequestException(String.join("\n", todosErros));
-        }
+
+        if (!erros.isEmpty())
+            throw new BadRequestException(String.join("\n", erros));
+
         return true;
     }
-
 
     private void enviarEmailConvite(Convite convite) {
         email.emailConvite(convite.getEmail(), convite.getNome(), convite.getCodigo());
