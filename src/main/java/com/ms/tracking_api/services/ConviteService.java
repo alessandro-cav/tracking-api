@@ -19,6 +19,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -35,29 +36,50 @@ public class ConviteService {
 
     private final ModelMapper modelMapper;
 
-    @Transactional
-    public void enviarConvite(ConviteRequest request) {
-        this.validator.validaEmail(request.getEmail());
-        this.repository.findByEmail(request.getEmail()).ifPresent(email -> {
-            throw new BadRequestException(
-                    "O e-mail: " + request.getEmail() + " já foi utilizado para convidar um usuário."
-            );
-        });
-        String codigo = this.generateUniqueCode();
-        Convite convite = Convite.
-                builder()
-                .email(request.getEmail())
-                .nome(request.getNome())
-                .codigo(codigo)
-                .statusConvite(StatusConvite.PENDENTE)
-                .build();
-
-        convite = this.repository.save(convite);
-        this.enviarEmailConvite(convite);
-    }
-
     private String generateUniqueCode() {
         return UUID.randomUUID().toString().replaceAll("[^0-9]", "").substring(0, 6);
+    }
+    @Transactional
+    public void enviarConvite(ConviteRequest request) {
+        List<String> emailsInvalidos = new ArrayList<>();
+        List<String> emailsJaUtilizados = new ArrayList<>();
+        List<String> todosErros = new ArrayList<>();
+
+        List<String> emailsValidos = request.getEmails().stream()
+                .filter(email -> {
+                    if (!this.validator.isEmailValid(email)) {
+                        emailsInvalidos.add(email);
+                        return false;
+                    }
+                    return true;
+                })
+                .collect(Collectors.toList());
+
+        emailsValidos.forEach(email -> {
+            if (this.repository.findByEmail(email).isPresent()) {
+                emailsJaUtilizados.add(email);
+            } else {
+                String codigo = this.generateUniqueCode();
+                Convite convite = Convite.builder()
+                        .email(email)
+                        .nome(request.getNome())
+                        .codigo(codigo)
+                        .statusConvite(StatusConvite.PENDENTE)
+                        .build();
+                this.repository.save(convite);
+                this.enviarEmailConvite(convite);
+            }
+        });
+
+        if (!emailsInvalidos.isEmpty()) {
+            todosErros.add("Os seguintes e-mails são inválidos: " + String.join(", ", emailsInvalidos));
+        }
+        if (!emailsJaUtilizados.isEmpty()) {
+            todosErros.add("Os seguintes e-mails já foram utilizados para convidar um usuário: " + String.join(", ", emailsJaUtilizados));
+        }
+        if (!todosErros.isEmpty()) {
+            throw new BadRequestException(String.join("\n", todosErros));
+        }
     }
 
     @Transactional
@@ -73,21 +95,49 @@ public class ConviteService {
     }
 
     public Boolean reenviarConvite(ConviteRequest request) {
-        return this.repository.findByEmailAndNome(request.getEmail(), request.getNome())
-                .map(convite -> {
-                   this.validarStatusConvite(convite);
-                    this.enviarEmailConvite(convite);
+        List<String> emailsInvalidos = new ArrayList<>();
+        List<String> emailsComStatusDiferenteDePendente = new ArrayList<>();
+        List<String> emailsNaoEncontrados = new ArrayList<>();
+        List<String> todosErros = new ArrayList<>();
+
+        // Filtra e-mails inválidos
+        List<String> emailsValidos = request.getEmails().stream()
+                .filter(email -> {
+                    if (!this.validator.isEmailValid(email)) {
+                        emailsInvalidos.add(email);
+                        return false;
+                    }
                     return true;
                 })
-                .orElseThrow(() -> new BadRequestException("Convite não encontrado para os dados fornecidos."));
+                .collect(Collectors.toList());
+
+        emailsValidos.forEach(email -> {
+            this.repository.findByEmailAndNome(email, request.getNome())
+                    .ifPresentOrElse(convite -> {
+                        if (convite.getStatusConvite() == StatusConvite.VALIDADO) {
+                            emailsComStatusDiferenteDePendente.add(email);
+                        } else {
+                            this.enviarEmailConvite(convite);
+                        }
+                    }, () -> emailsNaoEncontrados.add(email));
+        });
+
+        if (!emailsInvalidos.isEmpty()) {
+            todosErros.add("Os seguintes e-mails são inválidos: " + String.join(", ", emailsInvalidos));
+        }
+        if (!emailsNaoEncontrados.isEmpty()) {
+            todosErros.add("Convite não encontrado para os seguintes e-mails: " + String.join(", ", emailsNaoEncontrados));
+        }
+        if (!emailsComStatusDiferenteDePendente.isEmpty()) {
+            todosErros.add("Os seguintes e-mails já foram utilizados para acesso à aplicação e não podem receber um novo convite: "
+                    + String.join(", ", emailsComStatusDiferenteDePendente));
+        }
+        if (!todosErros.isEmpty()) {
+            throw new BadRequestException(String.join("\n", todosErros));
+        }
+        return true;
     }
 
-    private void validarStatusConvite(Convite convite) {
-        if (convite.getStatusConvite() == StatusConvite.VALIDADO) {
-            throw new BadRequestException(
-                    "Não é possível reenviar o convite, pois o acesso ao aplicativo já foi validado com sucesso!");
-        }
-    }
 
     private void enviarEmailConvite(Convite convite) {
         email.emailConvite(convite.getEmail(), convite.getNome(), convite.getCodigo());
