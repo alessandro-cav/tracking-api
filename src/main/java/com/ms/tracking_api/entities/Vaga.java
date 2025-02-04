@@ -69,6 +69,9 @@ public class Vaga  implements Serializable {
     @OneToMany(mappedBy = "vaga")
     private List<RegistrarAtividade> registrarAtividades;
 
+    @OneToMany(mappedBy = "vaga")
+    private List<Comprovante> recibos;
+
     @CreationTimestamp
     private LocalDate dataCriacao;
 
