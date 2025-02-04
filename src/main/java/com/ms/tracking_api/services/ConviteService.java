@@ -7,6 +7,7 @@ import com.ms.tracking_api.dtos.requests.ConviteRequest;
 import com.ms.tracking_api.dtos.requests.FiltroConviteRequest;
 import com.ms.tracking_api.dtos.requests.ValidarConviteRequest;
 import com.ms.tracking_api.dtos.responses.ConviteResponse;
+import com.ms.tracking_api.dtos.responses.MensagemResponse;
 import com.ms.tracking_api.entities.Convite;
 import com.ms.tracking_api.enuns.StatusConvite;
 import com.ms.tracking_api.handlers.BadRequestException;
@@ -41,7 +42,7 @@ public class ConviteService {
         return UUID.randomUUID().toString().replaceAll("[^0-9]", "").substring(0, 6);
     }
     @Transactional
-    public void enviarConvite(ConviteRequest request) {
+    public MensagemResponse enviarConvite(ConviteRequest request) {
         List<String> emailsInvalidos = new ArrayList<>();
         List<String> emailsJaUtilizados = new ArrayList<>();
         List<String> erros = new ArrayList<>();
@@ -68,7 +69,7 @@ public class ConviteService {
                         .statusConvite(StatusConvite.PENDENTE)
                         .build();
 
-                repository.save(convite);
+               convite =  repository.save(convite);
                 enviarEmailConvite(convite);
             }
         });
@@ -81,7 +82,9 @@ public class ConviteService {
                     + String.join(", ", emailsJaUtilizados));
 
         if (!erros.isEmpty())
-            throw new BadRequestException(String.join("\n", erros));
+             return new MensagemResponse("Houve erros ao processar os convites: " + erros);
+
+        return new MensagemResponse("Convites enviados com sucesso.");
     }
 
     @Transactional
@@ -96,7 +99,7 @@ public class ConviteService {
                 .orElse(false);
     }
 
-    public Boolean reenviarConvite(ConviteRequest request) {
+    public MensagemResponse reenviarConvite(ConviteRequest request) {
         List<String> emailsInvalidos = new ArrayList<>();
         List<String> emailsComStatusDiferenteDePendente = new ArrayList<>();
         List<String> emailsNaoEncontrados = new ArrayList<>();
@@ -118,7 +121,6 @@ public class ConviteService {
                         if (convite.getStatusConvite() == StatusConvite.VALIDADO) {
                             emailsComStatusDiferenteDePendente.add(conviteDTO.getEmail());
                         } else {
-                            // Cria um convite com base no DTO e envia o convite
                             enviarEmailConvite(convite);
                         }
                     }, () -> emailsNaoEncontrados.add(conviteDTO.getEmail()));
@@ -135,9 +137,9 @@ public class ConviteService {
                     + String.join(", ", emailsComStatusDiferenteDePendente));
 
         if (!erros.isEmpty())
-            throw new BadRequestException(String.join("\n", erros));
+            return new MensagemResponse("Houve erros ao processar os convites: " + erros);
 
-        return true;
+        return new MensagemResponse("Convites enviados com sucesso.");
     }
 
     private void enviarEmailConvite(Convite convite) {
