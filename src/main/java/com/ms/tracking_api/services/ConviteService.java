@@ -10,7 +10,6 @@ import com.ms.tracking_api.dtos.responses.ConviteResponse;
 import com.ms.tracking_api.dtos.responses.MensagemResponse;
 import com.ms.tracking_api.entities.Convite;
 import com.ms.tracking_api.enuns.StatusConvite;
-import com.ms.tracking_api.handlers.BadRequestException;
 import com.ms.tracking_api.repositories.ConviteRepository;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
