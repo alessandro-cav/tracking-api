@@ -17,7 +17,7 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @Builder
 @Entity
-@Table(name = "tb_vaga")
+@Table(name = "tb_comprovante")
 public class Comprovante implements Serializable {
 
     private static final long serialVersionUID = 1L;
