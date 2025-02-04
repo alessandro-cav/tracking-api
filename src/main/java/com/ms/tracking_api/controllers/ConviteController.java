@@ -4,6 +4,7 @@ import com.ms.tracking_api.dtos.requests.ConviteRequest;
 import com.ms.tracking_api.dtos.requests.FiltroConviteRequest;
 import com.ms.tracking_api.dtos.requests.ValidarConviteRequest;
 import com.ms.tracking_api.dtos.responses.ConviteResponse;
+import com.ms.tracking_api.dtos.responses.MensagemResponse;
 import com.ms.tracking_api.services.ConviteService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
@@ -28,9 +29,8 @@ public class ConviteController {
 
     @PostMapping("/enviarConvite")
     @Operation(summary = "Enviar convite ao Usuário", description = "Endpoint para enviar convite a um novo usuário")
-    public ResponseEntity<Void> enviarConvite(@Valid  @RequestBody ConviteRequest requestDTO) {
-        service.enviarConvite(requestDTO);
-        return ResponseEntity.ok().build();
+    public ResponseEntity<MensagemResponse> enviarConvite(@Valid  @RequestBody ConviteRequest requestDTO) {
+        return ResponseEntity.ok(service.enviarConvite(requestDTO));
     }
 
     @PostMapping("/validarConvite")
@@ -41,7 +41,7 @@ public class ConviteController {
 
     @PostMapping("/reenviarConvite")
     @Operation(summary = "Reenviar o  convite do Usuário", description = "Endpoint para reenviar o convite de um novo usuário")
-    public ResponseEntity<Boolean> reenviar(@Valid @RequestBody ConviteRequest requestDTO) {
+    public ResponseEntity<MensagemResponse> reenviar(@Valid @RequestBody ConviteRequest requestDTO) {
         return ResponseEntity.ok( service.reenviarConvite(requestDTO));
     }
 
