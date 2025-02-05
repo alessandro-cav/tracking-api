@@ -35,4 +35,9 @@ public class Validator {
             throw new BadRequestException("Email inválido");
         }
     }
+
+    public boolean isEmailValid(String email) {
+        EmailValidator validator = EmailValidator.getInstance();
+        return validator.isValid(email);
+    }
 }
