@@ -16,7 +16,7 @@ import java.util.List;
 @RequestMapping("/comprovantes")
 @RequiredArgsConstructor
 
-@Tag(name = "Comrpovante Controller", description = "APIs relacionado aos comprovantes controller")
+@Tag(name = "Comprovante Controller", description = "APIs relacionado aos comprovantes controller")
 @SecurityRequirement(name = "bearerAuth")
 public class ComprovanteController {
 
