@@ -1,14 +1,14 @@
 package com.ms.tracking_api.enuns;
 
-public enum StatusUsuario {
+public enum Status {
 
      ATIVO("ATIVO"), INATIVO("INATIVO");
 
      private String descricao;
 
-     public static StatusUsuario buscarStatus(String st) {
-          StatusUsuario status = null;
-          for (StatusUsuario status1 : StatusUsuario.values()) {
+     public static Status buscarStatus(String st) {
+          Status status = null;
+          for (Status status1 : Status.values()) {
                if (status1.getDescricao().equals(st.toUpperCase())) {
                     status = status1;
                     break;
@@ -17,7 +17,7 @@ public enum StatusUsuario {
           return status;
      }
 
-     private StatusUsuario(String descricao) {
+     private Status(String descricao) {
           this.descricao = descricao;
      }
 
