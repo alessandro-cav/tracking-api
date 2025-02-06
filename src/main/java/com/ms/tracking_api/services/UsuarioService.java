@@ -2,22 +2,16 @@ package com.ms.tracking_api.services;
 
 
 import com.ms.tracking_api.configs.validations.Validator;
-import com.ms.tracking_api.dtos.requests.FiltroUsuarioRequest;
 import com.ms.tracking_api.dtos.requests.UsuarioRequest;
-import com.ms.tracking_api.dtos.responses.UserResponse;
 import com.ms.tracking_api.dtos.responses.UsuarioResponse;
 import com.ms.tracking_api.entities.Endereco;
 import com.ms.tracking_api.entities.User;
 import com.ms.tracking_api.entities.Usuario;
-import com.ms.tracking_api.enuns.Status;
 import com.ms.tracking_api.handlers.BadRequestException;
 import com.ms.tracking_api.repositories.UserRepository;
 import com.ms.tracking_api.repositories.UsuarioRepository;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
-import org.springframework.data.domain.Example;
-import org.springframework.data.domain.ExampleMatcher;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -69,6 +63,7 @@ public class UsuarioService {
                 .collect(Collectors.toList());
     }
 
+
     @Transactional(readOnly = true)
     public UsuarioResponse buscarPeloId(Long id) {
         return this.repository.findById(id).map(usuario -> {
@@ -113,40 +108,6 @@ public class UsuarioService {
             usuario = this.repository.save(usuario);
             return gerarUsuarioResponse(usuario);
         }).orElseThrow(() -> new BadRequestException("Usuário não encontrado!"));
-    }
-
-    @Transactional
-    public void inativarUsuario(Long idUsuario) {
-        User user = this.userService.findById(idUsuario);
-        if (user.getStatus() == Status.INATIVO) {
-            throw new BadRequestException("O usuário já está com o status INATIVO.");
-        }
-        user.setStatus(Status.INATIVO);
-        this.userService.salvarNovoStatus(user);
-    }
-
-
-    @Transactional
-    public void ativarUsuario(Long idUsuario) {
-        User user = this.userService.findById(idUsuario);
-        if (user.getStatus() == Status.ATIVO) {
-            throw new BadRequestException("O usuário já está com o status ATIVO.");
-        }
-        user.setStatus(Status.ATIVO);
-        this.userService.salvarNovoStatus(user);
-    }
-
-    public List<UserResponse> filtroUsuarioWeb(FiltroUsuarioRequest filtroUsuarioRequest,
-                                            PageRequest pageRequest) {
-        User user = this.modelMapper.map(filtroUsuarioRequest, User.class);
-        ExampleMatcher exampleMatcher = ExampleMatcher.matching().withIgnoreCase()
-                .withStringMatcher(ExampleMatcher.StringMatcher.CONTAINING);
-        Example<User> example = Example.of(user, exampleMatcher);
-
-        Page<User> users = this.userRepository.findAll(example, pageRequest);
-        return users.stream().map(user1 -> {
-            return this.modelMapper.map(user1, UserResponse.class);
-        }).collect(Collectors.toList());
     }
 
     @Transactional(readOnly = true)
