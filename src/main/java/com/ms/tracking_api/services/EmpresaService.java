@@ -6,6 +6,8 @@ import com.ms.tracking_api.dtos.requests.EmpresaRequest;
 import com.ms.tracking_api.dtos.responses.EmpresaResponse;
 import com.ms.tracking_api.entities.Empresa;
 import com.ms.tracking_api.entities.Endereco;
+import com.ms.tracking_api.entities.User;
+import com.ms.tracking_api.enuns.Status;
 import com.ms.tracking_api.handlers.BadRequestException;
 import com.ms.tracking_api.handlers.ObjetoNotFoundException;
 import com.ms.tracking_api.repositories.EmpresaRepository;
@@ -13,6 +15,7 @@ import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -32,69 +35,65 @@ public class EmpresaService {
 
     @Transactional
     public EmpresaResponse salvar(EmpresaRequest empresaRequest) {
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         this.validator.validaCNPJ(empresaRequest.getCnpj());
         this.validator.validaEmail(empresaRequest.getEmail());
-        this.repository.findByCnpj(empresaRequest.getCnpj()).ifPresent(empresa -> {
+        this.repository.findByCnpjBancoAndCnpj(user.getCnpjBanco(),empresaRequest.getCnpj()).ifPresent(empresa -> {
             throw new BadRequestException(empresa.getCnpj() + " já cadastrado no sistema!");
+        });
+        this.repository.findByCnpjAndEmail(user.getCnpjBanco(),empresaRequest.getEmail()).ifPresent(funcionario1 -> {
+            throw new BadRequestException(empresaRequest.getEmail() + " já cadastrado no sistema!");
         });
         Empresa empresa = this.modelMapper.map(empresaRequest, Empresa.class);
         empresa.setEndereco(getEndereco(empresa, empresaRequest));
+        empresa.setCnpjBanco(user.getCnpjBanco());
         empresa = this.repository.save(empresa);
         return   gerarEmpresaResponse(empresa);
     }
 
     @Transactional(readOnly = true)
     public List<EmpresaResponse> buscarTodos(PageRequest pageRequest) {
-        return this.repository.findAll(pageRequest).stream()
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        return this.repository.findByCnpjBanco(user.getCnpjBanco(), pageRequest).stream()
                 .map(empresa ->  gerarEmpresaResponse(empresa))
                 .collect(Collectors.toList());
     }
 
     @Transactional(readOnly = true)
     public EmpresaResponse buscarPeloId(Long id) {
-        return this.repository.findById(id).map(empresa -> {
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        return this.repository.findByCnpjAndIdEmpresa(user.getCnpjBanco(),id).map(empresa -> {
             return   gerarEmpresaResponse(empresa);
         }).orElseThrow(() -> new ObjetoNotFoundException("Empresa não encontrada!"));
     }
 
     @Transactional
-    public void delete(Long id) {
-        this.repository.findById(id).ifPresentOrElse(empresa -> {
-            try {
-                this.repository.delete(empresa);
-            } catch (DataIntegrityViolationException e) {
-                throw new BadRequestException("Empresa não pode ser excluida, pois está vinculada em algum evento");
-            }
-        }, () -> {
-            throw new ObjetoNotFoundException("Empresa não encontrada!");
-        });
-    }
-
-    @Transactional
     public EmpresaResponse atualizar(Long id, EmpresaRequest empresaRequest) {
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         if(empresaRequest.getCnpj() != null) {
             this.validator.validaCNPJ(empresaRequest.getCnpj());
         }
         if(empresaRequest.getEmail() != null) {
             this.validator.validaEmail(empresaRequest.getEmail());
         }
-        return this.repository.findById(id).map(empresa -> {
+        return this.repository.findByCnpjAndIdEmpresa(user.getCnpjBanco(),id).map(empresa -> {
             if(empresaRequest.getCnpj() != null) {
                 if (!(empresa.getCnpj().equals(empresaRequest.getCnpj()))) {
-                    this.repository.findByCnpj(empresaRequest.getCnpj()).ifPresent(empresa1 -> {
+                    this.repository.findByCnpjBancoAndCnpj(user.getCnpjBanco(),empresaRequest.getCnpj()).ifPresent(empresa1 -> {
                         throw new BadRequestException(empresa1.getCnpj() + " já cadastrado!");
                     });
                 }
             }
             if(empresaRequest.getEmail() != null) {
                 if (!(empresa.getEmail().equals(empresaRequest.getEmail()))) {
-                    this.repository.findByEmail(empresaRequest.getEmail()).ifPresent(funcionario1 -> {
+                    this.repository.findByCnpjAndEmail(user.getCnpjBanco(),empresaRequest.getEmail()).ifPresent(funcionario1 -> {
                         throw new BadRequestException(empresaRequest.getEmail() + " já cadastrado no sistema!");
                     });
                 }
             }
             empresa = this.atualizarEmpresa(empresa, empresaRequest);
             empresa.setEndereco(getEndereco(empresa, empresaRequest));
+            empresa.setCnpjBanco(user.getCnpjBanco());
             empresa = this.repository.save(empresa);
             return  gerarEmpresaResponse(empresa);
         }).orElseThrow(() -> new ObjetoNotFoundException("Empresa não encontrada!"));
@@ -102,15 +101,38 @@ public class EmpresaService {
 
     @Transactional(readOnly = true)
     public List<EmpresaResponse> buscarPorNome(String nome, PageRequest pageRequest) {
-        return this.repository.findByNomeContainingIgnoreCase(nome, pageRequest).stream()
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        return this.repository.findByCnpjBancoAndNomeContainingIgnoreCase(user.getCnpjBanco(),nome, pageRequest).stream()
                 .map(empresa ->  gerarEmpresaResponse(empresa))
                 .collect(Collectors.toList());
     }
 
     @Transactional(readOnly = true)
     public Empresa buscarEmpresaPeloId(Long id) {
-        return this.repository.findById(id)
-                .orElseThrow(() -> new ObjetoNotFoundException("Empresa não encontrada!"));
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+         return this.repository.findByCnpjAndIdEmpresa(user.getCnpjBanco(),id).orElseThrow(() -> new ObjetoNotFoundException("Empresa não encontrada!"));
+    }
+
+    @Transactional
+    public void inativarEmpresa(Long idEmpresa) {
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+       Empresa empresa =  this.repository.findByCnpjAndIdEmpresa(user.getCnpjBanco(), idEmpresa).get();
+        if (empresa.getStatus() == Status.INATIVO) {
+            throw new BadRequestException(" A empresa já está com o status INATIVO.");
+        }
+        empresa.setStatus(Status.INATIVO);
+       this.repository.save(empresa);
+    }
+
+    @Transactional
+    public void ativarEmpresa(Long idEmpresa) {
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        Empresa empresa =  this.repository.findByCnpjAndIdEmpresa(user.getCnpjBanco(), idEmpresa).get();
+        if (empresa.getStatus() == Status.ATIVO) {
+            throw new BadRequestException("A empresa já está com o status ATIVO.");
+        }
+        user.setStatus(Status.ATIVO);
+        this.repository.save(empresa);
     }
 
     private Endereco getEndereco(Empresa empresa, EmpresaRequest empresaRequest) {
