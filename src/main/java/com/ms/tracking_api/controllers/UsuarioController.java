@@ -1,7 +1,7 @@
 package com.ms.tracking_api.controllers;
 
 import com.ms.tracking_api.dtos.requests.FiltroUsuarioRequest;
-import com.ms.tracking_api.dtos.requests.InativarAtivarRequest;
+import com.ms.tracking_api.dtos.requests.IdRequest;
 import com.ms.tracking_api.dtos.requests.UsuarioRequest;
 import com.ms.tracking_api.dtos.responses.UserResponse;
 import com.ms.tracking_api.dtos.responses.UsuarioResponse;
@@ -67,14 +67,14 @@ public class UsuarioController {
 
     @PutMapping("/inativar")
     @Operation(summary = "Inativar Usuário", description = "Endpoint para inativar um usuário pelo id")
-    public ResponseEntity<Void> inativarUsuario(@RequestBody InativarAtivarRequest requestDTO) {
+    public ResponseEntity<Void> inativarUsuario(@RequestBody IdRequest requestDTO) {
         service.inativarUsuario(requestDTO.getId());
         return ResponseEntity.ok().build();
     }
 
     @PutMapping("/ativar")
     @Operation(summary = "Ativar Usuário", description = "Endpoint para ativar um usuário pelo id")
-    public ResponseEntity<Void> ativarUsuario(@RequestBody InativarAtivarRequest requestDTO) {
+    public ResponseEntity<Void> ativarUsuario(@RequestBody IdRequest requestDTO) {
         service.ativarUsuario(requestDTO.getId());
         return ResponseEntity.ok().build();
     }

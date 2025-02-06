@@ -13,7 +13,6 @@ import com.ms.tracking_api.handlers.ObjetoNotFoundException;
 import com.ms.tracking_api.repositories.EmpresaRepository;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -41,7 +40,7 @@ public class EmpresaService {
         this.repository.findByCnpjBancoAndCnpj(user.getCnpjBanco(),empresaRequest.getCnpj()).ifPresent(empresa -> {
             throw new BadRequestException(empresa.getCnpj() + " já cadastrado no sistema!");
         });
-        this.repository.findByCnpjAndEmail(user.getCnpjBanco(),empresaRequest.getEmail()).ifPresent(funcionario1 -> {
+        this.repository.findByCnpBancojAndEmail(user.getCnpjBanco(),empresaRequest.getEmail()).ifPresent(funcionario1 -> {
             throw new BadRequestException(empresaRequest.getEmail() + " já cadastrado no sistema!");
         });
         Empresa empresa = this.modelMapper.map(empresaRequest, Empresa.class);
@@ -62,7 +61,7 @@ public class EmpresaService {
     @Transactional(readOnly = true)
     public EmpresaResponse buscarPeloId(Long id) {
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        return this.repository.findByCnpjAndIdEmpresa(user.getCnpjBanco(),id).map(empresa -> {
+        return this.repository.findByCnpjBancoAndIdEmpresa(user.getCnpjBanco(),id).map(empresa -> {
             return   gerarEmpresaResponse(empresa);
         }).orElseThrow(() -> new ObjetoNotFoundException("Empresa não encontrada!"));
     }
@@ -76,7 +75,7 @@ public class EmpresaService {
         if(empresaRequest.getEmail() != null) {
             this.validator.validaEmail(empresaRequest.getEmail());
         }
-        return this.repository.findByCnpjAndIdEmpresa(user.getCnpjBanco(),id).map(empresa -> {
+        return this.repository.findByCnpjBancoAndIdEmpresa(user.getCnpjBanco(),id).map(empresa -> {
             if(empresaRequest.getCnpj() != null) {
                 if (!(empresa.getCnpj().equals(empresaRequest.getCnpj()))) {
                     this.repository.findByCnpjBancoAndCnpj(user.getCnpjBanco(),empresaRequest.getCnpj()).ifPresent(empresa1 -> {
@@ -86,7 +85,7 @@ public class EmpresaService {
             }
             if(empresaRequest.getEmail() != null) {
                 if (!(empresa.getEmail().equals(empresaRequest.getEmail()))) {
-                    this.repository.findByCnpjAndEmail(user.getCnpjBanco(),empresaRequest.getEmail()).ifPresent(funcionario1 -> {
+                    this.repository.findByCnpBancojAndEmail(user.getCnpjBanco(),empresaRequest.getEmail()).ifPresent(funcionario1 -> {
                         throw new BadRequestException(empresaRequest.getEmail() + " já cadastrado no sistema!");
                     });
                 }
@@ -110,13 +109,13 @@ public class EmpresaService {
     @Transactional(readOnly = true)
     public Empresa buscarEmpresaPeloId(Long id) {
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-         return this.repository.findByCnpjAndIdEmpresa(user.getCnpjBanco(),id).orElseThrow(() -> new ObjetoNotFoundException("Empresa não encontrada!"));
+         return this.repository.findByCnpjBancoAndIdEmpresa(user.getCnpjBanco(),id).orElseThrow(() -> new ObjetoNotFoundException("Empresa não encontrada!"));
     }
 
     @Transactional
     public void inativarEmpresa(Long idEmpresa) {
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-       Empresa empresa =  this.repository.findByCnpjAndIdEmpresa(user.getCnpjBanco(), idEmpresa).get();
+       Empresa empresa =  this.repository.findByCnpjBancoAndIdEmpresa(user.getCnpjBanco(), idEmpresa).get();
         if (empresa.getStatus() == Status.INATIVO) {
             throw new BadRequestException(" A empresa já está com o status INATIVO.");
         }
@@ -127,7 +126,7 @@ public class EmpresaService {
     @Transactional
     public void ativarEmpresa(Long idEmpresa) {
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        Empresa empresa =  this.repository.findByCnpjAndIdEmpresa(user.getCnpjBanco(), idEmpresa).get();
+        Empresa empresa =  this.repository.findByCnpjBancoAndIdEmpresa(user.getCnpjBanco(), idEmpresa).get();
         if (empresa.getStatus() == Status.ATIVO) {
             throw new BadRequestException("A empresa já está com o status ATIVO.");
         }
