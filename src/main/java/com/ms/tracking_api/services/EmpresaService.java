@@ -40,7 +40,7 @@ public class EmpresaService {
         this.repository.findByCnpjBancoAndCnpj(user.getCnpjBanco(),empresaRequest.getCnpj()).ifPresent(empresa -> {
             throw new BadRequestException(empresa.getCnpj() + " já cadastrado no sistema!");
         });
-        this.repository.findByCnpBancojAndEmail(user.getCnpjBanco(),empresaRequest.getEmail()).ifPresent(funcionario1 -> {
+        this.repository.findByCnpjBancoAndEmail(user.getCnpjBanco(),empresaRequest.getEmail()).ifPresent(empresa -> {
             throw new BadRequestException(empresaRequest.getEmail() + " já cadastrado no sistema!");
         });
         Empresa empresa = this.modelMapper.map(empresaRequest, Empresa.class);
@@ -85,7 +85,7 @@ public class EmpresaService {
             }
             if(empresaRequest.getEmail() != null) {
                 if (!(empresa.getEmail().equals(empresaRequest.getEmail()))) {
-                    this.repository.findByCnpBancojAndEmail(user.getCnpjBanco(),empresaRequest.getEmail()).ifPresent(funcionario1 -> {
+                    this.repository.findByCnpjBancoAndEmail(user.getCnpjBanco(),empresaRequest.getEmail()).ifPresent(funcionario1 -> {
                         throw new BadRequestException(empresaRequest.getEmail() + " já cadastrado no sistema!");
                     });
                 }

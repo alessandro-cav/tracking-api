@@ -16,7 +16,7 @@ public interface EmpresaRepository extends PagingAndSortingRepository<Empresa, L
 
     List<Empresa> findByCnpjBanco(String cnpjBanco, PageRequest pageRequest);
 
-    Optional<Empresa> findByCnpBancojAndEmail(String cnpjBanco, String email);
+    Optional<Empresa> findByCnpjBancoAndEmail(String cnpjBanco, String email);
 
     List<Empresa> findByCnpjBancoAndNomeContainingIgnoreCase(String cnpjBanco, String nome, PageRequest pageRequest);
 

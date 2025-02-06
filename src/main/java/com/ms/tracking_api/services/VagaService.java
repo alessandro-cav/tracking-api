@@ -108,7 +108,7 @@ public class VagaService {
     @Transactional(readOnly = true)
     public List<VagaResponse> buscarPorNome(String nome, PageRequest pageRequest) {
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        return this.repository.findByCnpjBancoAndDescricaoVagaContainingIgnoreCase(nome, pageRequest).stream()
+        return this.repository.findByCnpjBancoAndDescricaoVagaContainingIgnoreCase(user.getCnpjBanco(), nome, pageRequest).stream()
                 .map(vaga -> gerarEnderecoResponse(vaga))
                 .collect(Collectors.toList());
     }
@@ -158,7 +158,6 @@ public class VagaService {
         vaga.setRequisitos(vagaRequest.getRequisitos() == null ? vaga.getRequisitos() : vagaRequest.getRequisitos());
         vaga.setAdvertencias(vagaRequest.getAdvertencias() == null ? vaga.getAdvertencias() : vagaRequest.getAdvertencias());
         vaga.setImagemVaga(vagaRequest.getImagemVaga() == null ? vaga.getImagemVaga() : vagaRequest.getImagemVaga());
-        vaga.setIconeVaga(vagaRequest.getIconeVaga() == null ? vaga.getIconeVaga() : vagaRequest.getIconeVaga());
         vaga.setValor(vagaRequest.getValor() == null ? vaga.getValor() : vagaRequest.getValor());
         vaga.setVestimenta(vagaRequest.getVestimenta() == null ? vaga.getVestimenta() : vagaRequest.getVestimenta());
         vaga.setRefeicao(vagaRequest.getRefeicao() == null ? vaga.getRefeicao() : vagaRequest.getRefeicao());
