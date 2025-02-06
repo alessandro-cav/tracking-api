@@ -10,6 +10,7 @@ import com.ms.tracking_api.repositories.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -29,8 +30,9 @@ public class AuthenticationService {
     private final Validator validator;
 
     public AuthenticationResponseDTO register(RegisterRequestDTO requestDTO) {
+        User userLogado = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         this.validator.validaEmail(requestDTO.getEmail());
-        this.repository.findByEmail(requestDTO.getEmail()).ifPresent(email -> {
+        this.repository.findByCnpjBancoAndEmail(userLogado.getCnpjBanco(), requestDTO.getEmail()).ifPresent(email -> {
             throw new BadRequestException(requestDTO.getEmail() + " já cadastrado no sistema!");
         });
         var user = User.builder()
@@ -39,6 +41,7 @@ public class AuthenticationService {
                 .senha(passwordEncoder.encode(requestDTO.getSenha()))
                 .role(Role.buscarRole(requestDTO.getRole()))
                 .statusUsuario(StatusUsuario.ATIVO)
+                .cnpjBanco(userLogado.getCnpjBanco())
                 .build();
         repository.save(user);
 
