@@ -1,5 +1,6 @@
 package com.ms.tracking_api.entities;
 
+import com.ms.tracking_api.enuns.Status;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -31,6 +32,11 @@ public class Empresa implements Serializable {
     private String telefone;
 
     private String email;
+
+    private String cnpjBanco;
+
+    @Enumerated(EnumType.STRING)
+    private Status status;
 
     @Embedded
     private Endereco endereco;

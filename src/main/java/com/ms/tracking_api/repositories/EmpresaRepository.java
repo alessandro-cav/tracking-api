@@ -13,9 +13,13 @@ import java.util.Optional;
 @Repository
 public interface EmpresaRepository extends PagingAndSortingRepository<Empresa, Long>, JpaRepository<Empresa, Long>{
 
-    Optional<Empresa> findByCnpj(String cnpj);
+    Optional<Empresa> findByCnpjBancoAndCnpj(String cnpj, String empresaRequestCnpj);
 
-    List<Empresa> findByNomeContainingIgnoreCase(String nome, PageRequest pageRequest);
+    List<Empresa> findByCnpjBanco(String cnpjBanco, PageRequest pageRequest);
 
-    Optional<Empresa> findByEmail(String email);
+    Optional<Empresa> findByCnpjAndEmail(String cnpjBanco, String email);
+
+    List<Empresa> findByCnpjBancoAndNomeContainingIgnoreCase(String cnpjBanco, String nome, PageRequest pageRequest);
+
+    Optional<Empresa> findByCnpjAndIdEmpresa(String cnpjBanco, Long idEmpresa);
 }
