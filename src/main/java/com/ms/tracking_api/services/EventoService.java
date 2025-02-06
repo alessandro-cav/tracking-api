@@ -6,11 +6,9 @@ import com.ms.tracking_api.dtos.requests.EventoRequest;
 import com.ms.tracking_api.dtos.responses.EmpresaResponse;
 import com.ms.tracking_api.dtos.responses.EventoResponse;
 import com.ms.tracking_api.dtos.responses.EventoVagaResponse;
-import com.ms.tracking_api.dtos.responses.VagaResponse;
-import com.ms.tracking_api.entities.Empresa;
-import com.ms.tracking_api.entities.Endereco;
-import com.ms.tracking_api.entities.Evento;
-import com.ms.tracking_api.entities.Vaga;
+import com.ms.tracking_api.entities.*;
+import com.ms.tracking_api.enuns.Status;
+import com.ms.tracking_api.enuns.StatusEvento;
 import com.ms.tracking_api.handlers.BadRequestException;
 import com.ms.tracking_api.handlers.ObjetoNotFoundException;
 import com.ms.tracking_api.repositories.EventoRepository;
@@ -18,6 +16,7 @@ import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -40,43 +39,52 @@ public class EventoService {
 
     @Transactional
     public EventoResponse salvar(EventoRequest eventoRequest) {
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         Empresa empresa = this.empresaService.buscarEmpresaPeloId(eventoRequest.getIdEmpresa());
         Evento evento = this.modelMapper.map(eventoRequest, Evento.class);
         evento.setEmpresa(empresa);
         evento.setEndereco(gerarEndereco(evento, eventoRequest));
+        evento.setCnpjBanco(user.getCnpjBanco());
+        evento.setStatusEvento(StatusEvento.ABERTO);
         evento = this.repository.save(evento);
         return gerarEnderecoResponse(evento);
     }
 
     @Transactional(readOnly = true)
     public List<EventoResponse> buscarTodos(PageRequest pageRequest) {
-        return this.repository.findAll(pageRequest).stream()
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        return this.repository.findByCnpjBanco(user.getCnpjBanco(), pageRequest).stream()
                 .map(evento -> gerarEnderecoResponse(evento))
                 .collect(Collectors.toList());
     }
 
     @Transactional(readOnly = true)
     public List<EventoResponse> buscarNovoEventos(PageRequest pageRequest) {
-        List<Evento> eventos = this.repository.findAll();
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        List<Evento> eventos = this.repository.findByCnpjBanco(user.getCnpjBanco(), pageRequest);
         LocalDate agora = LocalDate.now();
+
         List<Evento> novosEventos = eventos.stream()
                 .filter(evento -> !evento.getData().isBefore(agora))
                 .collect(Collectors.toList());
+
         return novosEventos.stream()
-                .map(evento -> gerarEnderecoResponse(evento))
+                .map(this::gerarEnderecoResponse)
                 .collect(Collectors.toList());
     }
 
     @Transactional(readOnly = true)
     public EventoResponse buscarPeloId(Long id) {
-        return this.repository.findById(id).map(evento -> {
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        return this.repository.findByCnpjBancoAndIdEvento(user.getCnpjBanco(),id).map(evento -> {
             return gerarEnderecoResponse(evento);
         }).orElseThrow(() -> new ObjetoNotFoundException("Evento não encontrado!"));
     }
 
     @Transactional
     public void delete(Long id) {
-        this.repository.findById(id).ifPresentOrElse(evento -> {
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        this.repository.findByCnpjBancoAndIdEvento(user.getCnpjBanco(),id).ifPresentOrElse(evento -> {
             try {
                 this.repository.delete(evento);
             } catch (DataIntegrityViolationException e) {
@@ -89,11 +97,13 @@ public class EventoService {
 
     @Transactional
     public EventoResponse atualizar(Long id, EventoRequest eventoRequest) {
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         Empresa empresa = this.empresaService.buscarEmpresaPeloId(eventoRequest.getIdEmpresa());
-        return this.repository.findById(id).map(evento -> {
+        return this.repository.findByCnpjBancoAndIdEvento(user.getCnpjBanco(),id).map(evento -> {
             this.atualizarEvento(evento, eventoRequest);
             evento.setEmpresa(empresa);
             evento.setEndereco(gerarEndereco(evento, eventoRequest));
+            evento.setCnpjBanco(user.getCnpjBanco());
             evento = this.repository.save(evento);
              return  gerarEnderecoResponse(evento);
         }).orElseThrow(() -> new ObjetoNotFoundException("Evento não encontrado!"));
@@ -101,18 +111,32 @@ public class EventoService {
 
     @Transactional(readOnly = true)
     public List<EventoResponse> buscarPorNome(String nome, PageRequest pageRequest) {
-        return this.repository.findByNomeContainingIgnoreCase(nome, pageRequest).stream()
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        return this.repository.findByCnpjBancpAndNomeContainingIgnoreCase(user.getCnpjBanco(), nome, pageRequest).stream()
                 .map(evento -> gerarEnderecoResponse(evento))
                 .collect(Collectors.toList());
     }
 
     @Transactional(readOnly = true)
     public Evento buscarEventoPeloId(Long id) {
-        return this.repository.findById(id).orElseThrow(() -> new ObjetoNotFoundException("Evento não encontrado!"));
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        return this.repository.findByCnpjBancoAndIdEvento(user.getCnpjBanco(),id).orElseThrow(() -> new ObjetoNotFoundException("Evento não encontrado!"));
+    }
+
+    @Transactional
+    public void fecharEvento(Long idEvento) {
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+         Evento evento = this.repository.findByCnpjBancoAndIdEvento(user.getCnpjBanco(),idEvento).orElseThrow(() -> new ObjetoNotFoundException("Evento não encontrado!"));
+        if (evento.getStatusEvento() == StatusEvento.FECHADO) {
+            throw new BadRequestException("O evento já está com o status FECHADO.");
+        }
+       evento.setStatusEvento(StatusEvento.FECHADO);
+       this.repository.save(evento);
     }
 
     public List<EventoVagaResponse> buscarVagasPeloIdEvento(Long idEvento) {
-        List<Vaga> vagas = this.repository.findVagasByIdEvento(idEvento);
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        List<Vaga> vagas = this.repository.findVagasByCnpjBancoAndIdEvento(user.getCnpjBanco(),idEvento);
         if (vagas.isEmpty()) {
             throw new BadRequestException("Nenhuma vaga cadastrada para o evento especificado.");
         }
@@ -157,7 +181,7 @@ public class EventoService {
         evento.setHoraFim(eventoRequest.getHoraFim() == null ? evento.getHoraFim() : eventoRequest.getHoraFim());
         evento.setData(eventoRequest.getData() == null ? evento.getData() : eventoRequest.getData());
         evento.setDetalhes(eventoRequest.getDetalhes() == null ? evento.getDetalhes() : eventoRequest.getDetalhes());
-
+        evento.setStatusEvento(StatusEvento.ABERTO);
         return evento;
     }
 }
