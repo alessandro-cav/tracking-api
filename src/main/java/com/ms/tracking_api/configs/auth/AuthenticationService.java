@@ -4,7 +4,7 @@ import com.ms.tracking_api.configs.jwt.JwtService;
 import com.ms.tracking_api.configs.validations.Validator;
 import com.ms.tracking_api.entities.User;
 import com.ms.tracking_api.enuns.Role;
-import com.ms.tracking_api.enuns.StatusUsuario;
+import com.ms.tracking_api.enuns.Status;
 import com.ms.tracking_api.handlers.BadRequestException;
 import com.ms.tracking_api.repositories.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -40,7 +40,7 @@ public class AuthenticationService {
                 .email(requestDTO.getEmail())
                 .senha(passwordEncoder.encode(requestDTO.getSenha()))
                 .role(Role.buscarRole(requestDTO.getRole()))
-                .statusUsuario(StatusUsuario.ATIVO)
+                .status(Status.ATIVO)
                 .cnpjBanco(userLogado.getCnpjBanco())
                 .build();
         repository.save(user);
@@ -55,7 +55,7 @@ public class AuthenticationService {
         this.validator.validaEmail(requestDTO.getEmail());
         var user = repository.findByEmail(requestDTO.getEmail())
                 .map(usuario -> {
-                    if (usuario.getStatusUsuario() == StatusUsuario.ATIVO) {
+                    if (usuario.getStatus() == Status.ATIVO) {
                         return usuario;
                     } else {
                         throw new BadRequestException("Usuário com status INATIVO. Por favor, entre em contato com a empresa para mais informações.");

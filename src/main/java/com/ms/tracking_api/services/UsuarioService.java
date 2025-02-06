@@ -9,7 +9,7 @@ import com.ms.tracking_api.dtos.responses.UsuarioResponse;
 import com.ms.tracking_api.entities.Endereco;
 import com.ms.tracking_api.entities.User;
 import com.ms.tracking_api.entities.Usuario;
-import com.ms.tracking_api.enuns.StatusUsuario;
+import com.ms.tracking_api.enuns.Status;
 import com.ms.tracking_api.handlers.BadRequestException;
 import com.ms.tracking_api.repositories.UserRepository;
 import com.ms.tracking_api.repositories.UsuarioRepository;
@@ -118,10 +118,10 @@ public class UsuarioService {
     @Transactional
     public void inativarUsuario(String email) {
         User user = this.userService.findByEmail(email);
-        if (user.getStatusUsuario() == StatusUsuario.INATIVO) {
+        if (user.getStatus() == Status.INATIVO) {
             throw new BadRequestException("O usuário já está com o status INATIVO.");
         }
-        user.setStatusUsuario(StatusUsuario.INATIVO);
+        user.setStatus(Status.INATIVO);
         this.userService.salvarNovoStatus(user);
     }
 
@@ -129,10 +129,10 @@ public class UsuarioService {
     @Transactional
     public void ativarUsuario(String email) {
         User user = this.userService.findByEmail(email);
-        if (user.getStatusUsuario() == StatusUsuario.ATIVO) {
+        if (user.getStatus() == Status.ATIVO) {
             throw new BadRequestException("O usuário já está com o status ATIVO.");
         }
-        user.setStatusUsuario(StatusUsuario.ATIVO);
+        user.setStatus(Status.ATIVO);
         this.userService.salvarNovoStatus(user);
     }
 
