@@ -47,10 +47,6 @@ public class Vaga  implements Serializable {
     @Column(columnDefinition = "LONGTEXT")
     private String imagemVaga;
 
-    @Lob
-    @Column(columnDefinition = "LONGTEXT")
-    private String iconeVaga;
-
     private BigDecimal valor;
 
     private String vestimenta;

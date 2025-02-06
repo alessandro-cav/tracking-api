@@ -49,8 +49,6 @@ public class VagaResponse implements Serializable {
 
     private String imagemVaga;
 
-    private String iconeVaga;
-
     private String titulo;
 
     private String subtitulo;
