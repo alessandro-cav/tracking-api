@@ -13,12 +13,12 @@ public class UserService {
 
     private final UserRepository repository;
 
-    public User findByEmail(String email) {
-        return this.repository.findByEmail(email).orElseThrow(() -> new ObjetoNotFoundException("Usúario não encontrado!"));
-    }
-
     @Transactional
     public void salvarNovoStatus(User user) {
         this.repository.save(user);
+    }
+
+    public User findById(Long idUsuario) {
+        return this.repository.findById(idUsuario).orElseThrow(() -> new ObjetoNotFoundException("Usúario não encontrado!"));
     }
 }

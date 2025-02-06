@@ -116,8 +116,8 @@ public class UsuarioService {
     }
 
     @Transactional
-    public void inativarUsuario(String email) {
-        User user = this.userService.findByEmail(email);
+    public void inativarUsuario(Long idUsuario) {
+        User user = this.userService.findById(idUsuario);
         if (user.getStatus() == Status.INATIVO) {
             throw new BadRequestException("O usuário já está com o status INATIVO.");
         }
@@ -127,8 +127,8 @@ public class UsuarioService {
 
 
     @Transactional
-    public void ativarUsuario(String email) {
-        User user = this.userService.findByEmail(email);
+    public void ativarUsuario(Long idUsuario) {
+        User user = this.userService.findById(idUsuario);
         if (user.getStatus() == Status.ATIVO) {
             throw new BadRequestException("O usuário já está com o status ATIVO.");
         }
