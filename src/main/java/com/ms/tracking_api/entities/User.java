@@ -37,6 +37,8 @@ public class User implements UserDetails {
 
     private String senha;
 
+    private String cnpjBanco;
+
     @CreationTimestamp
     private LocalDate dataCriacao;
 

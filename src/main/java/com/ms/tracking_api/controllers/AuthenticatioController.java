@@ -5,6 +5,7 @@ import com.ms.tracking_api.configs.auth.AuthenticationResponseDTO;
 import com.ms.tracking_api.configs.auth.AuthenticationService;
 import com.ms.tracking_api.configs.auth.RegisterRequestDTO;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -21,6 +22,7 @@ public class AuthenticatioController {
 
     @PostMapping("/register")
     @Operation(summary = "Registrar Usuario da web", description = "Endpoint para registrar um novo usuário na web")
+    @SecurityRequirement(name = "bearerAuth")
     public ResponseEntity<AuthenticationResponseDTO> register(
             @RequestBody RegisterRequestDTO requestDTO
     ) {
