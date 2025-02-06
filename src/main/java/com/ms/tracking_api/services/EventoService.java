@@ -6,6 +6,7 @@ import com.ms.tracking_api.dtos.requests.EventoRequest;
 import com.ms.tracking_api.dtos.responses.EmpresaResponse;
 import com.ms.tracking_api.dtos.responses.EventoResponse;
 import com.ms.tracking_api.dtos.responses.EventoVagaResponse;
+import com.ms.tracking_api.dtos.responses.VagaResponse;
 import com.ms.tracking_api.entities.*;
 import com.ms.tracking_api.enuns.Status;
 import com.ms.tracking_api.enuns.StatusEvento;
@@ -53,9 +54,17 @@ public class EventoService {
     @Transactional(readOnly = true)
     public List<EventoResponse> buscarTodos(PageRequest pageRequest) {
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        return this.repository.findByCnpjBanco(user.getCnpjBanco(), pageRequest).stream()
-                .map(evento -> gerarEnderecoResponse(evento))
-                .collect(Collectors.toList());
+        List<EventoResponse> eventoResponses = null;
+        if(user.getCnpjBanco() == null) {
+            eventoResponses =  this.repository.findAll(pageRequest).stream()
+                    .map(evento -> gerarEnderecoResponse(evento))
+                    .collect(Collectors.toList());
+        }else{
+            eventoResponses = this.repository.findByCnpjBanco(user.getCnpjBanco(), pageRequest).stream()
+                    .map(evento -> gerarEnderecoResponse(evento))
+                    .collect(Collectors.toList());
+        }
+        return eventoResponses;
     }
 
     @Transactional(readOnly = true)
@@ -76,9 +85,17 @@ public class EventoService {
     @Transactional(readOnly = true)
     public EventoResponse buscarPeloId(Long id) {
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        return this.repository.findByCnpjBancoAndIdEvento(user.getCnpjBanco(),id).map(evento -> {
-            return gerarEnderecoResponse(evento);
-        }).orElseThrow(() -> new ObjetoNotFoundException("Evento não encontrado!"));
+        EventoResponse eventoResponse= null;
+        if(user.getCnpjBanco() == null) {
+            eventoResponse =  this.repository.findById(id).map(evento -> {
+                return gerarEnderecoResponse(evento);
+            }).orElseThrow(() -> new ObjetoNotFoundException("Evento não encontrado!"));
+        }else {
+            eventoResponse = this.repository.findByCnpjBancoAndIdEvento(user.getCnpjBanco(), id).map(evento -> {
+                return gerarEnderecoResponse(evento);
+            }).orElseThrow(() -> new ObjetoNotFoundException("Evento não encontrado!"));
+        }
+        return  eventoResponse;
     }
 
     @Transactional
@@ -112,7 +129,7 @@ public class EventoService {
     @Transactional(readOnly = true)
     public List<EventoResponse> buscarPorNome(String nome, PageRequest pageRequest) {
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        return this.repository.findByCnpjBancpAndNomeContainingIgnoreCase(user.getCnpjBanco(), nome, pageRequest).stream()
+        return this.repository.findByCnpjBancoAndNomeContainingIgnoreCase(user.getCnpjBanco(), nome, pageRequest).stream()
                 .map(evento -> gerarEnderecoResponse(evento))
                 .collect(Collectors.toList());
     }

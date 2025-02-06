@@ -1,11 +1,12 @@
 package com.ms.tracking_api.services;
 
-import com.ms.tracking_api.dtos.requests.StatusVagaFechadaRequest;
+import com.ms.tracking_api.dtos.requests.IdRequest;
 import com.ms.tracking_api.dtos.requests.VagaRequest;
 import com.ms.tracking_api.dtos.responses.EmpresaResponse;
 import com.ms.tracking_api.dtos.responses.EventoResponse;
 import com.ms.tracking_api.dtos.responses.VagaResponse;
 import com.ms.tracking_api.entities.Evento;
+import com.ms.tracking_api.entities.User;
 import com.ms.tracking_api.entities.Vaga;
 import com.ms.tracking_api.enuns.StatusVaga;
 import com.ms.tracking_api.handlers.BadRequestException;
@@ -15,6 +16,7 @@ import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -34,31 +36,52 @@ public class VagaService {
 
     @Transactional
     public VagaResponse salvar(VagaRequest vagaRequest) {
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         Evento evento = this.eventoService.buscarEventoPeloId(vagaRequest.getIdEvento());
         Vaga vaga = this.modelMapper.map(vagaRequest, Vaga.class);
         vaga.setEvento(evento);
         vaga.setStatusVaga(StatusVaga.ABERTA);
+        vaga.setCnpjBanco(user.getCnpjBanco());
         vaga = this.repository.save(vaga);
         return gerarEnderecoResponse(vaga);
     }
 
     @Transactional(readOnly = true)
     public List<VagaResponse> buscarTodos(PageRequest pageRequest) {
-        return this.repository.findAll(pageRequest).stream()
-                .map(vaga -> gerarEnderecoResponse(vaga))
-                .collect(Collectors.toList());
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        List<VagaResponse> vagaResponses = null;
+         if(user.getCnpjBanco() == null) {
+             vagaResponses =  this.repository.findAll(pageRequest).stream()
+                     .map(vaga -> gerarEnderecoResponse(vaga))
+                     .collect(Collectors.toList());
+         }else {
+             vagaResponses = this.repository.findByCnpjBanco(user.getCnpjBanco(), pageRequest).stream()
+                     .map(vaga -> gerarEnderecoResponse(vaga))
+                     .collect(Collectors.toList());
+         }
+         return vagaResponses;
     }
 
     @Transactional(readOnly = true)
     public VagaResponse buscarPeloId(Long id) {
-        return this.repository.findById(id).map(vaga -> {
-            return gerarEnderecoResponse(vaga);
-        }).orElseThrow(() -> new ObjetoNotFoundException("Vaga não encontrada!"));
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        VagaResponse vagaResponse = null;
+        if(user.getCnpjBanco() == null) {
+            vagaResponse =  this.repository.findById(id).map(vaga -> {
+                return gerarEnderecoResponse(vaga);
+            }).orElseThrow(() -> new ObjetoNotFoundException("Vaga não encontrada!"));
+        }else {
+            vagaResponse =  this.repository.findByCnpjBancoAndIdVaga(user.getCnpjBanco() ,id).map(vaga -> {
+                return gerarEnderecoResponse(vaga);
+            }).orElseThrow(() -> new ObjetoNotFoundException("Vaga não encontrada!"));
+        }
+        return vagaResponse;
     }
 
     @Transactional
     public void delete(Long id) {
-        this.repository.findById(id).ifPresentOrElse(vaga -> {
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        this.repository.findByCnpjBancoAndIdVaga(user.getCnpjBanco() ,id).ifPresentOrElse(vaga -> {
             try {
                 this.repository.delete(vaga);
             } catch (DataIntegrityViolationException e) {
@@ -71,10 +94,12 @@ public class VagaService {
 
     @Transactional
     public VagaResponse atualizar(Long id, VagaRequest vagaRequest) {
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         Evento evento = this.eventoService.buscarEventoPeloId(vagaRequest.getIdEvento());
-        return this.repository.findById(id).map(vaga -> {
+        return this.repository.findByCnpjBancoAndIdVaga(user.getCnpjBanco(),id).map(vaga -> {
             this.atualizarVaga(vaga,vagaRequest);
             vaga.setEvento(evento);
+            vaga.setCnpjBanco(user.getCnpjBanco());
             vaga = this.repository.save(vaga);
             return gerarEnderecoResponse(vaga);
         }).orElseThrow(() -> new ObjetoNotFoundException("Vaga não encontrada!"));
@@ -82,19 +107,22 @@ public class VagaService {
 
     @Transactional(readOnly = true)
     public List<VagaResponse> buscarPorNome(String nome, PageRequest pageRequest) {
-        return this.repository.findByDescricaoVagaContainingIgnoreCase(nome, pageRequest).stream()
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        return this.repository.findByCnpjBancoAndDescricaoVagaContainingIgnoreCase(nome, pageRequest).stream()
                 .map(vaga -> gerarEnderecoResponse(vaga))
                 .collect(Collectors.toList());
     }
 
     @Transactional(readOnly = true)
     public Vaga buscarVagaPeloId(Long id) {
-        return this.repository.findById(id).orElseThrow(() -> new ObjetoNotFoundException("Vaga não encontrada!"));
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        return this.repository.findByCnpjBancoAndIdVaga(user.getCnpjBanco(),id).orElseThrow(() -> new ObjetoNotFoundException("Vaga não encontrada!"));
     }
 
     @Transactional
-    public void mudarsStatusParaFechada(StatusVagaFechadaRequest request) {
-        Vaga vaga = this.repository.findById(request.getIdVaga()).get();
+    public void mudarsStatusParaFechada(IdRequest request) {
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        Vaga vaga = this.repository.findByCnpjBancoAndIdVaga(user.getCnpjBanco(), request.getId()).orElseThrow(() -> new ObjetoNotFoundException("Vaga não encontrada!"));
 
         if (vaga.getStatusVaga() == StatusVaga.FECHADA) {
             throw new BadRequestException("A vaga já está fechada.");

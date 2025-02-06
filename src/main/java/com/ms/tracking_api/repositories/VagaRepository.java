@@ -1,5 +1,6 @@
 package com.ms.tracking_api.repositories;
 
+import com.ms.tracking_api.entities.Evento;
 import com.ms.tracking_api.entities.Vaga;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -14,4 +15,10 @@ import java.util.Optional;
 public interface VagaRepository extends PagingAndSortingRepository<Vaga, Long>, JpaRepository<Vaga, Long>{
 
     List<Vaga> findByDescricaoVagaContainingIgnoreCase(String nome, PageRequest pageRequest);
+
+    List<Vaga> findByCnpjBanco(String cnpjBanco, PageRequest pageRequest);
+
+    Optional<Vaga> findByCnpjBancoAndIdVaga(String cnpjBanco, Long id);
+
+    List<Vaga> findByCnpjBancoAndDescricaoVagaContainingIgnoreCase(String nome, PageRequest pageRequest);
 }
