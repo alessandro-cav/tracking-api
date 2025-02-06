@@ -1,10 +1,9 @@
 package com.ms.tracking_api.controllers;
 
 import com.ms.tracking_api.dtos.requests.EventoRequest;
-import com.ms.tracking_api.dtos.responses.EmpresaResponse;
+import com.ms.tracking_api.dtos.requests.IdRequest;
 import com.ms.tracking_api.dtos.responses.EventoResponse;
 import com.ms.tracking_api.dtos.responses.EventoVagaResponse;
-import com.ms.tracking_api.dtos.responses.VagaResponse;
 import com.ms.tracking_api.services.EventoService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
@@ -93,6 +92,13 @@ public class EventoController {
     @Operation(summary = "Buscar vagas pelo id do evento", description = "Endpoint para buscar vagas pelo id do evento")
     public ResponseEntity<List<EventoVagaResponse>> buscarVagasPeloIdEvento(@PathVariable(name = "id") Long id) {
         return ResponseEntity.ok((this.service.buscarVagasPeloIdEvento(id)));
+    }
+
+    @PutMapping("/fechar")
+    @Operation(summary = "Fechar evento", description = "Endpoint para fechar um evento pelo id")
+    public ResponseEntity<Void> fecharEvento(@RequestBody IdRequest requestDTO) {
+        service.fecharEvento(requestDTO.getId());
+        return ResponseEntity.ok().build();
     }
 
 }

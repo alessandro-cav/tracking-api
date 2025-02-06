@@ -1,5 +1,7 @@
 package com.ms.tracking_api.entities;
 
+import com.ms.tracking_api.enuns.StatusEvento;
+import com.ms.tracking_api.enuns.TipoAcesso;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -33,6 +35,11 @@ public class Evento implements Serializable {
     private LocalDate data;
 
     private String detalhes;
+
+    private String cnpjBanco;
+
+    @Enumerated(EnumType.STRING)
+    private StatusEvento statusEvento;
 
     @Embedded
     private Endereco endereco;
