@@ -27,6 +27,8 @@ public class Usuario implements Serializable {
 
     private String cpf;
 
+    private String cnpjBanco;
+
     private String rg;
 
     private String telefone;
