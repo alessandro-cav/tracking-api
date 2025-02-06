@@ -1,7 +1,7 @@
 package com.ms.tracking_api.controllers;
 
 import com.ms.tracking_api.dtos.requests.EmpresaRequest;
-import com.ms.tracking_api.dtos.requests.InativarAtivarRequest;
+import com.ms.tracking_api.dtos.requests.IdRequest;
 import com.ms.tracking_api.dtos.responses.EmpresaResponse;
 import com.ms.tracking_api.services.EmpresaService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -53,14 +53,14 @@ public class EmpresaController {
 
     @PutMapping("/inativar")
     @Operation(summary = "Inativar Empresa", description = "Endpoint para inativar um empresa pelo id")
-    public ResponseEntity<Void> inativarEmpresa(@RequestBody InativarAtivarRequest requestDTO) {
+    public ResponseEntity<Void> inativarEmpresa(@RequestBody IdRequest requestDTO) {
         service.inativarEmpresa(requestDTO.getId());
         return ResponseEntity.ok().build();
     }
 
     @PutMapping("/ativar")
     @Operation(summary = "Ativar Empresa", description = "Endpoint para ativar uma empresa pelo id")
-    public ResponseEntity<Void> ativarUsuario(@RequestBody InativarAtivarRequest requestDTO) {
+    public ResponseEntity<Void> ativarUsuario(@RequestBody IdRequest requestDTO) {
         service.ativarEmpresa(requestDTO.getId());
         return ResponseEntity.ok().build();
     }
