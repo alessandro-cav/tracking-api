@@ -16,7 +16,7 @@ import java.util.Optional;
 public interface EventoRepository extends PagingAndSortingRepository<Evento, Long>, JpaRepository<Evento, Long>{
 
 
-    List<Evento> findByCnpjBancpAndNomeContainingIgnoreCase(String nome, String s, PageRequest pageRequest);
+    List<Evento> findByCnpjBancoAndNomeContainingIgnoreCase(String nome, String s, PageRequest pageRequest);
 
     List<Evento> findByCnpjBanco(String cnpjBanco, PageRequest pageRequest);
 

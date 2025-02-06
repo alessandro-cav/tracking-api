@@ -41,6 +41,8 @@ public class Vaga  implements Serializable {
 
     private String advertencias;
 
+    private String cnpjBanco;
+
     @Lob
     @Column(columnDefinition = "LONGTEXT")
     private String imagemVaga;

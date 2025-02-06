@@ -1,6 +1,6 @@
 package com.ms.tracking_api.controllers;
 
-import com.ms.tracking_api.dtos.requests.StatusVagaFechadaRequest;
+import com.ms.tracking_api.dtos.requests.IdRequest;
 import com.ms.tracking_api.dtos.requests.VagaRequest;
 import com.ms.tracking_api.dtos.responses.VagaResponse;
 import com.ms.tracking_api.services.VagaService;
@@ -78,7 +78,7 @@ public class VagaController {
     }
 
     @PutMapping("/fechar")
-    public ResponseEntity<Void> mudarsStatusParaFechada(@Valid @RequestBody StatusVagaFechadaRequest request) {
+    public ResponseEntity<Void> mudarsStatusParaFechada(@Valid @RequestBody IdRequest request) {
             this.service.mudarsStatusParaFechada(request);
             return ResponseEntity.ok().build();
     }
