@@ -1,7 +1,7 @@
 package com.ms.tracking_api.dtos.requests;
 
 
-import com.ms.tracking_api.enuns.StatusUsuario;
+import com.ms.tracking_api.enuns.Status;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -17,5 +17,5 @@ public class FiltroUsuarioRequest {
 
     private String email;
 
-    private StatusUsuario statusUsuario;
+    private Status status;
 }
