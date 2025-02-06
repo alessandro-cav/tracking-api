@@ -38,7 +38,7 @@ public class JwtService {
             UserDetails userDetails
     ) {
         if (userDetails instanceof User user) {
-            extraClaims.put("id", user.getId()); // Adicionando o ID ao token
+            extraClaims.put("id", user.getId());
         }
 
         return Jwts
