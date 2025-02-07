@@ -2,6 +2,7 @@ package com.ms.tracking_api.controllers;
 
 import com.ms.tracking_api.dtos.requests.CandidaturaRequest;
 import com.ms.tracking_api.dtos.responses.CandidaturaResponse;
+import com.ms.tracking_api.dtos.responses.VagaResponse;
 import com.ms.tracking_api.services.CandidaturaService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
@@ -13,6 +14,8 @@ import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/candidaturas")
@@ -77,6 +80,19 @@ public class CandidaturaController {
             @RequestParam Long idVaga) {
         return ResponseEntity.ok(this.service
                 .buscarCandidatosPorVaga(idVaga, PageRequest.of(pagina, quantidade, Sort.by(Sort.Direction.valueOf(ordem), ordenarPor))));
+
+    }
+
+    @GetMapping("/buscarVagasCandidatadasPeloIdUsuario")
+    @Operation(summary = "Buscar vagas que me canditatei pelo o id", description = "Buscar vagas que se canditatou pelo id do usuario")
+    public ResponseEntity<List<VagaResponse>> buscarVagasCandidatadasPeloIdUsuario(
+            @RequestParam Integer pagina,
+            @RequestParam Integer quantidade,
+            @RequestParam String ordem,
+            @RequestParam String ordenarPor,
+            @RequestParam Long IdUsuaario) {
+        return ResponseEntity.ok(this.service
+                .buscarVagasCandidatadasPeloIdUsuario(IdUsuaario, PageRequest.of(pagina, quantidade, Sort.by(Sort.Direction.valueOf(ordem), ordenarPor))));
 
     }
 }

@@ -19,7 +19,7 @@ public interface CandidaturaRepository extends PagingAndSortingRepository<Candid
 
     Optional<Candidatura> findByVagaIdVagaAndUsuarioIdUsuario(Long idVaga, Long idUsuario);
 
-    List<Candidatura> findByUsuarioIdUsuario(Long idUsuario);
+    List<Candidatura> findByUsuarioIdUsuario(Long idUsuario, PageRequest of);
 
     List<Candidatura>  findByVagaIdVagaAndStatusCandidatura(Long idVaga, StatusCandidatura statusCandidatura, Pageable pageable);
 
