@@ -180,7 +180,7 @@ public class CandidaturaService {
         candidaturaUsuarioResponse.setData(candidatura.getVaga().getEvento().getData());
         candidaturaUsuarioResponse.setHoraInicio(candidatura.getVaga().getEvento().getHoraInicio());
         candidaturaUsuarioResponse.setHoraFim(candidatura.getVaga().getEvento().getHoraFim());
-        candidaturaUsuarioResponse.setDescricaoVaga(candidatura.getVaga().getDescricaoVaga());
+        candidaturaUsuarioResponse.setCargoVaga(candidatura.getVaga().getCargoVaga());
         candidaturaUsuarioResponse.setStatusCandidatura(candidatura.getStatusCandidatura());
         return candidaturaUsuarioResponse;
     }

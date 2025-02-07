@@ -24,7 +24,7 @@ public class CandidaturaUsuarioResponse implements Serializable {
 
     private LocalDate data;
 
-    private String descricaoVaga;
+    private String cargoVaga;
 
     private StatusCandidatura statusCandidatura;
 }
