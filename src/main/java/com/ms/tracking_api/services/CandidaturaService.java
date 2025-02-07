@@ -3,7 +3,7 @@ package com.ms.tracking_api.services;
 import com.ms.tracking_api.dtos.requests.CandidaturaRequest;
 import com.ms.tracking_api.dtos.responses.CandidaturaResponse;
 import com.ms.tracking_api.dtos.responses.UsuarioCandidatoResponse;
-import com.ms.tracking_api.dtos.responses.VagaCandidatoResponse;
+import com.ms.tracking_api.dtos.responses.VagaResponse;
 import com.ms.tracking_api.entities.Candidatura;
 import com.ms.tracking_api.entities.Evento;
 import com.ms.tracking_api.entities.Usuario;
@@ -47,7 +47,7 @@ public class CandidaturaService {
         Usuario usuario = this.usuarioService.buscarUsuarioPeloId(request.getIdUsuario());
         this.repository.findByVagaIdVagaAndUsuarioIdUsuario(vaga.getIdVaga(), usuario.getIdUsuario())
                 .ifPresent(fv -> {
-                    throw new BadRequestException("Usuário já está vinculado a esta vaga.");
+                    throw new BadRequestException("Você já se candidatou a esta vaga.");
                 });
         Candidatura candidatura = new Candidatura();
         candidatura.setVaga(vaga);
@@ -166,6 +166,13 @@ public class CandidaturaService {
                 .build();
     }
 
+
+    public List<VagaResponse> buscarVagasCandidatadasPeloIdUsuario(Long idUsuario, PageRequest of) {
+        List<Candidatura> candidaturas = this.repository.findByUsuarioIdUsuario(idUsuario, of);
+        return candidaturas.stream()
+                .map(c -> this.modelMapper.map(c.getVaga(), VagaResponse.class))
+                .collect(Collectors.toList());
+    }
 }
 
 
