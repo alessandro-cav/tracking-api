@@ -2,7 +2,7 @@ package com.ms.tracking_api.controllers;
 
 import com.ms.tracking_api.dtos.requests.CandidaturaRequest;
 import com.ms.tracking_api.dtos.responses.CandidaturaResponse;
-import com.ms.tracking_api.dtos.responses.VagaResponse;
+import com.ms.tracking_api.dtos.responses.CandidaturaUsuarioResponse;
 import com.ms.tracking_api.services.CandidaturaService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
@@ -83,16 +83,16 @@ public class CandidaturaController {
 
     }
 
-    @GetMapping("/buscarVagasCandidatadasPeloIdUsuario")
-    @Operation(summary = "Buscar vagas que me canditatei pelo o id", description = "Buscar vagas que se canditatou pelo id do usuario")
-    public ResponseEntity<List<VagaResponse>> buscarVagasCandidatadasPeloIdUsuario(
+    @GetMapping("/buscarCandidataurasPeloIdUsuario")
+    @Operation(summary = "Buscar canditaturas pelo o id", description = "Buscar candidaturas pelo id do usuario")
+    public ResponseEntity<List<CandidaturaUsuarioResponse>> buscarCandidatadasPeloIdUsuario(
             @RequestParam Integer pagina,
             @RequestParam Integer quantidade,
             @RequestParam String ordem,
             @RequestParam String ordenarPor,
             @RequestParam Long IdUsuaario) {
         return ResponseEntity.ok(this.service
-                .buscarVagasCandidatadasPeloIdUsuario(IdUsuaario, PageRequest.of(pagina, quantidade, Sort.by(Sort.Direction.valueOf(ordem), ordenarPor))));
+                .buscarCandidatadasPeloIdUsuario(IdUsuaario, PageRequest.of(pagina, quantidade, Sort.by(Sort.Direction.valueOf(ordem), ordenarPor))));
 
     }
 }

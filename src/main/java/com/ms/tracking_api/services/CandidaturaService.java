@@ -2,8 +2,8 @@ package com.ms.tracking_api.services;
 
 import com.ms.tracking_api.dtos.requests.CandidaturaRequest;
 import com.ms.tracking_api.dtos.responses.CandidaturaResponse;
+import com.ms.tracking_api.dtos.responses.CandidaturaUsuarioResponse;
 import com.ms.tracking_api.dtos.responses.UsuarioCandidatoResponse;
-import com.ms.tracking_api.dtos.responses.VagaResponse;
 import com.ms.tracking_api.entities.Candidatura;
 import com.ms.tracking_api.entities.Evento;
 import com.ms.tracking_api.entities.Usuario;
@@ -167,11 +167,22 @@ public class CandidaturaService {
     }
 
 
-    public List<VagaResponse> buscarVagasCandidatadasPeloIdUsuario(Long idUsuario, PageRequest of) {
+    public List<CandidaturaUsuarioResponse> buscarCandidatadasPeloIdUsuario(Long idUsuario, PageRequest of) {
         List<Candidatura> candidaturas = this.repository.findByUsuarioIdUsuario(idUsuario, of);
         return candidaturas.stream()
-                .map(c -> this.modelMapper.map(c.getVaga(), VagaResponse.class))
+                .map(c -> gerarCandidaturaUsuarioResponse(c))
                 .collect(Collectors.toList());
+    }
+
+    private CandidaturaUsuarioResponse gerarCandidaturaUsuarioResponse(Candidatura candidatura) {
+        CandidaturaUsuarioResponse candidaturaUsuarioResponse = new CandidaturaUsuarioResponse();
+        candidaturaUsuarioResponse.setNomeEvento(candidatura.getVaga().getEvento().getNome());
+        candidaturaUsuarioResponse.setData(candidatura.getVaga().getEvento().getData());
+        candidaturaUsuarioResponse.setHoraInicio(candidatura.getVaga().getEvento().getHoraInicio());
+        candidaturaUsuarioResponse.setHoraFim(candidatura.getVaga().getEvento().getHoraFim());
+        candidaturaUsuarioResponse.setDescricaoVaga(candidatura.getVaga().getDescricaoVaga());
+        candidaturaUsuarioResponse.setStatusCandidatura(candidatura.getStatusCandidatura());
+        return candidaturaUsuarioResponse;
     }
 }
 
