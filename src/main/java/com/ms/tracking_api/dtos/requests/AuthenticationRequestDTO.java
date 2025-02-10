@@ -1,4 +1,4 @@
-package com.ms.tracking_api.configs.auth;
+package com.ms.tracking_api.dtos.requests;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

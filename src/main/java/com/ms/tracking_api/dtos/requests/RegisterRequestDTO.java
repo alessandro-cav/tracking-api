@@ -1,4 +1,4 @@
-package com.ms.tracking_api.configs.auth;
+package com.ms.tracking_api.dtos.requests;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
