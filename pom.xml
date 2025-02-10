@@ -175,6 +175,14 @@
 			<artifactId>mockito-core</artifactId>
 			<version>5.12.0</version>
 		</dependency>
+
+		<!-- firebase notificacao -->
+		<dependency>
+			<groupId>com.google.firebase</groupId>
+			<artifactId>firebase-admin</artifactId>
+			<version>9.0.0</version>
+		</dependency>
+
 	</dependencies>
 
 	<build>

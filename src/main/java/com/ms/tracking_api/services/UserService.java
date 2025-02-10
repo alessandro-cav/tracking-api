@@ -7,8 +7,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Optional;
-
 @Service
 @RequiredArgsConstructor
 public class UserService {
@@ -23,4 +21,10 @@ public class UserService {
     public void salvarNovoStatus(User user) {
         this.repository.save(user);
     }
+
+    public User findById(Long id) {
+        return this.repository.findById(id)
+                .orElseThrow(() -> new ObjetoNotFoundException("Usuário não encontrado!"));
+    }
 }
+
