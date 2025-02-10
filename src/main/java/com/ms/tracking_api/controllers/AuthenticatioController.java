@@ -1,9 +1,9 @@
 package com.ms.tracking_api.controllers;
 
-import com.ms.tracking_api.configs.auth.AuthenticationRequestDTO;
-import com.ms.tracking_api.configs.auth.AuthenticationResponseDTO;
-import com.ms.tracking_api.configs.auth.AuthenticationService;
-import com.ms.tracking_api.configs.auth.RegisterRequestDTO;
+import com.ms.tracking_api.dtos.requests.AuthenticationRequestDTO;
+import com.ms.tracking_api.dtos.responses.AuthenticationResponseDTO;
+import com.ms.tracking_api.services.AuthenticationService;
+import com.ms.tracking_api.dtos.requests.RegisterRequestDTO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;

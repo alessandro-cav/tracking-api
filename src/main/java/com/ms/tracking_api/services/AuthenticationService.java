@@ -1,7 +1,10 @@
-package com.ms.tracking_api.configs.auth;
+package com.ms.tracking_api.services;
 
 import com.ms.tracking_api.configs.jwt.JwtService;
 import com.ms.tracking_api.configs.validations.Validator;
+import com.ms.tracking_api.dtos.requests.AuthenticationRequestDTO;
+import com.ms.tracking_api.dtos.requests.RegisterRequestDTO;
+import com.ms.tracking_api.dtos.responses.AuthenticationResponseDTO;
 import com.ms.tracking_api.entities.User;
 import com.ms.tracking_api.enuns.Role;
 import com.ms.tracking_api.enuns.StatusUsuario;
