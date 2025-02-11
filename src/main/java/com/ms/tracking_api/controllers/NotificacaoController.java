@@ -1,13 +1,10 @@
 package com.ms.tracking_api.controllers;
 
-import com.google.firebase.messaging.FirebaseMessagingException;
-import com.ms.tracking_api.handlers.ObjetoNotFoundException;
-import com.ms.tracking_api.repositories.UserRepository;
 import com.ms.tracking_api.services.NotificacaoService;
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -26,21 +23,24 @@ public class NotificacaoController {
 
     private final NotificacaoService notificacaoService;
 
-    private final UserRepository userRepository;
-
-    @PostMapping("/enviar")
-    public Map<String, String> sendNotification(@RequestParam String recipientToken,
-                                                   @RequestParam String title,
-                                                   @RequestParam String body) {
-         return this.notificacaoService.sendMessage(recipientToken, title, body);
-    }
-
     @PostMapping("/enviarParaUsuario")
+    @Operation(summary = "enviar para um usuario", description = "Endpoint para enviar notificação para um usuario")
     public ResponseEntity<Map<String, String>> sendNotificationToUser(@RequestParam Long idUsuario,
                                                                       @RequestParam String title,
                                                                       @RequestParam String body) {
             Map<String, String> response = this.notificacaoService.sendNotificationToUser(idUsuario, title, body);
             return ResponseEntity.ok(response);
+    }
+
+    @PostMapping("/enviarNotificacaoParaTodosUsuarios")
+    @Operation(summary = "Enviar notificacao para todos Usuarios", description = "Endpoint para enviar noticações para todos")
+    public ResponseEntity<Map<String, String>> enviarNotificacaoParaTodos(
+            @RequestParam String title,
+            @RequestParam String body) {
+
+        Map<String, String> response = notificacaoService.sendMessageToAll(title, body);
+
+        return ResponseEntity.ok(response);
     }
 }
 

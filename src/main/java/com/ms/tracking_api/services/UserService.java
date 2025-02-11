@@ -7,6 +7,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class UserService {
@@ -25,6 +27,10 @@ public class UserService {
     public User findById(Long id) {
         return this.repository.findById(id)
                 .orElseThrow(() -> new ObjetoNotFoundException("Usuário não encontrado!"));
+    }
+
+    public List<User> findAll() {
+        return this.repository.findAll();
     }
 }
 
