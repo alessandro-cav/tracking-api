@@ -21,7 +21,6 @@ import java.util.Map;
 @SecurityRequirement(name = "bearerAuth")
 public class NotificacaoController {
 
-
     private final NotificacaoService notificacaoService;
 
     @PostMapping("/enviarParaUsuario")
