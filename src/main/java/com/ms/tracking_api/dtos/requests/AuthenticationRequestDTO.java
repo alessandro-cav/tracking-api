@@ -18,4 +18,6 @@ public class AuthenticationRequestDTO implements Serializable {
     private String email;
 
     private String senha;
+
+    private String FcmToken;
 }
