@@ -45,6 +45,7 @@ public class NotificacaoController {
     }
 
     @PostMapping("/send")
+    @Operation(summary = "Testar os token de enviar notificação", description = "Endpoint teste envio")
     public ResponseEntity<String> sendNotification(@RequestParam String recipientToken,
                                                    @RequestParam String title,
                                                    @RequestParam String body) {
