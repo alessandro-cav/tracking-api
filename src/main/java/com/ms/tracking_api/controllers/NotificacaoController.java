@@ -5,6 +5,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -41,6 +42,19 @@ public class NotificacaoController {
         Map<String, String> response = notificacaoService.sendMessageToAll(title, body);
 
         return ResponseEntity.ok(response);
+    }
+
+    @PostMapping("/send")
+    public ResponseEntity<String> sendNotification(@RequestParam String recipientToken,
+                                                   @RequestParam String title,
+                                                   @RequestParam String body) {
+        boolean isSent = this.notificacaoService.sendMessage(recipientToken, title, body);
+
+        if (isSent) {
+            return ResponseEntity.ok("Notification sent successfully.");
+        } else {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to send notification.");
+        }
     }
 }
 

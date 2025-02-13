@@ -8,6 +8,8 @@ import com.ms.tracking_api.entities.User;
 import com.ms.tracking_api.enuns.Role;
 import com.ms.tracking_api.handlers.BadRequestException;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -19,21 +21,39 @@ public class NotificacaoService {
 
     private final UserService userService;
 
+    private static final Logger logger = LoggerFactory.getLogger(NotificacaoService.class);
+
     public Map<String, String> sendMessageToAll(String title, String body) {
+        List<User> usersInvalidos = new ArrayList<>();
+
         List<User> users = userService.findAll()
                 .stream()
-                .filter(this::isUsuarioValido)
+                .filter(user -> {
+                    if (user.getRole() == Role.ADMIN) {
+                        return false;
+                    }
+                    if (!isUsuarioValido(user)) {
+                        usersInvalidos.add(user);
+                        return false;
+                    }
+                    return true;
+                })
                 .collect(Collectors.toList());
 
-        Map<String, String> resultados = new HashMap<>();
+        Map<String, String> resultados = new LinkedHashMap<>();
 
-        // Se não houver usuários válidos, retorna uma mensagem e não tenta enviar notificações
+        // Lista para armazenar falhas no envio de notificações
+        List<String> falhas = new ArrayList<>();
+
+        // Se não houver usuários válidos, retorna uma mensagem apropriada
         if (users.isEmpty()) {
-            resultados.put("Mensagem", "Nenhum usuário válido encontrado para envio de notificações.");
+            resultados.put("Mensagem", "Falha ao enviar notificação: usuários sem perfil adequado ou sem token de notificação.");
+
+            if (!usersInvalidos.isEmpty()) {
+                resultados.put("Usuários inválidos", formatarUsuariosInvalidos(usersInvalidos));
+            }
             return resultados;
         }
-
-        List<String> falhas = new ArrayList<>();
 
         users.forEach(user -> {
             try {
@@ -43,23 +63,42 @@ public class NotificacaoService {
             }
         });
 
-        if (falhas.isEmpty()) {
-            resultados.put("Mensagem", "Todas as notificações foram enviadas com sucesso.");
-        } else {
-            resultados.put("Mensagem", "Algumas notificações falharam.");
+        StringBuilder mensagem = new StringBuilder("Todas as notificações foram enviadas com sucesso.");
+
+        if (!falhas.isEmpty()) {
+            mensagem.append(" No entanto, algumas falharam.");
+        }
+
+        if (!usersInvalidos.isEmpty()) {
+            mensagem.append(" Alguns usuários não atenderam aos requisitos.");
+        }
+
+        resultados.put("Mensagem", mensagem.toString());
+
+        if (!falhas.isEmpty()) {
             resultados.put("Erros", String.join("; ", falhas));
+        }
+
+        if (!usersInvalidos.isEmpty()) {
+            resultados.put("Usuários inválidos", "Falha ao enviar notificação: alguns usuários não possuem perfil adequado ou estão sem token de notificação.");
+            resultados.put("Detalhes", formatarUsuariosInvalidos(usersInvalidos));
         }
 
         return resultados;
     }
 
+    private String formatarUsuariosInvalidos(List<User> usersInvalidos) {
+        return usersInvalidos.stream()
+                .map(user -> user.getNome() + " - " + user.getEmail())
+                .collect(Collectors.joining("; "));
+    }
 
     public Map<String, String> sendNotificationToUser(Long idUsuario, String title, String body) {
         User user = userService.findById(idUsuario);
 
         if (!isUsuarioValido(user)) {
             throw new BadRequestException("Falha ao enviar notificação para " + user.getNome() +
-                    " (Email: " + user.getEmail() + "): usuário inválido ou sem token de notificação.");
+                    " (Email: " + user.getEmail() + "): usuário sem perfil adequado ou sem token de notificação.");
         }
 
         Map<String, String> resultado = new HashMap<>();
@@ -93,6 +132,33 @@ public class NotificacaoService {
     private String formatarMensagemErro(User user, String erro) {
         return "Falha ao enviar notificação para " + user.getNome() +
                 " (Email: " + user.getEmail() + "). Erro: " + erro;
+    }
+
+
+    public boolean sendMessage(String recipientToken, String title, String body) {
+        try {
+            Message message = Message.builder()
+                    .setToken(recipientToken)
+                    .setNotification(Notification.builder()
+                            .setTitle(title)
+                            .setBody(body)
+                            .build())
+                    .build();
+
+            String response = FirebaseMessaging.getInstance().send(message);
+            logger.info("Mensagem enviada com sucesso: {}", response);
+            return true;
+        } catch (FirebaseMessagingException e) {
+            if (e.getMessage().contains("401")) {
+                logger.error("Erro de autenticação: verifique as credenciais do Firebase. {}", e.getMessage());
+            } else {
+                logger.error("Erro ao enviar mensagem FCM: {}", e.getMessage(), e);
+            }
+            return false;
+        } catch (Exception e) {
+            logger.error("Erro inesperado ao enviar a notificação: {}", e.getMessage(), e);
+            return false;
+        }
     }
 }
 
